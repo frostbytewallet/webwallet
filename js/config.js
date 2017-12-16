@@ -420,7 +420,7 @@ var txgas = 60000;
 var gx=5000000;
 
 var LANG_DOC_TITLE = "FrostByte - Secure client-side ethereum wallet";
-var LANG_SLOGEN = "Secure client-side ethereum wallet";
+var LANG_SLOGEN = "Secure client-side ethereum wallet (testnet)";
 var LANG_UNLOAD_WALLET = "Unload wallet";
 var LANG_LOAD_WALLET = "Load wallet";
 var LANG_WRITE_DOWN_ACCOUNT_NUMBERS = "Write down the account numbers that you use. Deeper addresses can create avalanche for lower prices.";
