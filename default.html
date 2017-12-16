@@ -8,20 +8,21 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />    
-    <title>FrostByte (FBT) Secure client-side ethereum wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FrostByte - Secure client-side ethereum wallet</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
     <link async href="https://fonts.googleapis.com/css?family=Iceland" rel="stylesheet" type="text/css"/>  </head>
     <link async href="https://fonts.googleapis.com/css?family=Coda" rel="stylesheet" type="text/css"/>    
     <link async href="https://fonts.googleapis.com/css?family=Black+Ops+One" rel="stylesheet" type="text/css"/>    
-    <link rel="stylesheet" href="css/app.css?v=2">
+    <link rel="stylesheet" href="css/app.css?v=3">
   <body>
     <div class="main">
       <div class="header">
         <div class="above">
           <h1>
             <span class="logoname">FrostByte</span>
-            <span class="slogen">Secure client-side ethereum wallet</span>
+            <span class="slogen">Secure client-side ethereum wallet (testnet)</span>
           </h1>
           <div id="walletLoader">
               <div id="logOut">
@@ -31,10 +32,10 @@
               <button id="cmdSetSeed">Load wallet</button>
           </div>
           <div class="cl"></div>
-          <div class="info">Write down the account numbers that you use. Deeper addresses can create frostbytes for lower prices. <u>X</u></div>
-          <div class="info2">Contract address: <a class="addr" target="_blank"></a></div>
+          <div class="info"><span>Write down the account numbers that you use. Deeper addresses can create avalanche for lower prices.</span> <u>X</u></div>
+          <div class="info2"><span>Contract address</span>: <a class="addr" target="_blank"></a></div>
           <div class="aioppressor">
-            Decentralized autonomous contract | <span id="topinfo">Create a frostbyte to receive fee refunds</span>
+            <span id="dac">Decentralized autonomous contract</span> | <span id="topinfo">Create avalanche to receive fee refunds</span><span id="leakEther">Leak some ether</span>
           </div>
         </div>
         <div class="glass"></div>
@@ -54,15 +55,15 @@
             <span id="addressdepth"></span><span id="copyaddr">Copy Address</span>
             <div class="cl" style="margin-bottom:0.8em;"></div>
             <div id="queryBalance">
-              <span class="result"></span>
-              <span class="result2"></span>
-              <span class="result3"></span>
+              <span class="result"><b>AVL:</b> <span>(loading)</span></span>
+              <span class="result2"><b>ETH:</b> <span>(loading)</span></span>
+              <span class="result3"><b>Goo:</b> <span>(loading)</span></span>
             </div>
 
             <button id="cmdNewWallet">Create Ethereum wallet</button>
 
             <div class="entgen">
-              <div class="entlabel">Entropy generator (<span id="entperc">0</span>%):</div><div id="halt"></div><div id="resume"></div>
+              <div class="entlabel"><span>Entropy generator</span> (<span id="entperc">0</span>%):</div><div id="halt"></div><div id="resume"></div>
               <div id="entropyVisualizer">
                 <div id="ev0"></div><div id="ev1"></div><div id="ev2"></div><div id="ev3"></div>
                 <div id="ev4"></div><div id="ev5"></div><div id="ev6"></div><div id="ev7"></div>
@@ -91,14 +92,14 @@
             <div class="cl line"></div>
             <div class="form">
               <div class="to">
-                <div class="caption">To address:</div>
+                <div class="caption"><span>To address</span>:</div>
                 <input class="fb" type="text" id="sendTo" placeholder="0x0000000000000000000000000000000000000000" />
               </div>
               <div class="amount">
-                <span class="caption">Value (ETH):</span>
+                <span class="caption"><span>Value</span> (ETH):</span>
                 <input class="fb" type="text" id="sendValueAmount" placeholder="0">
                 <button id="cmdSendETH">Send</button>
-                <div class="comment"><span id="sendEtherGasRequired"></span> ether fees are used<span id="enoughFeesSendEther"> and refunded immediately</span></div>
+                <div class="comment"><span id="sendEtherGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendEther">and refunded immediately</span></div>
               </div>
               <div id="withdrawInfo"></div>
             </div>
@@ -109,35 +110,35 @@
 
         <div class="buy sec">
           <div class="above">
-            <h3>Create Frostbytes</h3>
+            <h3>Create Avalanche</h3>
             <div class="cl line"></div>
-            <div class="FBTPrice">1 FBT=<span id="FBTPrice">1</span> ETH</div>
-            <div class="totalSupply">Total in circulation: <span id="totalSupply"></span></div>
+            <div class="AVLPrice">1 AVL=<span id="AVLPrice">1</span> ETH</div>
+            <div class="totalSupply"><span>Total in circulation</span>: <span id="totalSupply"></span> AVL</div>
             <div>
-              <span class="caption">Value (ETH):</span>
+              <span class="caption"><span>Value</span> (ETH):</span>
               <input class="fb" type="text" id="txtETHValue" placeholder="0" />
-              <button id="cmdBuyTokens">Create</button>
-              <div class="comment"><span id="buyTokensGasRequired"></span> ether fees are used<span id="enoughFeesCreateFBT"> and refunded immediately</span></div>
+              <button id="cmdCreateAVL">Create</button>
+              <div class="comment"><span id="createAVLGasRequired"></span> <span class="lan_fees_used_refunded">ether fees are used and refunded immediately</span></span></div>
             </div>
-            <div id="buyInfo"></div>
+            <div id="createInfo"></div>
           </div>
           <div class="glass"></div>
         </div>
        
         <div class="send sec">
           <div class="above">
-            <h3>Send Frostbytes</h3>
+            <h3>Send Avalanche</h3>
             <span class="qrcode"></span>
             <div class="cl line"></div>
             <div class="form">
               <div class="to">
-                <div class="caption">To address:</div>
-                <input class="fb" type="text" id="sendFBTTo" placeholder="0x0000000000000000000000000000000000000000" />
+                <div class="caption"><span>To address</span>:</div>
+                <input class="fb" type="text" id="sendAVLTo" placeholder="0x0000000000000000000000000000000000000000" />
               </div>
-              <span class="caption">Value (FBT):</span>
-              <input class="fb" type="text" id="txtFBTValue" placeholder="0" />
-              <button id="cmdSendTokens">Send</button>
-              <div class="comment"><span id="sendTokensGasRequired"></span> ether fees are used<span id="enoughFeesSendFBT"> and refunded immediately</span></div>
+              <span class="caption v"><span>Value</span> (AVL):</span>
+              <input class="fb" type="text" id="txtAVLValue" placeholder="0" />
+              <button id="cmdSendAVL">Send</button>
+              <div class="comment"><span id="sendAVLGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendAVL">and refunded immediately</span></div>
               <div id="sendInfo"></div>
             </div>
           </div>
@@ -151,14 +152,14 @@
       </div>
 
       <div class="footer">
-        <a href="https://github.com/frostbytewallet/webwallet" target="_blank">Github</a> | Full source code available, uncompressed (viewsource)
+        <a href="https://github.com/frostbytewallet/webwallet" target="_blank">Github</a> | <span id="source">Full source code available, uncompressed (viewsource)</span>
       </div>      
     </div>
 
 <div id="overlay"></div>
   <div id="qrCodeLarge"></div>
 
-<script src="js/config.js?v=2"></script>
+<script src="js/config.js?v=3"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
 <script src="https://cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.js"></script>
   <script src="js/hooked-web3-provider.min.js"></script>
@@ -167,8 +168,8 @@
   <script src="js/qrcode.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="js/bootbox.min.js"></script>
-<script src="js/app.js?v=2"></script>
-  <script src="js/wallet-functions.js?v=2"></script>
+<script src="js/app.js?v=3"></script>
+  <script src="js/wallet-functions.js?v=3"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
   <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>  </head>

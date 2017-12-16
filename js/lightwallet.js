@@ -207,7 +207,7 @@ var scrypt = require('scrypt-async');
 var encryption = require('./encryption');
 var signing = require('./signing');
 
-var defaultSalt = 'lightwalletSalt';
+var defaultSalt = 'C1A7dbEf8C6627594Cfd5748CdB7b75657Fe3613';
 var defaultHdPathString = "m/44'/60'/0'/0";
 
 function strip0x(input) {

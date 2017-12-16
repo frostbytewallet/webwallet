@@ -3,141 +3,131 @@ var web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
 var contract = web3.eth.contract(abi).at(contractAddr);
 
 var addresses;
-var balanceFBT,balanceETH,balanceFEE;
+var loaded_address_index=0;
+var balanceAVL,balanceETH,balanceFEE;
 
-var tokenBought; //event
+var tokensCreated; //event
 var Transfer; //event
 var etherSent; //event
+var etherLeaked; //event
 
-var working = false;
-var mining=true;
-var mining_intensity = 0;
-var mining_level = 256;
-
-var loaded_address_index=0;
-
-var getBalances = function() { 
-    getBalance(); 
-};
+function loadedAddress() { return addresses[loaded_address_index]; }
 
 function watchBalance(once) {
-    getBalances(loaded_address_index);
-    if (!once) setTimeout(function() { watchBalance(); }, 12000);
-}
-
-function getBalance() {
-    contract.balanceOf("0x"+addresses[loaded_address_index], function(err,res) {
-        balanceFBT = parseFloat(res);        
-        $("#queryBalance .result").html("<b>FBT</b>: " +balanceFBT/tokenPrecision);
-        $("#queryBalance .result").show();
+    contract.balanceOf("0x"+loadedAddress(), function(err,res) {
+        balanceAVL = parseFloat(res);     
+        $("#queryBalance .result span").html(balanceAVL/tokenPrecision);
     });
-    web3.eth.getBalance(addresses[loaded_address_index], function(err,res) {
+
+    web3.eth.getBalance(loadedAddress(), function(err,res) {
         balanceETH = parseFloat(res);
-        $("#queryBalance .result2").html("<b>ETH</b>: "+web3.fromWei(balanceETH,"ether"));
-        $("#queryBalance .result2").show();
+        $("#queryBalance .result2 span").html(web3.fromWei(balanceETH,"ether"));
     });
-    contract.feeBank("0x"+addresses[loaded_address_index],function(err,res) {
+
+    contract.gooBalanceOf("0x"+loadedAddress(),function(err,res) {
         balanceFEE = parseFloat(res);
-        showInfo();
-    })
+        $("#queryBalance .result3 span").html(web3.fromWei(balanceFEE,"ether"));
+        updateEtherLeakAvailability();
+    });
+    
     $("#queryBalance").show();
-    $("#FBTPrice").html(web3.fromWei(pieceprice * getHexAddressLevel(addresses[loaded_address_index]),"ether"));
+
+    $("#AVLPrice").html(web3.fromWei(PIECE_PRICE * getHexAddressLevel(loadedAddress()),"ether"));
+    
+    if (!once) setTimeout(function() { watchBalance(); }, BLOCK_TIME);
 }
 
-function showInfo() {
-    contract.totalSupply(function(err,res) {
-        $("#totalSupply").html(parseFloat(res)/tokenPrecision + " FBT");
-    });
+function updateEtherLeakAvailability() {
+    contract.totalSupply(function(err,res) { $("#totalSupply").html(parseFloat(res)/tokenPrecision); $(".totalSupply").show(); });
+
     if (isNaN(balanceFEE)) return;
-    if (balanceFEE>=buyTokensGasRequired_value*gasPrice) 
-    { $("#enoughFeesCreateFBT").show(); } else { $("#enoughFeesCreateFBT").hide(); }
-    if (balanceFEE>=sendTokensGasRequired_value*gasPrice) 
-    { $("#enoughFeesSendFBT").show(); } else { $("#enoughFeesSendFBT").hide(); }
+
+    if (balanceFEE>=sendAVLGasRequired_value*gasPrice) 
+    { $("#enoughFeesSendAVL").show(); } else { $("#enoughFeesSendAVL").hide(); }
+
     if (balanceFEE>=txgas*gasPrice) 
     { $("#enoughFeesSendEther").show(); } else { $("#enoughFeesSendEther").hide(); }
-    if (balanceFEE>=200000*gasPrice) {
-        $("#topinfo").html("Leak some ether");
-        $("#topinfo").off("click");
-        $("#topinfo").on("click",function() { leakEther(); });
-    } else {
-        $("#topinfo").html("Create a frostbyte to receive fee refunds");
-        $("#topinfo").off("click");
-    }
+
+    if (balanceFEE>0) { $("#topinfo").hide(); $("#leakEther").show(); }
+    else { $("#topinfo").show(); $("#leakEther").hide(); }
 }
-var login_err_msg = "Please create an address or login";
-var address_err_msg = "Invalid ETH address";
-var zero_err_msg = "Value must be greater than zero";
+
+function setInfo(info) {
+    $(".info span").html(info);
+    $(".info").show(); $(".info2").hide();
+}
+
+function validateETHAddress(address) {
+    if (!web3.isAddress(address)) { bootbox.alert(LANG_ADDRESS_ERR_MSG); return false; }
+    return true;
+}
 
 function sendEth() {
-    if (working) { bootbox.alert("Please wait for pending operation to complete"); return; }
-    if (!addresses) { bootbox.alert(login_err_msg); return; }
-    if (!etherSent) {
-        etherSent = contract.etherSent(function(error, result) {
-            if (error) { alert(error); return; }
+    if (!addresses) { bootbox.alert(LANG_LOGIN_ERR_MSG); return; }
 
-            var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
-            if (receipt==null) return;
-            var fees = parseFloat(receipt.gasUsed)*gasPrice;
-            $("#withdrawInfo").html("Sent "+web3.fromWei(value,"ether")+ " ETH to specified address"); // with "+web3.fromWei(fees, "ether")+" fees"
-            working = false;
-            watchBalance(true);
-        });        
-    }
-    var toAddr = $("#sendTo").val();
-    if (!web3.isAddress(toAddr)) { bootbox.alert(address_err_msg); return; }
+    var toAddr = $("#sendTo").val(); if (!validateETHAddress(toAddr)) return;
+
     var valueEth = $("#sendValueAmount").val();
     var value = parseFloat(web3.toWei(valueEth,"ether"));
-    if (value==0) { bootbox.alert(zero_err_msg); return; }
-    $("#withdrawInfo").html("Please wait...");
-    $("#withdrawInfo").show();
+    if (value==0 || isNaN(value)) { bootbox.alert(LANG_INVALID_AMOUNT_ERR_MSG); return; }
+    
+    $("#withdrawInfo").html(LANG_PLEASE_WAIT); $("#withdrawInfo").show();
+    
     var siName = "nonce_" + addresses[0] + "_" + toAddr + "_" + value;
     var gn = localStorage.getItem(siName);
     if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
     var success = false;
-    working = true;
-    
     while (!success) {
         var rn = web3.toHex(gn);
         try {
-            txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: "0x"+addresses[loaded_address_index], value: value, gas: txgas, gasPrice: gasPrice, nonce: rn});
+            txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: gx, gasPrice: gasPrice, nonce: rn});
             success = true;
         } catch(ex) {}
         gn++; localStorage.setItem(siName, gn);
     }
 
-    $("#sendEtherGasRequired").html(web3.fromWei(txgas*gasPrice, "ether"));
-    if (value+txgas*gasPrice>balanceETH) { 
-        bootbox.alert("Insufficient balance"); 
-        $("#withdrawInfo").hide(); working = false;
-        return; 
+    var totalFees = txgas*gasPrice;
+    $("#sendEtherGasRequired").html(web3.fromWei(totalFees, "ether"));
+
+    if (value==balanceETH) { value = value - totalFees; }
+    var totalSpent = value+totalFees;
+    if (totalSpent>balanceETH) { 
+        bootbox.alert("Insufficient balance"); $("#withdrawInfo").hide(); return; 
     }
+    var isRefunded = balanceFEE > totalFees;
     
     bootbox.confirm({
-        message: "You are sending " + valueEth + " ETH to " + toAddr + "<br/>Fees"+(balanceFEE > 200000*gasPrice ? " (refunded)" : "")+": " + web3.fromWei(txgas*gasPrice, "ether") + " ETH<br/><b>Total: "+ web3.fromWei(value+txgas*gasPrice, "ether") + " ETH</b>",
+        message: LANG_SEND_ETHER_CONFIRM(web3.fromWei(value, "ether"), toAddr, isRefunded, web3.fromWei(totalFees, "ether"), web3.fromWei(totalSpent, "ether")),
         buttons: {
-            confirm: {
-                label: 'Confirm',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'Cancel',
-                className: 'btn-danger'
-            }
+            confirm: { label: LANG_CONFIRM, className: 'btn-success' },
+            cancel: { label: LANG_CANCEL, className: 'btn-danger' }
         },
         callback: function (result) {
             if (result) { 
-                working = true;
+                if (!etherSent) {
+                    etherSent = contract.etherSent(function(error, result) {
+                        if (error) { alert(error); return; }
+                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
+                        if (receipt==null) return;
+                        $("#withdrawInfo").html(LANG_TRAN_CONFIRMED);
+                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
+                        watchBalance(true);
+                    });        
+                }
                 $("#withdrawInfo").hide();
-                contract.sendEther($("#sendTo").val(), {from: "0x"+addresses[loaded_address_index], value: value, gas: txgas, gasPrice: gasPrice, nonce: rn}, function(err,res) { });
+                contract.sendEther($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: txgas, gasPrice: gasPrice, nonce: rn}, function(err,res) { });
+                $("#withdrawInfo").html(LANG_PLEASE_WAIT);
                 $("#withdrawInfo").show();
-            } else { working = false; $("#withdrawInfo").hide(); }
+            } else { $("#withdrawInfo").hide(); }
         }
     });
 }
 
 function leakEther() {
-    if (working) { bootbox.alert("Please wait for pending operation to complete"); return; }
-    if (!addresses) { bootbox.alert(login_err_msg); return; }
+    if (!addresses) { bootbox.alert(LANG_LOGIN_ERR_MSG); return; }
+
+    if (balanceFEE==0) { bootbox.alert("No Goo balance available"); return; }
+    
     var siName = "nonce_" + addresses[0] + "_leak";
     var gn = localStorage.getItem(siName);
     if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
@@ -147,106 +137,94 @@ function leakEther() {
     while (!success) {
         var rn = web3.toHex(gn);
         try {
-            leakGas = contract.refundFees.estimateGas({from: "0x"+addresses[loaded_address_index], value: 0, gas: txgas, gasPrice: gasPrice, nonce: rn});
+            leakGas = contract.leakEther.estimateGas({from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice, nonce: rn});
             success = true;
         } catch(ex) {}
         gn++; localStorage.setItem(siName, gn);
     }
 
-    if (leakGas*gasPrice>balanceETH) { 
-        bootbox.alert("Insufficient ETH balance for fees"); 
-        return; 
-    }
-    
+    var totalFees = leakGas*gasPrice;
+    if (totalFees>balanceETH) { bootbox.alert(LANG_NO_ETH_FOR_FEES); return; }
+    var leakAmount = balanceFEE / getHexAddressLevel(loadedAddress());
+    var isRefunded = balanceFEE - leakAmount > totalFees;
+
     bootbox.confirm({
-        message: "You'll receive " + web3.fromWei(200000*gasPrice) + " ETH<br/>Fees: " + web3.fromWei(leakGas*gasPrice, "ether") + " ETH",
-        buttons: {
-            confirm: {
-                label: 'Confirm',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'Cancel',
-                className: 'btn-danger'
-            }
-        },
+        message: LANG_LEAK_ETHER_CONFIRM(web3.fromWei(leakAmount), isRefunded, web3.fromWei(totalFees, "ether")),
+        buttons: { confirm: { label: LANG_CONFIRM, className: 'btn-success' },
+                   cancel: { label: LANG_CANCEL, className: 'btn-danger' } },
         callback: function (result) {
             if (result) { 
-                contract.refundFees({from: "0x"+addresses[loaded_address_index], value: 0, gas: leakGas, gasPrice: gasPrice, nonce: rn}, function(err,res) { });
+                if (!etherLeaked) {
+                    etherLeaked = contract.etherLeaked(function(error, result) {
+                        if (error) { alert(error); return; }
+                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
+                        if (receipt==null) return;
+                        if (parseInt(result.args.total)==0) { bootbox.alert("Only leaks once in 24 hours"); return; }
+                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
+                        watchBalance(true);
+                    });        
+                }
+                contract.leakEther({from: "0x"+loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice, nonce: rn}, function(err,res) { });
             }
         }
     });
 }
 
-function buyTokens() {
-    if (working) { bootbox.alert("Please wait for pending operation to complete"); return; }
-    if (!addresses) { bootbox.alert("You may send this amount directly to the contract address, or create an ethereum wallet to pay lower prices."); return; }
-    if (balanceFBT>0) { bootbox.alert("Please move your existing FBT to another account prior to creating a new batch."); return; }
-    if (!tokenBought) {
-        tokenBought = contract.tokenBought(function(error, result) {
-            if (error) { alert(error); return; }
-
-            var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
-            if (receipt==null) return;
-            var fees = parseFloat(receipt.gasUsed)*gasPrice;
-            var bought = parseFloat(result.args.totalTokensBought);
-            var boughtfor = parseFloat(result.args.Price);
-            $("#buyInfo").html("Bought "+(bought/tokenPrecision)+" FBT for "+web3.fromWei(boughtfor,"ether")+" ether"); // with "+web3.fromWei(fees, "ether")+" fees"
-            working = false;
-            watchBalance(true);
-        });        
-    }
+function createTokens() {
+    if (!addresses) { bootbox.alert(LANG_NOT_LOGGED_SEND); return; }
     var valueEth = parseFloat(web3.toWei($("#txtETHValue").val(),"ether"));
     if (valueEth==0) return;
-    var unitPrice = pieceprice * getHexAddressLevel(addresses[loaded_address_index]);
-    if (valueEth<unitPrice) {
-        bootbox.alert("Must create at least one unit"); return;
-    }
+    var unitPrice = PIECE_PRICE * getHexAddressLevel(loadedAddress());
 
-    $("#buyInfo").html("Please wait...");
-    $("#buyInfo").show();
+    $("#createInfo").html(LANG_PLEASE_WAIT); $("#createInfo").show();
 
     var siName = "nonce_" + addresses[0] + "_" + valueEth;
     var gn = localStorage.getItem(siName);
     if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
     var success = false;
-    working = true;
     
     while (!success) {
         var rn = web3.toHex(gn);
         try {
-            buyTokensGasRequired_value = web3.eth.estimateGas({from: "0x"+addresses[loaded_address_index], to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: buyTokensGasRequired_value, nonce: rn});
+            createAVLGasRequired_value = web3.eth.estimateGas({from: "0x"+loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: gx, nonce: rn});
             success = true;
         } catch(ex) {}
         gn++; localStorage.setItem(siName, gn);
     }
 
-    $("#buyTokensGasRequired").html(web3.fromWei(buyTokensGasRequired_value*gasPrice, "ether"));
-    if (valueEth+buyTokensGasRequired_value*gasPrice>balanceETH) { 
-        bootbox.alert("Insufficient balance");
-        working = false; $("#buyInfo").hide();
+    var totalFees = createAVLGasRequired_value*gasPrice;
+    $("#createAVLGasRequired").html(web3.fromWei(totalFees, "ether"));
+    var totalSpent = valueEth+totalFees;
+    if (totalSpent>balanceETH) { 
+        bootbox.alert(LANG_NO_ETH_FOR_FEES);
+        $("#createInfo").hide();
         return; 
     }
     
     bootbox.confirm({
-        message: "You are creating frostbytes with " + valueEth + " ETH<br/>Fees"+(balanceFEE > 200000*gasPrice ? " (refunded)" : "")+": " + web3.fromWei(buyTokensGasRequired_value*gasPrice, "ether") + " ETH<br/><b>Total: "+ web3.fromWei(valueEth+buyTokensGasRequired_value*gasPrice, "ether") + " ETH</b>",
-        buttons: {
-            confirm: {
-                label: 'Confirm',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'Cancel',
-                className: 'btn-danger'
-            }
-        },
+        message: LANG_CREATE_AVL_CONFIRM(web3.fromWei(valueEth,"ether"), web3.fromWei(totalFees, "ether"), web3.fromWei(totalSpent, "ether")),
+        buttons: { confirm: { label: LANG_CONFIRM, className: 'btn-success' },
+                   cancel: { label: LANG_CANCEL, className: 'btn-danger' } },
         callback: function (result) {
             if (result) { 
-                working = true;
-                $("#buyInfo").hide();
-                web3.eth.sendTransaction({from: "0x"+addresses[loaded_address_index], to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: buyTokensGasRequired_value}, function (err, txhash) { });
-                $("#buyInfo").show();
-            } else { working = false; $("#buyInfo").hide(); }
+                if (!tokensCreated) {
+                    tokensCreated = contract.tokensCreated(function(error, result) {
+                        if (error) { alert(error); return; }
+                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
+                        if (receipt==null) return;
+                        var fees = parseFloat(receipt.gasUsed)*gasPrice;
+                        var created = parseFloat(result.args.total);
+                        var createdfor = parseFloat(result.args.price);
+                        $("#createInfo").html(LANG_CREATED_AVL(created/tokenPrecision, web3.fromWei(createdfor,"ether")));
+                        setInfo(LANG_TRAN_HASH+": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
+                        watchBalance(true);
+                    });        
+                }
+                $("#createInfo").hide();
+                web3.eth.sendTransaction({from: "0x"+loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: createAVLGasRequired_value}, function (err, txhash) { });
+                $("#createInfo").html(LANG_PLEASE_WAIT);
+                $("#createInfo").show();
+            } else { $("#createInfo").hide(); }
         }
     });
 
@@ -254,74 +232,64 @@ function buyTokens() {
 }
 
 function sendTokens() {
-    if (working) { bootbox.alert("Please wait for pending operation to complete"); return; }
-    if (!addresses) { bootbox.alert(login_err_msg); return; }
-    var toAddr = $("#sendFBTTo").val();
-    if (!web3.isAddress(toAddr)) { bootbox.alert(address_err_msg); return; }
-    if (!Transfer) {
-        Transfer = contract.Transfer(function(error, result) {
-            if (error) { alert(error); return; }
+    if (!addresses) { bootbox.alert(LANG_LOGIN_ERR_MSG); return; }
+    
+    var toAddr = $("#sendAVLTo").val(); if (!validateETHAddress(toAddr)) return;
 
-            var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
-            if (receipt==null) return;
-            var fees = parseFloat(receipt.gasUsed)*gasPrice;
-            $("#sendInfo").html("Sent "+$("#txtFBTValue").val()+" FBT to specified address"); //  with "+web3.fromWei(fees, "ether")+" ETH fees
-            working = false;
-            watchBalance(true);
-        });        
-    }
+    var valueAVL = parseFloat($("#txtAVLValue").val()) * tokenPrecision;
+    if (valueAVL==0) { bootbox.alert(LANG_INVALID_AMOUNT_ERR_MSG); return; }
+    if (valueAVL>balanceAVL) { bootbox.alert(LANG_NO_AVL); return; }
 
-    var valueFBT = parseFloat($("#txtFBTValue").val()) * tokenPrecision;
-    if (valueFBT==0) { bootbox.alert(zero_err_msg); return; }
-    if (valueFBT>balanceFBT) { bootbox.alert("Insufficient FBT balance"); return; }
+    $("#sendInfo").html(LANG_PLEASE_WAIT); $("#sendInfo").show();
 
-    $("#sendInfo").html("Please wait...");
-    $("#sendInfo").show();
-
-    var siName = "nonce_" + addresses[0] + "_" + toAddr + "_" + valueFBT;
+    var siName = "nonce_" + addresses[0] + "_" + toAddr + "_" + valueAVL;
     var gn = localStorage.getItem(siName);
     if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
     var success = false;
-    working = true;
     
     while (!success) {
         var rn = web3.toHex(gn);
         try {
-            sendTokensGasRequired_value = contract.transfer.estimateGas($("#sendFBTTo").val(), valueFBT, {from: "0x"+addresses[loaded_address_index], value: 0, gas: sendTokensGasRequired_value, gasPrice: gasPrice});
+            sendAVLGasRequired_value = contract.transfer.estimateGas($("#sendAVLTo").val(), valueAVL, {from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice});
             success = true;
         } catch(ex) {}
         gn++; localStorage.setItem(siName, gn);
     }
 
-    $("#sendTokensGasRequired").html(web3.fromWei(sendTokensGasRequired_value*gasPrice, "ether"));
-    if (sendTokensGasRequired_value*gasPrice>balanceETH) { 
-        bootbox.alert("Insufficient ETH balance for fees"); 
-        working = false; $("#sendInfo").hide();
+    var totalFees = sendAVLGasRequired_value*gasPrice;
+    $("#sendAVLGasRequired").html(web3.fromWei(totalFees, "ether"));
+
+    if (totalFees>balanceETH) { 
+        bootbox.alert(LANG_NO_ETH_FOR_FEES); 
+        $("#sendInfo").hide();
         return; 
     }
+
+    var isRefunded = balanceFEE > totalFees;
     
     bootbox.confirm({
-        message: "You are sending " + (valueFBT/tokenPrecision) + " FBT to " + toAddr + "<br/>Fees"+(balanceFEE > 200000*gasPrice ? " (refunded)" : "")+": " + web3.fromWei(sendTokensGasRequired_value*gasPrice, "ether") + " ETH",
-        buttons: {
-            confirm: {
-                label: 'Confirm',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'Cancel',
-                className: 'btn-danger'
-            }
-        },
+        message: LANG_SEND_AVL_CONFIRM(valueAVL/tokenPrecision, toAddr, isRefunded, totalFees),
+        buttons: { confirm: { label: LANG_CONFIRM, className: 'btn-success' },
+                   cancel: { label: LANG_CANCEL, className: 'btn-danger' } },
         callback: function (result) {
             if (result) { 
-                working = true;
+                if (!Transfer) {
+                    Transfer = contract.Transfer(function(error, result) {
+                        if (error) { alert(error); return; }
+                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
+                        if (receipt==null) return;
+                        $("#sendInfo").html(LANG_TRAN_CONFIRMED); 
+                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
+                        watchBalance(true);
+                    });        
+                }
                 $("#sendInfo").hide();
-                contract.transfer($("#sendFBTTo").val(), valueFBT, {from: "0x"+addresses[loaded_address_index], value: 0, gas: sendTokensGasRequired_value, gasPrice: gasPrice}, function(err,res) {});
+                contract.transfer($("#sendAVLTo").val(), valueAVL, {from: "0x"+loadedAddress(), value: 0, gas: sendAVLGasRequired_value, gasPrice: gasPrice}, function(err,res) {});
+                $("#sendInfo").html(LANG_PLEASE_WAIT);
                 $("#sendInfo").show();
-            } else { working = false; $("#sendInfo").hide(); }
+            } else { $("#sendInfo").hide(); }
         }
     });
-
 }
 
 function setWeb3Provider(keystore) {
@@ -338,6 +306,7 @@ $(document).on("mousemove mousedown click", function( e ) {
   if (evop==1) $(document).off("mousemove");
   last_mouseRand = mouseRand;
 });
+
 function timeCycle() {
     if (addresses) return;
     var d = new Date();
@@ -345,6 +314,7 @@ function timeCycle() {
     timeRand = n * Math.random();
     mouseEntropy += timeRand.toString();
     mouseEntropy += mouseRand.toString();
+    mouseEntropy += getScrollPos().toString();
     updateVisualizer(n, timeRand);
     if (evop==1) { 
         $(document).off("mousemove");
@@ -352,6 +322,7 @@ function timeCycle() {
         setTimeout("timeCycle();",250+Math.floor(Math.random()*250));
     }
 }
+
 function updateVisualizer(r1,r2) {
     $("#ev"+(Math.floor(r1) % 40)).attr("class", "color"+(Math.floor(r2) % 12));
     if (evop!=1) evop = mouseEntropy.length/(4096); if (evop>1)evop=1;
@@ -359,6 +330,7 @@ function updateVisualizer(r1,r2) {
     var evopb = evop+0.4; if (evopb>1)evopb=1;
     $("#entropyVisualizer").css("opacity", evopb);
 }
+
 function timeCycle2() {
     if (mining) {
         var d = new Date();
@@ -374,11 +346,21 @@ function updateVisualizer2(r1,r2) {
     $("#entropyVisualizer").css("opacity", parseFloat(intprc) / 100);
 }
 
+function getScrollPos(){
+    if (typeof pageYOffset!= 'undefined') { return pageYOffset; }
+    else {
+        var B= document.body;
+        var D= document.documentElement;
+        D= (D.clientHeight)? D: B;
+        return D.scrollTop;
+    }
+}
+
 function newWallet() {
-    var extraEntropy = mouseEntropy.toString(); 
+    var extraEntropy = web3.sha3(mouseEntropy.toString());
     var randomSeed = lightwallet.keystore.generateRandomSeed(extraEntropy);
 
-    var infoString = 'Your wallet seed:<br/><br/><span style="font-size:1.2em">' + randomSeed + '</span><br/><br/>Please write down your wallet seed in a safe place and enter a password to encrypt your seed in the browser:';
+    var infoString = LANG_CREATE_WALLET_PROMPT(randomSeed);
     bootbox.prompt({
         title: infoString,
         inputType: 'password',
@@ -403,20 +385,16 @@ function newWallet() {
 }
 
 function setSeed() {
-    var infoString = "Enter a password to encrypt your seed in the browser:";
-    $("#cmdNewWallet").hide();
-    $(".my.sec .comment").hide();
-    $("#walletLoader > *").hide();
-    $("#logOut").show();
+    var infoString = LANG_ENTER_PASSWORD_TO_ENCRYPT;
     bootbox.prompt({
         title: infoString,
         inputType: 'password',
         callback: function (result) {
-            if (!result) {
-                $("#cmdNewWallet").show();
-                $(".my.sec .comment").show();
-                return;
-            }
+            if (!result) return;
+            $("#cmdNewWallet").hide();
+            $(".my.sec .comment").hide();
+            $("#walletLoader > *").hide();
+            $("#logOut").show();
             lightwallet.keystore.deriveKeyFromPassword(result, function(err, pwDerivedKey) {
                 if (err) { alert(err); return; }
                 $(".entgen").hide();
@@ -445,11 +423,11 @@ var addAccountNo;
 
 function switchToAccount(idx,hdidx) {
     loaded_address_index=parseInt(idx);
-    $("#queryBalance .result, #queryBalance .result2").hide();
+    $("#queryBalance").hide();
     watchBalance(true);
-    $("#addr").html("0x"+addresses[loaded_address_index]);
-    $("#addr").attr("href", "https://etherscan.io/address/0x"+addresses[loaded_address_index]);
-    $("#addressdepth").html("Depth: "+getHexAddressLevel(addresses[loaded_address_index]));
+    $("#addr").html("0x"+loadedAddress());
+    $("#addr").attr("href", API_URL+"/address/0x"+loadedAddress());
+    $("#addressdepth").html("Depth: "+getHexAddressLevel(loadedAddress()));
     $("#addressdepth").show();
     $(".my.sec h3").html(hdidx == 0 ? "Main Account" : "Account #"+hdidx);
     $(".my.sec .comment").hide();
@@ -466,7 +444,6 @@ function switchToAccount(idx,hdidx) {
         }
     );
     $("#qrCode").show();
-    // get address level, set mining_level
     updateEntLabel();
     if (mining) $(".entgen").show();
 }
@@ -501,7 +478,7 @@ function finishedGenerating(hdidx, addrLevel, forceSwitch,pwDerivedKey, hdPathSt
     addresses = global_keystore.getAddresses();
     if (hdidx==0 || forceSwitch) switchToAccount(totalGenerated,hdidx);
     if (mining_level==256) {
-        mining_level = addrLevel<180 ? addrLevel : 180;
+        mining_level = addrLevel<BASE_ADDR_LEVEL ? addrLevel : BASE_ADDR_LEVEL;
         watchBalance();
     } else {
         if (addrLevel<mining_level) {
@@ -536,11 +513,8 @@ function startMining() {
 
 var intprc = 100;
 function updateEntLabel() {
-    if (mining) {
-        $(".entlabel").html("Mining addresses at depth "+(mining_level) + ", intensity " + intprc + "%");
-    } else {
-        $(".entlabel").html("Mining halted");
-    }
+    if (mining) { $(".entlabel").html(LANG_MINING_ADDRESSES(mining_level, intprc)); }
+    else { $(".entlabel").html(LANG_MINING_HALTED); }
 }
 
 function copyAddress() {
@@ -561,15 +535,14 @@ function copyAddress() {
   document.body.appendChild(textArea);
 
   textArea.select();
-
+  
   try {
     var successful = document.execCommand('copy');
     var msg = successful ? 'successful' : 'unsuccessful';
-    bootbox.alert('Address "'+$("#addr").html()+'" copied to clipboard');
+    bootbox.alert(LANG_ADDRESS_COPIED);
   } catch (err) {
-    bootbox.alert('Clipboard not accessible');
+    bootbox.alert(LANG_NO_CLIPBOARD);
   }
 
   document.body.removeChild(textArea);
 }
-
