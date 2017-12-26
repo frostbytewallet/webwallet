@@ -26,18 +26,24 @@ body {
 }
 
 .bootbox-body { color:black; }
-.footer { font-family:"Coda";font-size:0.8em;color:white;margin-top:0.5em;margin-bottom:1em;text-align:right;margin-right:1em; }
+.footer { font-family:"Coda";font-size:0.8em;color:white;margin-top:0;margin-bottom:1.5em;text-align:right;margin-right:1em; }
 
 h1 { width:100%;color:whitesmoke;margin-bottom:0;font-size:1em;margin-top:1em;margin-left:1.5em;
-padding-bottom: 0.5em; vertical-align:middle;float:left;cursor:pointer; }
+padding-bottom: 0.5em; vertical-align:middle;float:left;cursor:default; }
 
 .slogen {
-    font-size:0.9em;
+    font-size: 0.9em;
     color: snow;
     display: block;
     margin-left: 22em;
     font-family: "Coda";
+    background-image: url(../images/github.png);
+    background-repeat: no-repeat;
+    padding-left: 1.8em;
+    height: 16px;
+    padding-top: 2px;
 }
+.slogen:hover, .slogen:active, .slogen:visited { text-decoration: none; }
 
 .logoname { 
     cursor: pointer;
@@ -176,8 +182,8 @@ input.fb {
 
 .sec .glass { }
 .above { z-index:90;width:100%; height:100%; position:absolute; top:0;left:0;bottom:0;right:0;}
-.aioppressor { position:absolute; right:1em;top:0.3em;cursor:pointer;}
-#topinfo, #leakEther, #dac { font-family: "Iceland"; }
+.aioppressor { position:absolute; right:1em;top:0.3em;cursor:default;}
+#topinfo, #leakEther, #dac, #dac { font-family: "Iceland"; }
 #leakEther { display: none; }
 .entgen { bottom: 1em; position: absolute; }
 
@@ -239,7 +245,7 @@ input.fb {
 }
 
 .AVLPrice { font-size:1.2em; }
-.totalSupply { margin-bottom:1em;font-size:1.2em;display:none; }
+.totalSupply { margin-bottom:1em;font-size:1.2em; }
 #seed { width:25em;}
 #sendValueAmount { width:6em; }
 #txtAVLValue { width: 6em; }
@@ -254,7 +260,7 @@ input.fb {
 
 .sec { width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;position:relative;padding:1em; float:left;margin-bottom:1em;}
 .sec .above { padding:1em; }
-.sec .glass { border-radius:0.4em;opacity: 0.5;background-color:rgb(24, 86, 156); }
+.sec .glass { border-radius:0.4em;opacity: 0.555;background-color:rgb(24, 86, 156); }
 .sec * { font-family:"Iceland"; }
 .to { margin-bottom:0.5em; }
 .cl { clear:both; }
@@ -290,6 +296,7 @@ input.fb {
 .info a, .info span, .info2 span {
     font-family: inherit; text-decoration: none;
 }
+.info2 span { font-weight:bold; }
 
 .info a:hover { text-decoration: underline; }
 
@@ -326,6 +333,17 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     cursor: pointer;
     float:right;
 }
+.avlicon {
+    width: 32px;
+    height: 32px;
+    display: block;
+    background-image: url(../images/avl32.png);
+    background-color:aliceblue;
+    border-radius: 50%;
+    opacity:0.9;
+    cursor: pointer;
+    float:right;
+}
 
 .qrcode:hover { opacity:0.9; }
 
@@ -347,6 +365,19 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
 .color10 { background-color: #50A839 }
 .color11 { background-color: #1F7209 }
 
+.color0a { background-color: #3B1870 }
+.color1a { background-color: #6D4D9D }
+.color2a { background-color: #502D84 }
+.color3a { background-color: #270759 }
+.color4a { background-color: #6D1D63 }
+.color5a { background-color: #995190 }
+.color6a { background-color: #813176 }
+.color7a { background-color: #570C4C }
+.color8a { background-color: #1F588F }
+.color9a { background-color: #6397C9 }
+.color10a { background-color: #3971A8 }
+.color11a { background-color: #093E72 }
+
 #entropyVisualizer {
     width: 300px;overflow:hidden;
     height: 10px;
@@ -361,6 +392,13 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
 }
 
 .entlabel { display:inline-block; }
+
+.btn-success, .btn-success:hover {
+    background-color:cadetblue;border-color:cadetblue;
+}
+.btn-danger, .btn-danger:hover {
+    background-color:lightgray;border-color:lightgray;
+}
 
 @media screen and (max-width: 1020px) {
     .main {width: 100%;}

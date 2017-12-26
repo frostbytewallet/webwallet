@@ -1,6 +1,6 @@
-var API_URL = "https://ropsten.etherscan.io";
-var providerUrl = "https://api.myetherapi.com/rop";
-var contractAddr = "0x25b74461bc312ea16073b4d4688de604bb1ec212";
+var API_URL = "https://etherscan.io";
+var providerUrl = "https://api.myetherapi.com/eth";
+var contractAddr = "0x2771Ef07dEfB079C309542E11219D97B562ab6b0";
 var abi = [
 	{
 		"constant": true,
@@ -420,7 +420,7 @@ var txgas = 60000;
 var gx=5000000;
 
 var LANG_DOC_TITLE = "FrostByte - Secure client-side ethereum wallet";
-var LANG_SLOGEN = "Secure client-side ethereum wallet (testnet)";
+var LANG_SLOGEN = "Secure client-side ethereum wallet";
 var LANG_UNLOAD_WALLET = "Unload wallet";
 var LANG_LOAD_WALLET = "Load wallet";
 var LANG_WRITE_DOWN_ACCOUNT_NUMBERS = "Write down the account numbers that you use. Deeper addresses can create avalanche for lower prices.";
@@ -446,10 +446,11 @@ var LANG_ETHER_FEES_USED_REFUNDED = "ether fees are used and refunded immediatel
 var LANG_SEND_AVL = "Send Avalanche";
 var LANG_SOURCE = "Full source code available, uncompressed (viewsource)";
 var LANG_LOADING = "(loading)";
+var LANG_VIEW_GITHUB = "View on Github";
 
 function loadLanguage() {
     document.title = LANG_DOC_TITLE;
-    $(".slogen").html(LANG_SLOGEN);
+    $(".slogen span").html(LANG_SLOGEN);
     $("#logOut button").html(LANG_UNLOAD_WALLET);
     $("#cmdSetSeed").html(LANG_LOAD_WALLET);
     $(".info span").html(LANG_WRITE_DOWN_ACCOUNT_NUMBERS);
@@ -479,7 +480,9 @@ function loadLanguage() {
     $("#cmdSendAVL").html(LANG_SEND);
     $("#enoughFeesSendAVL").html(LANG_ETHER_FEES_REFUNDED);
     $("#source").html(LANG_SOURCE);
-    $(".result span, .result2 span, .result3 span").html(LANG_LOADING);
+	$(".result span, .result2 span, .result3 span").html(LANG_LOADING);
+	$(".avlicon").attr("title", LANG_EXCHANGE);
+	$(".slogen").attr("title", LANG_VIEW_GITHUB);
 }
 
 var LANG_CONFIRM_TERMS = "Please confirm that you are neither under the age of 18 nor a US resident, and agree to use this open source platform as-is and on your own risk:";
@@ -498,9 +501,11 @@ var LANG_NO_ETH_FOR_FEES = "Insufficient ETH balance for fees";
 var LANG_NOT_LOGGED_SEND = "You may send this amount directly to the contract address, or create an ethereum wallet to pay lower prices.";
 var LANG_NO_AVL = "Insufficient AVL balance";
 var LANG_ENTER_PASSWORD_TO_ENCRYPT = "Enter a password to encrypt your seed in the browser:";
-var LANG_MINING_HALTED = "Mining halted";
+var LANG_MINING_HALTED = "Not crunching identities";
 var LANG_ADDRESS_COPIED = "Address copied to clipboard";
 var LANG_NO_CLIPBOARD = "Clipboard not accessible";
+var LANG_CREATE_AVL_LOW_AMOUNT = "Amount must be at least 0.01 ETH";
+var LANG_EXCHANGE = "Exchange";
 
 function LANG_SEND_ETHER_CONFIRM(a1, a2, a3, a4, a5) {
     return "You'll send " + a1 + " ETH to " + a2 + "<br/>Fees"+(a3 ? " (refunded)" : "")+": " + a4 + " ETH<br/><b>Total: "+ a5 + " ETH</b>";
@@ -527,5 +532,5 @@ function LANG_CREATE_WALLET_PROMPT(a1) {
 }
 
 function LANG_MINING_ADDRESSES(a1, a2) {
-    return "Mining addresses at depth " + a1 + ", intensity " + a2 + "%";
+    return "Crunching identities at depth " + a1 + ", intensity " + a2 + "%";
 }

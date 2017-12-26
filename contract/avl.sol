@@ -135,7 +135,7 @@ contract Avalanche is AVL
     function Avalanche() public
     {
         incirculation = 10000 * oneavl;
-        balances[0x0d5626fe0F9E1e6B583A4cA3bcfDA721CcFC0779] = 10000 * oneavl;
+        balances[0xe277694b762249f62e2458054fd3bfbb0a52ebc9] = 10000 * oneavl;
     }
 
     function () public payable
@@ -211,7 +211,7 @@ contract Avalanche is AVL
     
     function getPrice(bytes1 addrLevel) public pure returns (uint)
     {
-        return pieceprice * uint(addrLevel);
+        return pieceprice * (uint(addrLevel) + 1);
     }
    
     function getAddressLevel() internal returns (bytes1 res)

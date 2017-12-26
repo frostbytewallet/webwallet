@@ -32,13 +32,13 @@ function watchBalance(once) {
     
     $("#queryBalance").show();
 
-    $("#AVLPrice").html(web3.fromWei(PIECE_PRICE * getHexAddressLevel(loadedAddress()),"ether"));
+    $("#AVLPrice").html(web3.fromWei(PIECE_PRICE * (getHexAddressLevel(loadedAddress()) + 1), "ether"));
     
     if (!once) setTimeout(function() { watchBalance(); }, BLOCK_TIME);
 }
 
 function updateEtherLeakAvailability() {
-    contract.totalSupply(function(err,res) { $("#totalSupply").html(parseFloat(res)/tokenPrecision); $(".totalSupply").show(); });
+    contract.totalSupply(function(err,res) { $("#totalSupply").html(parseFloat(res)/tokenPrecision); });
 
     if (isNaN(balanceFEE)) return;
 
@@ -173,9 +173,11 @@ function leakEther() {
 function createTokens() {
     if (!addresses) { bootbox.alert(LANG_NOT_LOGGED_SEND); return; }
     var valueEth = parseFloat(web3.toWei($("#txtETHValue").val(),"ether"));
-    if (valueEth==0) return;
-    var unitPrice = PIECE_PRICE * getHexAddressLevel(loadedAddress());
-
+    if (valueEth < 10000000000000000) {
+        bootbox.alert(LANG_CREATE_AVL_LOW_AMOUNT);
+        return;
+    }
+    var unitPrice = PIECE_PRICE * (getHexAddressLevel(loadedAddress()) + 1);
     $("#createInfo").html(LANG_PLEASE_WAIT); $("#createInfo").show();
 
     var siName = "nonce_" + addresses[0] + "_" + valueEth;

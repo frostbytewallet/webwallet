@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(window).on("load", function() {
     initEntropyGenerator();
     initGUI();
     setQRScanner();
@@ -21,9 +21,9 @@ function initGUI() {
     $("#cmdCreateAVL").on("click", function() { $("#createInfo").hide(); createTokens(); });
     $("#cmdSendAVL").on("click", function() { $("#sendInfo").hide(); sendTokens(); });
     $("#logOut button").on("click", function() { self.location=self.location.href; });
-    $("#createAVLGasRequired").html(web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
-    $("#sendAVLGasRequired").html(web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
-    $("#sendEtherGasRequired").html(web3.fromWei(txgas*gasPrice, "ether"));
+    $("#createAVLGasRequired").html("Less than " + web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
+    $("#sendAVLGasRequired").html("Less than " + web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
+    $("#sendEtherGasRequired").html("Less than " + web3.fromWei(txgas*gasPrice, "ether"));
     $("#copyaddr").on("click",function() { copyAddress(); });
     $("#overlay, #qrCodeLarge").on("click",function() { $("#overlay").hide(); $("#qrCodeLarge").hide(); });
     $(".info u").on("click", function() { $(".info").hide(); $(".info2").show(); });
