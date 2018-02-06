@@ -101,7 +101,6 @@ function sendEth() {
                         if (receipt==null) return;
                         $("#withdrawInfo").html(LANG_TRAN_CONFIRMED);
                         setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
-                        watchBalance(true);
                     });        
                 }
                 $("#withdrawInfo").hide();
@@ -137,7 +136,6 @@ function leakEther() {
                         if (receipt==null) return;
                         if (parseInt(result.args.total)==0) { bootbox.alert("Only leaks once in 24 hours"); return; }
                         setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
-                        watchBalance(true);
                     });        
                 }
                 contract.leakEther({from: "0x"+loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice }, function(err,res) { });
@@ -183,7 +181,6 @@ function createTokens() {
                         var createdfor = parseFloat(result.args.price);
                         $("#createInfo").html(LANG_CREATED_AVL(created/tokenPrecision, web3.fromWei(createdfor,"ether")));
                         setInfo(LANG_TRAN_HASH+": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
-                        watchBalance(true);
                     });        
                 }
                 $("#createInfo").hide();
@@ -233,7 +230,6 @@ function sendTokens() {
                         if (receipt==null) return;
                         $("#sendInfo").html(LANG_TRAN_CONFIRMED); 
                         setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
-                        watchBalance(true);
                     });        
                 }
                 $("#sendInfo").hide();
