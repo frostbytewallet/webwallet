@@ -16,18 +16,17 @@ Address depth allows decentralized applications to maintain a certain level of i
 
 **> Where does the ether go when creating new AVL coins**
 
-Nowhere. It's 100% yours, locked inside the contract as "Goo", and used by the contract to refund your ether fees while you use any AVL supported wallet. Fees are refunded for sending ether, and for creating and sending AVL. Also, you may leak your current Goo amount, divided by your address depth, back to ether every 24 hours. This is merely an anti-capitalistic measure. When buying and selling AVL coins in online exchanges, only the AVL is transferred.
+Nowhere. It's 100% yours, locked inside the contract as "Goo", and used by the contract to refund your ether fees while you use any AVL supported wallet. Fees are refunded for sending ether, and for creating and sending AVL. Also, you may leak your current Goo amount, divided by your address depth, back to ether every 24 hours. When buying and selling AVL coins in online exchanges, only the AVL is transferred.
 
 ### Currency features:
 
 - Autonomous contract (creator can't interact with or change the contract after its launch)
 - Fee refunds
 - Anonymous identities
-- Anti-capitalistic measures
 - Coins are created by users
 - Optimized blockchain storage
 - Amplified PoW
-- A "private" ethereum faucet (leaks)
+- Private ethereum faucet
 
 ### Technical specifications:
 
@@ -35,7 +34,7 @@ Nowhere. It's 100% yours, locked inside the contract as "Goo", and used by the c
 - Decimals: 4
 - Symbol: AVL
 - Total supply: 1,000,000 AVL (created by users)
-- Pre-allocation for bounties: 10,000 AVL (no ether)
+- Pre-allocation: 10,000 AVL (no ether)
 - ERC-20 compatible
 - Contract address: 0x2771Ef07dEfB079C309542E11219D97B562ab6b0
 
@@ -57,7 +56,7 @@ The deeper it gets, the harder the crunching gets as well.
 
 ### Integration (developers)
 
-Your contract may require that users have an address depth below a certain level, using the following solidity function (checking AVL balance is trivial):
+1. Your contract may require that users have an address depth below a certain level, using the following solidity code:
 
 ```solidity
 mapping (address => bytes1) addresslevels; // cache
@@ -76,4 +75,24 @@ function getAddressLevel() internal returns (bytes1 res)
     addresslevels[msg.sender] = highest;
     return highest;
 }
-````
+```
+2. To check a specific address for AVL balance, use the following solidity code:
+
+```solidity
+contract ERC20 {
+    function totalSupply() public constant returns (uint totalsupply);
+    function balanceOf(address _owner) public constant returns (uint balance);
+    function transfer(address _to, uint _value) public returns (bool success);
+    function transferFrom(address _from, address _to, uint _value) public returns (bool success);
+    function approve(address _spender, uint _value) public returns (bool success);
+    function allowance(address _owner, address _spender) public constant returns (uint remaining);
+    
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+}
+
+function getAVLBalance(address x) public constant returns (uint) {
+    ERC20 tokenContract = ERC20(0x2771Ef07dEfB079C309542E11219D97B562ab6b0);
+    return tokenContract.balanceOf(x);
+}
+```
