@@ -415,7 +415,7 @@ var sendAVLGasRequired_value = 60000;
 var tokenPrecision=10000;
 var tokenPrecisionDigits=4;
 var global_keystore;
-var gasPrice = 50000000000; 
+var gasPrice = 20000000000; 
 var txgas = 60000;
 var gx=5000000;
 
@@ -495,6 +495,8 @@ var LANG_ADDRESS_ERR_MSG = "Invalid ETH address";
 var LANG_INVALID_AMOUNT_ERR_MSG = "Invalid amount";
 var LANG_PLEASE_WAIT = "Please wait...";
 var LANG_TRAN_CONFIRMED = "Transaction confirmed";
+var LANG_TRAN_SENT = "Transaction sent";
+var LANG_TRAN_FAILED = "Transaction failed";
 var LANG_TRAN_HASH = "Transaction hash";
 var LANG_NO_ETH = "Insufficient balance";
 var LANG_NO_ETH_FOR_FEES = "Insufficient ETH balance for fees";
@@ -508,7 +510,7 @@ var LANG_CREATE_AVL_LOW_AMOUNT = "Amount must be at least 0.01 ETH";
 var LANG_EXCHANGE = "Exchange";
 
 function LANG_SEND_ETHER_CONFIRM(a1, a2, a3, a4, a5) {
-    return "You'll send " + a1 + " ETH to " + a2 + "<br/>Fees"+(a3 ? " (refunded)" : "")+": " + a4 + " ETH<br/><b>Total: "+ a5 + " ETH</b>";
+    return "You'll send " + a1 + " ETH to " + a2 + "<br/>Fees"+(a3 ? " (refunded)" : "")+": " + a4 + " ETH<br/><b>Total: "+ a5 + " ETH</b><br/><br/>WARNING: Do NOT send to smart contracts.";
 }
 
 function LANG_LEAK_ETHER_CONFIRM(a1, a2, a3) {

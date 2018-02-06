@@ -14,6 +14,8 @@ var etherLeaked; //event
 function loadedAddress() { return addresses[loaded_address_index]; }
 
 function watchBalance(once) {
+    txgas = web3.eth.gasPrice;
+    
     contract.balanceOf("0x"+loadedAddress(), function(err,res) {
         balanceAVL = parseFloat(res);     
         $("#queryBalance .result span").html(balanceAVL/tokenPrecision);
@@ -73,19 +75,7 @@ function sendEth() {
     
     $("#withdrawInfo").html(LANG_PLEASE_WAIT); $("#withdrawInfo").show();
     
-    var siName = "nonce_" + addresses[0] + "_" + toAddr + "_" + value;
-    var gn = localStorage.getItem(siName);
-    if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
-    var success = false;
-    while (!success) {
-        var rn = web3.toHex(gn);
-        try {
-            txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: gx, gasPrice: gasPrice, nonce: rn});
-            success = true;
-        } catch(ex) {}
-        gn++; localStorage.setItem(siName, gn);
-    }
-
+    txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: gx, gasPrice: gasPrice });
     var totalFees = txgas*gasPrice;
     $("#sendEtherGasRequired").html(web3.fromWei(totalFees, "ether"));
 
@@ -115,7 +105,7 @@ function sendEth() {
                     });        
                 }
                 $("#withdrawInfo").hide();
-                contract.sendEther($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: txgas, gasPrice: gasPrice, nonce: rn}, function(err,res) { });
+                contract.sendEther($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: txgas, gasPrice: gasPrice}, function(err,res) { });
                 $("#withdrawInfo").html(LANG_PLEASE_WAIT);
                 $("#withdrawInfo").show();
             } else { $("#withdrawInfo").hide(); }
@@ -128,21 +118,7 @@ function leakEther() {
 
     if (balanceFEE==0) { bootbox.alert("No Goo balance available"); return; }
     
-    var siName = "nonce_" + addresses[0] + "_leak";
-    var gn = localStorage.getItem(siName);
-    if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
-    var success = false;
-    var leakGas;
-
-    while (!success) {
-        var rn = web3.toHex(gn);
-        try {
-            leakGas = contract.leakEther.estimateGas({from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice, nonce: rn});
-            success = true;
-        } catch(ex) {}
-        gn++; localStorage.setItem(siName, gn);
-    }
-
+    leakGas = contract.leakEther.estimateGas({from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice });
     var totalFees = leakGas*gasPrice;
     if (totalFees>balanceETH) { bootbox.alert(LANG_NO_ETH_FOR_FEES); return; }
     var leakAmount = balanceFEE / getHexAddressLevel(loadedAddress());
@@ -164,7 +140,7 @@ function leakEther() {
                         watchBalance(true);
                     });        
                 }
-                contract.leakEther({from: "0x"+loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice, nonce: rn}, function(err,res) { });
+                contract.leakEther({from: "0x"+loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice }, function(err,res) { });
             }
         }
     });
@@ -180,19 +156,7 @@ function createTokens() {
     var unitPrice = PIECE_PRICE * (getHexAddressLevel(loadedAddress()) + 1);
     $("#createInfo").html(LANG_PLEASE_WAIT); $("#createInfo").show();
 
-    var siName = "nonce_" + addresses[0] + "_" + valueEth;
-    var gn = localStorage.getItem(siName);
-    if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
-    var success = false;
-    
-    while (!success) {
-        var rn = web3.toHex(gn);
-        try {
-            createAVLGasRequired_value = web3.eth.estimateGas({from: "0x"+loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: gx, nonce: rn});
-            success = true;
-        } catch(ex) {}
-        gn++; localStorage.setItem(siName, gn);
-    }
+    createAVLGasRequired_value = web3.eth.estimateGas({from: "0x"+loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: gx });
 
     var totalFees = createAVLGasRequired_value*gasPrice;
     $("#createAVLGasRequired").html(web3.fromWei(totalFees, "ether"));
@@ -244,20 +208,7 @@ function sendTokens() {
 
     $("#sendInfo").html(LANG_PLEASE_WAIT); $("#sendInfo").show();
 
-    var siName = "nonce_" + addresses[0] + "_" + toAddr + "_" + valueAVL;
-    var gn = localStorage.getItem(siName);
-    if (!gn) { localStorage.setItem(siName, 0); gn = 0; } else { gn = parseInt(gn); }
-    var success = false;
-    
-    while (!success) {
-        var rn = web3.toHex(gn);
-        try {
-            sendAVLGasRequired_value = contract.transfer.estimateGas($("#sendAVLTo").val(), valueAVL, {from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice});
-            success = true;
-        } catch(ex) {}
-        gn++; localStorage.setItem(siName, gn);
-    }
-
+    sendAVLGasRequired_value = contract.transfer.estimateGas($("#sendAVLTo").val(), valueAVL, {from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice});
     var totalFees = sendAVLGasRequired_value*gasPrice;
     $("#sendAVLGasRequired").html(web3.fromWei(totalFees, "ether"));
 
@@ -481,13 +432,13 @@ function finishedGenerating(hdidx, addrLevel, forceSwitch,pwDerivedKey, hdPathSt
     if (hdidx==0 || forceSwitch) switchToAccount(totalGenerated,hdidx);
     if (mining_level==256) {
         mining_level = addrLevel<BASE_ADDR_LEVEL ? addrLevel : BASE_ADDR_LEVEL;
-        watchBalance();
+        watchBalance(totalGenerated>0);
     } else {
         if (addrLevel<mining_level) {
             var gained = mining_level-addrLevel;
             mining_level=addrLevel;
             if (mining_intensity<1000) {
-                mining_intensity+=10*gained;
+                mining_intensity+=5*gained;
                 if (mining_intensity>1000) mining_intensity=1000;
             }
             if (intprc>0) intprc-=gained;

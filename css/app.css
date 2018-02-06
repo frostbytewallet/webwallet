@@ -89,6 +89,9 @@ h2, h3 {
     font-family:"Coda" !important;
     margin-bottom:0;text-shadow: 1px 1px 0px rgba(0, 0, 0, 1);
 }
+h3.avl {
+    color:black; text-shadow: 1px 1px 0px white;
+}
 
 .line { margin-bottom:1em; }
 
@@ -260,7 +263,7 @@ input.fb {
 
 .sec { width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;position:relative;padding:1em; float:left;margin-bottom:1em;}
 .sec .above { padding:1em; }
-.sec .glass { border-radius:0.4em;opacity: 0.555;background-color:rgb(24, 86, 156); }
+.sec .glass { opacity: 0.555;background-color:rgb(24, 86, 156); }
 .sec * { font-family:"Iceland"; }
 .to { margin-bottom:0.5em; }
 .cl { clear:both; }
@@ -269,6 +272,10 @@ input.fb {
 .my .glass, .withdraw .glass { border-top-left-radius: 0; border-top-right-radius: 0;}
 
 .buy { margin-right:1.5%; }
+
+.buy .glass, .send .glass { background-color:palegoldenrod;opacity:0.555; }
+
+.buy > *, .send > * { color:black; }
 
 .info {
     position: absolute;display: none;
@@ -330,17 +337,6 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     height: 32px;
     display: block;
     background-image: url(../images/qrcode.svg);
-    cursor: pointer;
-    float:right;
-}
-.avlicon {
-    width: 32px;
-    height: 32px;
-    display: block;
-    background-image: url(../images/avl32.png);
-    background-color:aliceblue;
-    border-radius: 50%;
-    opacity:0.9;
     cursor: pointer;
     float:right;
 }

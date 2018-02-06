@@ -75,11 +75,17 @@ function initQRCodes() {
 }
 
 function confirmTerms() {
+    if (localStorage.getItem("TERMS_CONFIRMED")=="YES") return;
+
     bootbox.confirm({
         message: LANG_CONFIRM_TERMS,
         buttons: { confirm: { label: LANG_CONFIRM_AND_AGREE, className: 'btn-success' },
                    cancel: { label: LANG_DECLINE, className: 'btn-danger' } },
-        callback: function (result) { if (!result) { $("body").hide(); } }
+        callback: function (result) { 
+            if (!result) { $("body").hide(); } 
+        
+            localStorage.setItem("TERMS_CONFIRMED", "YES");
+        }
     });
 }
 
