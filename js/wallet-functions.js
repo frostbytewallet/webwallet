@@ -2,6 +2,11 @@ var Web3 = require('web3');
 var web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
 var contract = web3.eth.contract(abi).at(contractAddr);
 
+function setWeb3Provider(keystore) {
+    var web3Provider = new HookedWeb3Provider({ host: providerUrl, transaction_signer: keystore });
+    web3.setProvider(web3Provider);
+}
+
 var addresses;
 var loaded_address_index=0;
 var balanceAVL,balanceETH,balanceFEE;
@@ -9,14 +14,13 @@ var balanceAVL,balanceETH,balanceFEE;
 var tokensCreated; //event
 var Transfer; //event
 var etherSent; //event
-var etherLeaked; //event
 
 function loadedAddress() { return addresses[loaded_address_index]; }
 
 function watchBalance(once) {
-    txgas = web3.eth.gasPrice;
+    txgas = web3.eth.gasPrice * 2;
     
-    contract.balanceOf("0x"+loadedAddress(), function(err,res) {
+    contract.balanceOf(loadedAddress(), function(err,res) {
         balanceAVL = parseFloat(res);     
         $("#queryBalance .result span").html(balanceAVL/tokenPrecision);
     });
@@ -26,7 +30,7 @@ function watchBalance(once) {
         $("#queryBalance .result2 span").html(web3.fromWei(balanceETH,"ether"));
     });
 
-    contract.gooBalanceOf("0x"+loadedAddress(),function(err,res) {
+    contract.gooBalanceOf(loadedAddress(),function(err,res) {
         balanceFEE = parseFloat(res);
         $("#queryBalance .result3 span").html(web3.fromWei(balanceFEE,"ether"));
         updateEtherLeakAvailability();
@@ -75,7 +79,7 @@ function sendEth() {
     
     $("#withdrawInfo").html(LANG_PLEASE_WAIT); $("#withdrawInfo").show();
     
-    txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: gx, gasPrice: gasPrice });
+    txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: loadedAddress(), value: value, gas: gx, gasPrice: gasPrice });
     var totalFees = txgas*gasPrice;
     $("#sendEtherGasRequired").html(web3.fromWei(totalFees, "ether"));
 
@@ -104,7 +108,7 @@ function sendEth() {
                     });        
                 }
                 $("#withdrawInfo").hide();
-                contract.sendEther($("#sendTo").val(), {from: "0x"+loadedAddress(), value: value, gas: txgas, gasPrice: gasPrice}, function(err,res) { });
+                contract.sendEther($("#sendTo").val(), {from: loadedAddress(), value: value, gas: txgas, gasPrice: gasPrice}, function(err,res) { });
                 $("#withdrawInfo").html(LANG_PLEASE_WAIT);
                 $("#withdrawInfo").show();
             } else { $("#withdrawInfo").hide(); }
@@ -112,12 +116,14 @@ function sendEth() {
     });
 }
 
+var leaked = false;
 function leakEther() {
+    if (leaked) { bootbox.alert("Only leaks once in 24 hours"); return; }
     if (!addresses) { bootbox.alert(LANG_LOGIN_ERR_MSG); return; }
 
     if (balanceFEE==0) { bootbox.alert("No Goo balance available"); return; }
     
-    leakGas = contract.leakEther.estimateGas({from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice });
+    leakGas = contract.leakEther.estimateGas({from: loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice });
     var totalFees = leakGas*gasPrice;
     if (totalFees>balanceETH) { bootbox.alert(LANG_NO_ETH_FOR_FEES); return; }
     var leakAmount = balanceFEE / getHexAddressLevel(loadedAddress());
@@ -129,16 +135,8 @@ function leakEther() {
                    cancel: { label: LANG_CANCEL, className: 'btn-danger' } },
         callback: function (result) {
             if (result) { 
-                if (!etherLeaked) {
-                    etherLeaked = contract.etherLeaked(function(error, result) {
-                        if (error) { alert(error); return; }
-                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
-                        if (receipt==null) return;
-                        if (parseInt(result.args.total)==0) { bootbox.alert("Only leaks once in 24 hours"); return; }
-                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
-                    });        
-                }
-                contract.leakEther({from: "0x"+loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice }, function(err,res) { });
+                contract.leakEther({from: loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice }, function(err,res) { });
+                leaked = true;
             }
         }
     });
@@ -154,7 +152,7 @@ function createTokens() {
     var unitPrice = PIECE_PRICE * (getHexAddressLevel(loadedAddress()) + 1);
     $("#createInfo").html(LANG_PLEASE_WAIT); $("#createInfo").show();
 
-    createAVLGasRequired_value = web3.eth.estimateGas({from: "0x"+loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: gx });
+    createAVLGasRequired_value = web3.eth.estimateGas({from: loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: gx });
 
     var totalFees = createAVLGasRequired_value*gasPrice;
     $("#createAVLGasRequired").html(web3.fromWei(totalFees, "ether"));
@@ -184,7 +182,7 @@ function createTokens() {
                     });        
                 }
                 $("#createInfo").hide();
-                web3.eth.sendTransaction({from: "0x"+loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: createAVLGasRequired_value}, function (err, txhash) { });
+                web3.eth.sendTransaction({from: loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: createAVLGasRequired_value}, function (err, txhash) { });
                 $("#createInfo").html(LANG_PLEASE_WAIT);
                 $("#createInfo").show();
             } else { $("#createInfo").hide(); }
@@ -205,7 +203,7 @@ function sendTokens() {
 
     $("#sendInfo").html(LANG_PLEASE_WAIT); $("#sendInfo").show();
 
-    sendAVLGasRequired_value = contract.transfer.estimateGas($("#sendAVLTo").val(), valueAVL, {from: "0x"+loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice});
+    sendAVLGasRequired_value = contract.transfer.estimateGas($("#sendAVLTo").val(), valueAVL, {from: loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice});
     var totalFees = sendAVLGasRequired_value*gasPrice;
     $("#sendAVLGasRequired").html(web3.fromWei(totalFees, "ether"));
 
@@ -233,17 +231,12 @@ function sendTokens() {
                     });        
                 }
                 $("#sendInfo").hide();
-                contract.transfer($("#sendAVLTo").val(), valueAVL, {from: "0x"+loadedAddress(), value: 0, gas: sendAVLGasRequired_value, gasPrice: gasPrice}, function(err,res) {});
+                contract.transfer($("#sendAVLTo").val(), valueAVL, {from: loadedAddress(), value: 0, gas: sendAVLGasRequired_value, gasPrice: gasPrice}, function(err,res) {});
                 $("#sendInfo").html(LANG_PLEASE_WAIT);
                 $("#sendInfo").show();
             } else { $("#sendInfo").hide(); }
         }
     });
-}
-
-function setWeb3Provider(keystore) {
-    var web3Provider = new HookedWeb3Provider({ host: providerUrl, transaction_signer: keystore });
-    web3.setProvider(web3Provider);
 }
 
 var mouseEntropy = "";
@@ -317,18 +310,36 @@ function newWallet() {
             if (!result) return;
             $("#walletLoader > *").hide();
             $("#logOut").show();
-            lightwallet.keystore.deriveKeyFromPassword(result, function(err, pwDerivedKey) {
-                if (err) { alert(err); return; }
-                $(".entgen").hide();
-                $("#halt").css("visibility", "visible");
-                $(document).off("mousemove");
-                timeCycle2();
-                global_keystore = new lightwallet.keystore(randomSeed, pwDerivedKey);
-                newAddresses(result);
-                setWeb3Provider(global_keystore);
-                $(".info").show();
+
+            lightwallet.keystore.createVault({
+                seedPhrase: randomSeed,
+                password: result,
+                hdPathString: DERIVATION_PATH
+            }, function (err, ks) {
+                ks.keyFromPassword(result, function (err, pwDerivedKey) {
+                    if (err) throw err;
+
+                    ks.passwordProvider = function (pwcallback) {
+                        bootbox.prompt({
+                            title: LANG_ENTER_PASSWORD_TO_UNLOCK,
+                            inputType: 'password',
+                            callback: function (res) {
+                                pwcallback(null, res);
+                            }
+                        });
+                    };
+
+                    global_keystore = ks;
+                    setWeb3Provider(global_keystore);
+                    $(".entgen").hide();
+                    $("#halt").css("visibility", "visible");
+                    $(document).off("mousemove");
+                    $(".info").show();
+                    $("#cmdNewWallet").hide();
+                    timeCycle2();
+                    newAddresses(pwDerivedKey);
+                });
             });
-            $("#cmdNewWallet").hide();
         }
     });
 }
@@ -344,29 +355,45 @@ function setSeed() {
             $(".my.sec .comment").hide();
             $("#walletLoader > *").hide();
             $("#logOut").show();
-            lightwallet.keystore.deriveKeyFromPassword(result, function(err, pwDerivedKey) {
-                if (err) { alert(err); return; }
-                $(".entgen").hide();
-                $("#halt").css("visibility", "visible");
-                $(document).off("mousemove");
-                timeCycle2();
-                global_keystore = new lightwallet.keystore(document.getElementById('seed').value, pwDerivedKey);
-                newAddresses(result);
-                setWeb3Provider(global_keystore);
-                $(".info").show();
+
+            lightwallet.keystore.createVault({
+                seedPhrase: $("#seed").val(),
+                password: result,
+                hdPathString: DERIVATION_PATH
+            }, function (err, ks) {
+                ks.keyFromPassword(result, function (err, pwDerivedKey) {
+                    if (err) throw err;
+
+                    ks.passwordProvider = function (pwcallback) {
+                        bootbox.prompt({
+                            title: LANG_ENTER_PASSWORD_TO_UNLOCK,
+                            inputType: 'password',
+                            callback: function (res) {
+                                pwcallback(null, res);
+                            }
+                        });
+                    };
+
+                    global_keystore = ks;
+                    setWeb3Provider(global_keystore);
+                    $(".entgen").hide();
+                    $("#halt").css("visibility", "visible");
+                    $(document).off("mousemove");
+                    $(".info").show();
+                    $("#cmdNewWallet").hide();
+                    timeCycle2();
+                    newAddresses(pwDerivedKey);
+                });
             });
         }
     });
 }
 
-function newAddresses(password) {
-    lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
-        if (err) { alert(err); return; }
-        evop=1;
-        updateEntLabel();
-        $("#accsec").show();
-        global_keystore.generateHardAddress(pwDerivedKey);
-    });
+function newAddresses(pwDerivedKey) {
+    evop=1;
+    updateEntLabel();
+    $("#accsec").show();
+    global_keystore.generateHardAddress(pwDerivedKey);
 }
 var addAccountNo;
 
@@ -374,7 +401,7 @@ function switchToAccount(idx,hdidx) {
     loaded_address_index=parseInt(idx);
     $("#queryBalance").hide();
     watchBalance(true);
-    $("#addr").html("0x"+loadedAddress());
+    $("#addr").html(loadedAddress());
     $("#addr").attr("href", API_URL+"/address/0x"+loadedAddress());
     $("#addressdepth").html("Depth: "+getHexAddressLevel(loadedAddress()));
     $("#addressdepth").show();
@@ -422,7 +449,7 @@ function bytesToHex(bytes) {
 }
 
 var totalGenerated=0;
-function finishedGenerating(hdidx, addrLevel, forceSwitch,pwDerivedKey, hdPathString) {
+function finishedGenerating(hdidx, addrLevel, forceSwitch,pwDerivedKey) {
     document.getElementById('seed').value = "";
     addresses = global_keystore.getAddresses();
     if (hdidx==0 || forceSwitch) switchToAccount(totalGenerated,hdidx);
@@ -449,7 +476,7 @@ function finishedGenerating(hdidx, addrLevel, forceSwitch,pwDerivedKey, hdPathSt
     totalGenerated++;
     updateEntLabel();
     if (forceSwitch) {
-        setTimeout(function() { global_keystore.generateHardAddress(pwDerivedKey, hdPathString); }, mining_intensity);
+        setTimeout(function() { global_keystore.generateHardAddress(pwDerivedKey); }, mining_intensity);
     }
 }
 

@@ -1,5 +1,5 @@
 var API_URL = "https://etherscan.io";
-var providerUrl = "https://api.myetherapi.com/eth";
+var providerUrl = "https://api.frostbytewallet.io";
 var contractAddr = "0x2771Ef07dEfB079C309542E11219D97B562ab6b0";
 var abi = [
 	{
@@ -402,6 +402,8 @@ var abi = [
 	}
 ];
 
+var DERIVATION_PATH = "m/44'/60'/0'/0";
+
 var BASE_ADDR_LEVEL = 180;
 var PIECE_PRICE = 3906250000000000;
 var BLOCK_TIME = 12000;
@@ -419,8 +421,8 @@ var gasPrice = 20000000000;
 var txgas = 60000;
 var gx=5000000;
 
-var LANG_DOC_TITLE = "FrostByte - Secure client-side ethereum wallet";
-var LANG_SLOGEN = "Secure client-side ethereum wallet";
+var LANG_DOC_TITLE = "FrostByte - Ethereum wallet for anonymous identities";
+var LANG_SLOGEN = "Ethereum wallet for anonymous identities";
 var LANG_UNLOAD_WALLET = "Unload wallet";
 var LANG_LOAD_WALLET = "Load wallet";
 var LANG_WRITE_DOWN_ACCOUNT_NUMBERS = "Write down the account numbers that you use. Deeper addresses can create avalanche for lower prices.";
@@ -503,6 +505,7 @@ var LANG_NO_ETH_FOR_FEES = "Insufficient ETH balance for fees";
 var LANG_NOT_LOGGED_SEND = "You may send this amount directly to the contract address, or create an ethereum wallet to pay lower prices.";
 var LANG_NO_AVL = "Insufficient AVL balance";
 var LANG_ENTER_PASSWORD_TO_ENCRYPT = "Enter a password to encrypt your seed in the browser:";
+var LANG_ENTER_PASSWORD_TO_UNLOCK = "Enter your password to:";
 var LANG_MINING_HALTED = "Not crunching identities";
 var LANG_ADDRESS_COPIED = "Address copied to clipboard";
 var LANG_NO_CLIPBOARD = "Clipboard not accessible";
