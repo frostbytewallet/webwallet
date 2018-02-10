@@ -1,5 +1,5 @@
 var API_URL = "https://etherscan.io";
-var providerUrl = "https://api.myetherapi.com/eth";
+var providerUrl = "https://api.frostbytewallet.io";
 var contractAddr = "0x2771Ef07dEfB079C309542E11219D97B562ab6b0";
 var abi = [
 	{
