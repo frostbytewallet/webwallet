@@ -10,7 +10,17 @@ $(window).on("load", function() {
     confirmTerms();    
 });
 
+var loadedSection="wallet";
+function loadSection(sel) { if (sel=="github") return;
+    $("#content ."+loadedSection).hide();
+    $("#content ."+sel).show();
+    loadedSection = sel;
+}
 function initGUI() {
+    $(".menu ul li a").on("click", function() { loadSection($(this).attr("id").split("_")[1]); });
+    $(".logoname").on("click", function() { loadSection("wallet"); });
+    $(".avlicon").on("click", function() { loadSection("specs");window.scrollTo(0,0); });
+    $(".crunching .readmore").on("click", function() { loadSection("about");window.scrollTo(0,0); });
     $("#leakEther").on("click",function() { leakEther(); });
     $("#cmdSetSeed").on("click", function() { setSeed(); });
     $("#halt").on("click", function() { stopMining(); });

@@ -1,6 +1,6 @@
 * { font-family:Arial;box-sizing: border-box; outline:none; }
 
-html, body { min-width:640px;overflow-x:hidden;margin:0;min-height:100%; }
+html, body { position:relative;min-width:640px;overflow-x:hidden;margin:0;min-height:100%; }
 
 body { 
     background-image:url(../images/bg.jpg);
@@ -8,7 +8,6 @@ body {
     background-color:black;
     padding-right: 0 !important;
     color:white;
-    position: relative;
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -19,7 +18,69 @@ a:active { text-decoration: none; }
 .main {
     width: 1020px;
     margin: 0 auto 0 auto;
-    position: relative;
+}
+
+#content .wallet { display: block; }
+#content .about { display: none; }
+#content .features { display: none; }
+#content .specs { display: none;background-color:rgba(0, 0, 0, 0.6); }
+#content .crunching { display: none; }
+#content .integrate { display: none;background-color:rgba(0, 0, 0, 0.6); }
+
+.informative { background-color:rgba(81, 122, 153, 0.8); cursor: default; margin-bottom:1em; padding:2em; }
+.informative * { font-family: "Iceland"; }
+.informative h3 { font-weight:normal;float:none;margin-bottom:0.5em;font-size:2.5em; }
+.informative h4 { margin-top:1em; font-size:1.5em; font-weight:bold;font-family: "Coda"; }
+.informative p, .informative span { font-size:1.5em; }
+
+.about .presentation { text-align:center;margin-left:2em; float:right; width:90px; }
+.about .presentation img { width:90px;height:90px;display: block; }
+.about .presentation div { margin-bottom:1em; }
+
+.features .featuresimage { margin-right:-20px;text-align:center;width:280px; float:right; }
+.features .featuresimage img { width:200px;margin-bottom:1em; }
+.features .featuresimage div { width:60%;margin-left:auto;margin-right:auto; }
+.features .featureset { float:left;margin-left:1em;margin-right:2em; }
+.features ul { padding-left:1em; }
+.features .comingsoon { margin-top:1em; }
+
+.specs h3 { font-weight:normal; }
+.specs .tokenlogo { text-align:center; width:164px;height:164px;float:right;margin-bottom:3em;margin-right:1em; }
+.specs .tokenlogo img { width:100%;margin-bottom:1em; }
+.specs .tokenlogo a:hover { text-decoration: underline; }
+.specs a:hover, .specs a:active { text-decoration: none; }
+.specs a img { width:100px;margin-left:0.3em; }
+.specs ul { padding-left:1em;margin-bottom:1em; }
+.specs textarea {
+    width: 100%;margin-bottom: 0.5em;
+    height: 400px;
+    font-family: 'Courier New', Courier, monospace;
+    opacity: 0.8;
+    color: white;
+    background-color: transparent;
+    border: solid 1px palegoldenrod;
+}
+
+.integrate h3 { font-weight:normal; }
+.integrate img { width:100%;margin-bottom:1em;margin-left:1em;width:64px;height:64px;float:right; }
+.integrate ul { padding-left:1em;margin-bottom:1em; }
+.integrate textarea {
+    width: 100%;margin-bottom: 0.5em;
+    height: 300px;
+    font-family: 'Courier New', Courier, monospace;
+    opacity: 0.8;
+    color: white;
+    background-color: transparent;
+    border: solid 1px palegoldenrod;
+}
+
+.crunching .presentationimage { text-align:center;width:200px; float:right; }
+.crunching .presentationimage img { width:100%;margin-bottom:1em; }
+.crunching a {
+    font-size: 2em;
+    margin-top: 0.5em;
+    cursor: pointer;
+    display: block;
 }
 
 .modal-open {
@@ -27,7 +88,7 @@ a:active { text-decoration: none; }
 }
 
 .bootbox-body { color:black; }
-.footer { font-family:"Coda";font-size:0.8em;color:white;margin-top:0;margin-bottom:1.5em;text-align:right;margin-right:1em; }
+.footer { font-family:"Coda";font-size:0.8em;color:white;margin-top:0;margin-bottom:2em;text-align:right;margin-right:1em; }
 
 h1 { width:100%;color:whitesmoke;margin-bottom:0;font-size:1em;margin-top:1em;margin-left:1.5em;
 padding-bottom: 0.5em; vertical-align:middle;float:left;cursor:default; }
@@ -56,7 +117,6 @@ a.slogen:hover, a.slogen:active, a.slogen:visited { text-decoration: none; }
     width: auto;
     height: auto;
     position: static;
-    cursor: default;
     opacity: 1;
     margin: 0;
     padding: 0;
@@ -93,6 +153,7 @@ h2, h3 {
 h3.avl {
     color:black; text-shadow: 1px 1px 0px white;
 }
+.avlicon { float:right; cursor: pointer; }
 
 .line { margin-bottom:1em; }
 
@@ -167,8 +228,10 @@ input.fb {
 #sendTo,#sendAVLTo { width:24em; }
 
 .header {
-    margin-bottom:1em;height:220px; margin-left:auto;
-    margin-right:auto;position:relative; 
+    height: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
 }
 
 .glass {
@@ -262,21 +325,60 @@ input.fb {
     bottom: 0.5em;font-size:1.2em;
 }
 
-.sec { width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;position:relative;padding:1em; float:left;margin-bottom:1em;}
+.sec { width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;padding:1em; float:left;margin-bottom:1em;}
 .sec .above { padding:1em; }
 .sec .glass { opacity: 0.555;background-color:rgb(24, 86, 156); }
 .sec * { font-family:"Iceland"; }
 .to { margin-bottom:0.5em; }
 .cl { clear:both; }
 
+.menu {
+    margin-bottom: 1em;
+    height: 3.5em;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    position:relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+}
+.menu .glass {
+    opacity: 0.2;
+    background-color: palegoldenrod;
+}
+.menu ul {
+    display: block;
+    padding-left: 1em;
+    height: inherit;
+}
+.menu ul li {
+    line-height: 3.5em;
+    float: left;
+    list-style: none;
+    cursor: pointer;
+    margin-right: 0.4em;
+}
+.menu ul li a {
+    font-family: "Coda";
+    font-size: 0.9em;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 32px / 54px;
+    opacity: 0.9;
+}
+.menu ul li a:hover { opacity: 1; }
+.menu ul li a:hover, .menu ul li a:active {text-decoration: none;}
+
 .my { margin-right:1.5%;opacity:1;-moz-opacity:1; }
 .my .glass, .withdraw .glass { border-top-left-radius: 0; border-top-right-radius: 0;}
 
 .buy { margin-right:1.5%; }
 
-.buy .glass, .send .glass { background-color:palegoldenrod;opacity:0.555; }
-
-.buy > *, .send > * { color:black; }
+.buy .glass, .send .glass { background-color:#517A99;opacity:0.555; }
 
 .info {
     position: absolute;display: none;
@@ -354,7 +456,7 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
 .color2 { background-color: #2D846A }
 .color3 { background-color: #075940 }
 .color4 { background-color: #1D4B6D }
-.color5 { background-color: #517A99 }
+.color5 { background-color: #517a99 }
 .color6 { background-color: #315E81 }
 .color7 { background-color: #0C3657 }
 .color8 { background-color: #368F1F }
@@ -405,6 +507,28 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     #accounts { width:156.8px; }
     .info { width: 26.7em; }
     .info a { font-size:0.7em; }
+    .menu ul li { margin-right: 0.3em; }
+
+    .features .featuresimage {
+        text-align: center;
+        width: 190px;
+        float: right;
+        margin-top: 3em;
+        margin-right: 1em;
+    }
+    .features .featuresimage img {
+        width: 190px;
+        margin-bottom: 1em;
+    }
+    .features .featuresimage div {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .specs .tokenlogo { width:128px; }
+    .crunching .presentationimage { width:164px; }
+
+    .informative h4 { font-size:1.2em; }    
 
     #createInfo, #withdrawInfo, #sendInfo {
         margin-top: -1.6em;

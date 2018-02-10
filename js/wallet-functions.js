@@ -383,6 +383,7 @@ function setSeed() {
                     $("#cmdNewWallet").hide();
                     timeCycle2();
                     newAddresses(pwDerivedKey);
+                    loadSection("wallet");
                 });
             });
         }

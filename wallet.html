@@ -8,8 +8,8 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />    
-    <meta name="viewport" content="width=device-width, initial-scale=0.5" />
-    <link href='images/favicon.png' rel='shortcut icon'>
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5" />
+    <link href='images/avl/avl16.png' rel='shortcut icon'>
     <title>FrostByte - Ethereum wallet for anonymous identities</title>
     <link rel="stylesheet" href="css/bootstrap.min.css?v=5">
     <link rel="stylesheet" href="css/fonts.css?v=5" />
@@ -39,138 +39,561 @@
         </div>
         <div class="glass"></div>
       </div>
-
-      <div id="walletFunctions">
-        
-        <div class="my sec">
-          <div class="above">
-            <h3>Contract Address</h3>
-            <div id="accsec">
-              <span id="addaccount">+ Add Account</span>
-              <select id="accounts"></select>
-            </div>
-            <div class="cl line"></div>
-            <a id="addr" target="_blank"></a>
-            <span id="addressdepth"></span><span id="copyaddr">Copy Address</span>
-            <div class="cl" style="margin-bottom:0.8em;"></div>
-            <div id="queryBalance">
-              <span class="result"><b>AVL:</b> <span>(loading)</span></span>
-              <span class="result2"><b>ETH:</b> <span>(loading)</span></span>
-              <span class="result3"><b>Goo:</b> <span>(loading)</span></span>
-            </div>
-
-            <button id="cmdNewWallet">Create Ethereum wallet</button>
-
-            <div class="entgen">
-              <div class="entlabel"><span>Entropy generator</span> (<span id="entperc">0</span>%):</div><div id="halt"></div><div id="resume"></div>
-              <div id="entropyVisualizer">
-                <div id="ev0"></div><div id="ev1"></div><div id="ev2"></div><div id="ev3"></div>
-                <div id="ev4"></div><div id="ev5"></div><div id="ev6"></div><div id="ev7"></div>
-                <div id="ev8"></div><div id="ev9"></div><div id="ev10"></div><div id="ev11"></div>
-                <div id="ev12"></div><div id="ev13"></div><div id="ev14"></div><div id="ev15"></div>
-                <div id="ev16"></div><div id="ev17"></div><div id="ev18"></div><div id="ev19"></div>
-                <div id="ev20"></div><div id="ev21"></div><div id="ev22"></div><div id="ev23"></div>
-                <div id="ev24"></div><div id="ev25"></div><div id="ev26"></div><div id="ev27"></div>
-                <div id="ev28"></div><div id="ev29"></div><div id="ev30"></div><div id="ev31"></div>
-                <div id="ev32"></div><div id="ev33"></div><div id="ev34"></div><div id="ev35"></div>
-                <div id="ev36"></div><div id="ev37"></div><div id="ev38"></div><div id="ev39"></div>
-              </div>
-            </div>
-
-            <div class="comment"></div>
-
-            <div id="qrCode"></div>
-          </div>
-          <div class="glass"></div>
+      
+      <div class="menu">
+        <div class="above">
+          <ul>
+            <li><a id="menu_wallet" class="color11a"><b>Wallet</b></a></li>
+            <li><a id="menu_about" class="color5">What's Avalanche?</a></li>
+            <li><a id="menu_features" class="color8">Features</a></li>
+            <li><a id="menu_specs" class="color8">Specs</a></li>
+            <li><a id="menu_crunching" class="color2">Crunching</a></li>
+            <li><a id="menu_integrate" class="color3">Integrate</a></li>
+            <li><a id="menu_github" target="_blank" href="https://github.com/frostbytewallet/webwallet" class="color3">Git</a></li>
+          </ul>        
         </div>
- 
-        <div class="withdraw sec">
-          <div class="above">
-            <h3>Send Ethereum</h3>
-            <span class="qrcode"></span>
-            <div class="cl line"></div>
-            <div class="form">
-              <div class="to">
-                <div class="caption"><span>To address</span>:</div>
-                <input class="fb" type="text" id="sendTo" placeholder="0x0000000000000000000000000000000000000000" />
+        <div class="glass"></div>
+      </div>
+
+      <div id="content">
+        <div id="walletFunctions" class="wallet">
+          <div class="my sec">
+            <div class="above">
+              <h3>Contract Address</h3>
+              <div id="accsec">
+                <span id="addaccount">+ Add Account</span>
+                <select id="accounts"></select>
               </div>
-              <div class="amount">
+              <div class="cl line"></div>
+              <a id="addr" target="_blank"></a>
+              <span id="addressdepth"></span><span id="copyaddr">Copy Address</span>
+              <div class="cl" style="margin-bottom:0.8em;"></div>
+              <div id="queryBalance">
+                <span class="result"><b>AVL:</b> <span>(loading)</span></span>
+                <span class="result2"><b>ETH:</b> <span>(loading)</span></span>
+                <span class="result3"><b>Goo:</b> <span>(loading)</span></span>
+              </div>
+
+              <button id="cmdNewWallet">Create Ethereum wallet</button>
+
+              <div class="entgen">
+                <div class="entlabel"><span>Entropy generator</span> (<span id="entperc">0</span>%):</div><div id="halt"></div><div id="resume"></div>
+                <div id="entropyVisualizer">
+                  <div id="ev0"></div><div id="ev1"></div><div id="ev2"></div><div id="ev3"></div>
+                  <div id="ev4"></div><div id="ev5"></div><div id="ev6"></div><div id="ev7"></div>
+                  <div id="ev8"></div><div id="ev9"></div><div id="ev10"></div><div id="ev11"></div>
+                  <div id="ev12"></div><div id="ev13"></div><div id="ev14"></div><div id="ev15"></div>
+                  <div id="ev16"></div><div id="ev17"></div><div id="ev18"></div><div id="ev19"></div>
+                  <div id="ev20"></div><div id="ev21"></div><div id="ev22"></div><div id="ev23"></div>
+                  <div id="ev24"></div><div id="ev25"></div><div id="ev26"></div><div id="ev27"></div>
+                  <div id="ev28"></div><div id="ev29"></div><div id="ev30"></div><div id="ev31"></div>
+                  <div id="ev32"></div><div id="ev33"></div><div id="ev34"></div><div id="ev35"></div>
+                  <div id="ev36"></div><div id="ev37"></div><div id="ev38"></div><div id="ev39"></div>
+                </div>
+              </div>
+
+              <div class="comment"></div>
+
+              <div id="qrCode"></div>
+            </div>
+            <div class="glass"></div>
+          </div>
+  
+          <div class="withdraw sec">
+            <div class="above">
+              <h3>Send Ethereum</h3>
+              <span class="qrcode"></span>
+              <div class="cl line"></div>
+              <div class="form">
+                <div class="to">
+                  <div class="caption"><span>To address</span>:</div>
+                  <input class="fb" type="text" id="sendTo" placeholder="0x0000000000000000000000000000000000000000" />
+                </div>
+                <div class="amount">
+                  <span class="caption"><span>Value</span> (ETH):</span>
+                  <input class="fb" type="text" id="sendValueAmount" placeholder="0">
+                  <button id="cmdSendETH">Send</button>
+                  <div class="comment"><span id="sendEtherGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendEther">and refunded immediately</span></div>
+                </div>
+                <div id="withdrawInfo"></div>
+              </div>
+            </div>
+            <div class="glass"></div>
+            <video id="withdrawprv" class="preview"></video>
+          </div>
+
+          <div class="buy sec">
+            <div class="above">
+              <img src="images/avl/avl32.png" class="avlicon" />
+              <h3>Create Avalanche</h3>
+              <div class="cl line"></div>
+              <div class="AVLPrice">1 AVL=<span id="AVLPrice">1</span> ETH</div>
+              <div class="totalSupply"><span>Total in circulation</span>: <span id="totalSupply">(loading)</span> AVL / 1000000 AVL</div>
+              <div>
                 <span class="caption"><span>Value</span> (ETH):</span>
-                <input class="fb" type="text" id="sendValueAmount" placeholder="0">
-                <button id="cmdSendETH">Send</button>
-                <div class="comment"><span id="sendEtherGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendEther">and refunded immediately</span></div>
+                <input class="fb" type="text" id="txtETHValue" placeholder="0" />
+                <button id="cmdCreateAVL">Create</button>
+                <div class="comment"><span id="createAVLGasRequired"></span> <span class="lan_fees_used_refunded">ether fees are used and refunded immediately</span></div>
               </div>
-              <div id="withdrawInfo"></div>
+              <div id="createInfo"></div>
             </div>
+            <div class="glass"></div>
           </div>
-          <div class="glass"></div>
-          <video id="withdrawprv" class="preview"></video>
-        </div>
-
-        <div class="buy sec">
-          <div class="above">
-            <h3 class="avl">Create Avalanche</h3>
-            <div class="cl line"></div>
-            <div class="AVLPrice">1 AVL=<span id="AVLPrice">1</span> ETH</div>
-            <div class="totalSupply"><span>Total in circulation</span>: <span id="totalSupply">(loading)</span> AVL / 1000000 AVL</div>
-            <div>
-              <span class="caption"><span>Value</span> (ETH):</span>
-              <input class="fb" type="text" id="txtETHValue" placeholder="0" />
-              <button id="cmdCreateAVL">Create</button>
-              <div class="comment"><span id="createAVLGasRequired"></span> <span class="lan_fees_used_refunded">ether fees are used and refunded immediately</span></span></div>
-            </div>
-            <div id="createInfo"></div>
-          </div>
-          <div class="glass"></div>
-        </div>
-       
-        <div class="send sec">
-          <div class="above">
-            <h3 class="avl">Send Avalanche</h3>
-            <span class="qrcode"></span>
-            <div class="cl line"></div>
-            <div class="form">
-              <div class="to">
-                <div class="caption"><span>To address</span>:</div>
-                <input class="fb" type="text" id="sendAVLTo" placeholder="0x0000000000000000000000000000000000000000" />
+        
+          <div class="send sec">
+            <div class="above">
+              <h3>Send Avalanche</h3>
+              <span class="qrcode"></span>
+              <div class="cl line"></div>
+              <div class="form">
+                <div class="to">
+                  <div class="caption"><span>To address</span>:</div>
+                  <input class="fb" type="text" id="sendAVLTo" placeholder="0x0000000000000000000000000000000000000000" />
+                </div>
+                <span class="caption v"><span>Value</span> (AVL):</span>
+                <input class="fb" type="text" id="txtAVLValue" placeholder="0" />
+                <button id="cmdSendAVL">Send</button>
+                <div class="comment"><span id="sendAVLGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendAVL">and refunded immediately</span></div>
+                <div id="sendInfo"></div>
               </div>
-              <span class="caption v"><span>Value</span> (AVL):</span>
-              <input class="fb" type="text" id="txtAVLValue" placeholder="0" />
-              <button id="cmdSendAVL">Send</button>
-              <div class="comment"><span id="sendAVLGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendAVL">and refunded immediately</span></div>
-              <div id="sendInfo"></div>
             </div>
+            <div class="glass"></div>
+            <video id="sendprv" class="preview"></video>
           </div>
-          <div class="glass"></div>
-          <video id="sendprv" class="preview"></video>
+
+          <div class="cl"></div>
+
         </div>
+        <div class="about informative">
+          <h3>Avalanche - A currency for anonymous identities</h3>
 
-        <div class="cl"></div>
+          <div class="presentation">
+            <img src="images/presentation/faucet.svg" />
+            <div>Faucets</div>
+            <img src="images/presentation/advertising.svg" />
+            <div>Advertising</div>
+            <img src="images/presentation/survey.svg" />
+            <div>AI Surveys</div>
+            <img src="images/presentation/voting.svg" />
+            <div>Voting</div>
+            <img src="images/presentation/exchange.svg" />
+            <div>Decentralized Exchanges</div>
+          </div>
+          <p>Avalanche is a decentralized digital currency for anonymous identities. A wrapper for Ethereum, with various incentives for creating ethereum addresses that are hard to generate.</p>
 
+          <h4>Address depth and anonymous identities</h4>
+          
+          <p>The highest byte in the user's ethereum address is defined as the address depth, and the price for creating the coin is set accordingly. If the highest byte in the address is 255 then the price is 1 eth, and for each byte lower than that, the price is reduced by 1 eth / 256.</p>
+          
+          <p>Address depth allows decentralized applications to maintain a certain level of identity control while the users remain anonymous. Usecases include faucets, advertising applications, surveys, voting, decentralized exchanges and more.</p>
+          
+          <h4>Where does the ether go when creating new AVL coins</h4>
+          
+          <p>Nowhere. It's 100% yours, locked inside the contract as "Goo", and used by the contract to refund your ether fees while you use any AVL supported wallet. Fees are refunded for sending ether, and for creating and sending AVL. Also, you may leak your current Goo amount, divided by your address depth, back to ether every 24 hours. When buying and selling AVL coins in online exchanges, only the AVL is transferred.</p>
+
+          <h4>Exchanges</h4>
+
+          <p>EtherDelta - <a target="_blank" href="https://etherdelta.com/#0x2771ef07defb079c309542e11219d97b562ab6b0-ETH">https://etherdelta.com</a></p>
+
+          <div class="cl"></div>
+        </div>
+        <div class="features informative">
+          <h3>Wallet and currency features</h3>
+          
+          <p>Below are lists of currently active features:</p>
+
+          <div class="featuresimage">
+              <img src="images/presentation/humanoid.svg" />
+              <div>Avalanche - A digital currency for anonymous identities</div>
+          </div>
+
+          <div class="featureset">
+            <h4>FrostByte Wallet</h4>
+            <ul>
+              <li><span>Fully client-side</span></li>
+              <li><span>Fast transaction confirmation</span></li>
+              <li><span>Improved HD wallet security</span></li>
+              <li><span>Camera QR scanner</span></li>
+              <li><span>Mobile compatability</span></li>
+              <li><span>Built-in identity cruncher</span></li>
+              <li><span>Maintaining a full Ethereum node</span></li>
+            </ul>
+          </div>
+
+          <div class="featureset">
+            <h4>Avalanche</h4>
+            <ul>
+              <li><span>Fully autonomous contract</span></li>
+              <li><span>Fee refunds</span></li>
+              <li><span>Anonymous identities</span></li>
+              <li><span>Coins are created by users</span></li>
+              <li><span>Optimized blockchain storage</span></li>
+              <li><span>Amplified PoW</span></li>
+              <li><span>Private ethereum faucet</span></li>
+            </ul>
+          </div>
+          
+          <div class="cl"></div>
+
+          <p class="comingsoon"><b>COMING SOON!</b>&nbsp;Currently under development: A decentralized token faucet and a decentralized survey application for artificial intelligences. With Avalanche, they will be able reward you according to your identity depth or AVL holdings.</p>
+        </div>
+        <div class="specs informative">
+          <h3>ERC-20 specifications</h3>
+
+          <div class="tokenlogo">
+              <img src="images/avl/avl.svg" />
+              <a target="_blank" href="images/avl/avl.svg">Avalanche Icon (SVG)</a>
+          </div>
+
+          <ul>
+            <li><span>Name: Avalanche</span></li>
+            <li><span>Decimals: 4</span></li>
+            <li><span>Symbol: AVL</span></li>
+            <li><span>Autonomous: Yes</span></li>
+            <li><span>Total supply: 1,000,000 AVL (created by users)</span></li>
+            <li><span>Pre-allocation: 10,000 AVL (no ether)</span></li>
+            <li><span>Contract address: 0x2771Ef07dEfB079C309542E11219D97B562ab6b0</span></li>
+          </ul>
+
+          <p>Autonomous contract - creators have no operational benefits over other users</p>
+
+          <h4>Contract code</h4>
+          <textarea>
+pragma solidity ^0.4.19;
+
+contract ERC20
+{
+function totalSupply() public constant returns (uint totalsupply);
+
+function balanceOf(address _owner) public constant returns (uint balance);
+
+function transfer(address _to, uint _value) public returns (bool success);
+
+function transferFrom(address _from, address _to, uint _value) public returns (bool success);
+
+function approve(address _spender, uint _value) public returns (bool success);
+
+function allowance(address _owner, address _spender) public constant returns (uint remaining);
+
+event Transfer(address indexed _from, address indexed _to, uint _value);
+
+event Approval(address indexed _owner, address indexed _spender, uint _value);
+}
+
+contract AVL is ERC20
+{
+uint public incirculation;
+
+mapping (address => uint) balances;
+mapping (address => mapping (address => uint)) allowed;
+
+mapping (address => uint) goo;
+
+function transfer(address _to, uint _value) public returns (bool success)
+{
+  uint gas = msg.gas;
+  
+  if (balances[msg.sender] >= _value && _value > 0)
+  {
+      balances[msg.sender] -= _value;
+      balances[_to] += _value;
+      
+      Transfer(msg.sender, _to, _value);
+    
+      refund(gas+1158);
+      
+      return true;
+  } 
+  else
+  {
+      revert();
+  }
+}
+
+function transferFrom(address _from, address _to, uint _value) public returns (bool success)
+{
+  uint gas = msg.gas;
+
+  if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && _value > 0)
+  {
+      balances[_to] += _value;
+      balances[_from] -= _value;
+      allowed[_from][msg.sender] -= _value;
+      
+      Transfer(_from, _to, _value);
+    
+      refund(gas);
+      
+      return true;
+  }
+  else
+  {
+      revert();
+  }
+}
+
+function approve(address _spender, uint _value) public returns (bool success)
+{
+  allowed[msg.sender][_spender] = _value;
+
+  Approval(msg.sender, _spender, _value);
+
+  return true;
+}
+
+function allowance(address _owner, address _spender) public constant returns (uint remaining)
+{
+  return allowed[_owner][_spender];
+}
+
+function balanceOf(address _owner) public constant returns (uint balance)
+{
+  return balances[_owner];
+}
+
+function totalSupply() public constant returns (uint totalsupply)
+{
+  return incirculation;
+}
+
+function refund(uint gas) internal
+{
+  uint amount = (gas-msg.gas+36120) * tx.gasprice;
+  
+  if (goo[msg.sender] < amount && goo[msg.sender] > 0)
+  {
+      amount = goo[msg.sender];
+  }
+  
+  if (goo[msg.sender] >= amount)
+  {
+      goo[msg.sender] -= amount;
+      
+      msg.sender.transfer(amount);
+  }
+}
+}
+
+contract Avalanche is AVL 
+{
+string public constant name = "Avalanche";
+uint8 public constant decimals = 4;
+string public constant symbol = "AVL";
+string public constant version = "1.0";
+
+event tokensCreated(uint total, uint price);
+event etherSent(uint total);
+event etherLeaked(uint total);
+
+uint public constant pieceprice = 1 ether / 256;
+uint public constant oneavl = 10000;
+uint public constant totalavl = 1000000 * oneavl;
+
+mapping (address => bytes1) addresslevels;
+
+mapping (address => uint) lastleak;
+
+function Avalanche() public
+{
+  incirculation = 10000 * oneavl;
+  balances[0xe277694b762249f62e2458054fd3bfbb0a52ebc9] = 10000 * oneavl;
+}
+
+function () public payable
+{
+  uint gas = msg.gas;
+
+  uint generateprice = getPrice(getAddressLevel());
+  uint generateamount = msg.value * oneavl / generateprice;
+  
+  if (incirculation + generateamount > totalavl)
+  {
+      revert();
+  }
+  
+  incirculation += generateamount;
+  balances[msg.sender] += generateamount;
+  goo[msg.sender] += msg.value;
+  
+  refund(gas); 
+  
+  tokensCreated(generateamount, msg.value);
+}
+
+function sendEther(address x) public payable 
+{
+  uint gas = msg.gas;
+  
+  x.transfer(msg.value);
+  
+  refund(gas+1715);
+  
+  etherSent(msg.value);
+}
+
+function leakEther() public 
+{
+  uint gas = msg.gas;
+  
+  if (now-lastleak[msg.sender] < 1 days)
+  { 
+      refund(gas);
+      
+      etherLeaked(0);
+      
+      return;
+  }
+  
+  uint amount = goo[msg.sender] / uint(getAddressLevel());
+  
+  if (goo[msg.sender] < amount && goo[msg.sender] > 0)
+  {
+      amount = goo[msg.sender];
+  }
+  
+  if (goo[msg.sender] >= amount)
+  {
+      lastleak[msg.sender] = now;
+      
+      goo[msg.sender] -= amount;
+      
+      msg.sender.transfer(amount);
+      
+      refund(gas+359);
+      
+      etherLeaked(amount);
+  }
+}
+
+function gooBalanceOf(address x) public constant returns (uint) 
+{ 
+  return goo[x]; 
+}
+
+function getPrice(bytes1 addrLevel) public pure returns (uint)
+{
+  return pieceprice * (uint(addrLevel) + 1);
+}
+
+function getAddressLevel() internal returns (bytes1 res)
+{
+  if (addresslevels[msg.sender] > 0) 
+  {
+      return addresslevels[msg.sender];
+  }
+
+  bytes1 highest = 0;
+  
+  for (uint i = 0; i < 20; i++)
+  {
+      bytes1 c = bytes1(uint8(uint(msg.sender) / (2 ** (8 * (19 - i)))));
+      
+      if (bytes1(c) > highest) highest = c;
+  }
+
+  addresslevels[msg.sender] = highest;
+  
+  return highest;
+}
+}                  
+          </textarea>
+          <a target="_blank" href="https://etherscan.io/address/0x2771Ef07dEfB079C309542E11219D97B562ab6b0#code">
+            Verified by <img src="images/etherscan.png" />
+          </a>
+        </div>
+        <div class="crunching informative">
+          <h3>Identity crunching</h3>
+          
+          <div class="presentationimage">
+              <img src="images/presentation/identitycrunching.svg" />
+              <div>Identity crunching</div>
+          </div>
+
+          <p>Identity crunching is done automatically when you create an Ethereum wallet through FrostByte.io. You can halt it at any time, but it's process power friendly. It tries to find an address with bytes as low as possible. The harder it is to generate an address - the lower the price will be to create AVL tokens.</p>
+
+          <p>For instance, if all bytes in an address are below 128, then you can create 1 AVL for 0.5 ether. If all bytes are below 64, you'll get each one for 0.25 ether.</p>
+          
+          <p>There's an added value to holding AVL, as integrated applications may reward you according to your address depth, goo level or total AVLs that you hold.</p>
+          
+          <p>A good example would be a decentralized faucet that gives out free ether or tokens every X hours to addresses below a certain depth, according to their percentage of holdings in all circulating AVL, or their Goo level.</p>
+          
+          <a class="readmore">Read more about anonymous identities</a>
+        </div>
+        <div class="integrate informative">
+            <img src="images/presentation/integration.svg" />
+
+            <h3>Integration (solidity)</h3>
+    
+            <p>1. Your contract may require that users have an address depth below a certain level:</p>
+  
+            <textarea>
+mapping (address => bytes1) addresslevels; // cache
+
+function getAddressLevel() internal returns (bytes1 res)
+{
+    if (addresslevels[msg.sender] > 0) { return addresslevels[msg.sender]; }
+
+    bytes1 highest = 0;
+
+    for (uint i = 0; i < 20; i++) {
+      bytes1 c = bytes1(uint8(uint(msg.sender) / (2 ** (8 * (19 - i)))));
+      if (bytes1(c) > highest) highest = c;
+    }
+
+    addresslevels[msg.sender] = highest;
+    return highest;
+}              
+            </textarea>
+
+            <p>2. To check a specific address for AVL or Goo balance:</p>
+  
+            <textarea>
+contract ERC20 {
+    function totalSupply() public constant returns (uint totalsupply);
+    function balanceOf(address _owner) public constant returns (uint balance);
+    function transfer(address _to, uint _value) public returns (bool success);
+    function transferFrom(address _from, address _to, uint _value) public returns (bool success);
+    function approve(address _spender, uint _value) public returns (bool success);
+    function allowance(address _owner, address _spender) public constant returns (uint remaining);
+    
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+}
+
+function getAVLBalance(address x) public constant returns (uint) {
+    ERC20 tokenContract = ERC20(0x2771Ef07dEfB079C309542E11219D97B562ab6b0);
+    return tokenContract.balanceOf(x);
+}
+
+function getGooBalance(address x) public constant returns (uint) {
+    ERC20 tokenContract = ERC20(0x2771Ef07dEfB079C309542E11219D97B562ab6b0);
+    return tokenContract.gooBalanceOf(x);
+}
+            </textarea>
+          </div>        
       </div>
 
       <div class="footer">
-        <a href="https://github.com/frostbytewallet/webwallet" target="_blank">Github</a> | <span id="source">Full source code available, uncompressed (viewsource)</span>
+        <a href="https://github.com/frostbytewallet/webwallet" target="_blank">Github</a> | <span id="source">Full source code available, uncompressed (viewsource)</span> | <span>Copyright © All rights reserved 2014-2018 FrostByte</span>
       </div>      
     </div>
 
-<div id="overlay"></div>
-  <div id="qrCodeLarge"></div>
+    <div id="overlay"></div>
+    <div id="qrCodeLarge"></div>
 
-<script src="js/config.js?v=5"></script>
-<script src="js/jquery-3.1.1.slim.min.js?v=5"></script>
-<script src="js/web3.min.js?v=5"></script>
-  <script src="js/hooked-web3-provider.min.js?v=5"></script>
-  <script src="js/async.min.js?v=5"></script>
-  <script src="js/lightwallet.js?v=5"></script>
-  <script src="js/qrcode.min.js?v=5"></script>
-<script src="js/bootstrap.min.js?v=5"></script>
-  <script src="js/bootbox.min.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
-  <script src="js/wallet-functions.js?v=5"></script>
-  <script type="text/javascript" src="js/adapter.min.js?v=5"></script>
-  <script type="text/javascript" src="js/vue.min.js?v=5"></script>
-  <script type="text/javascript" src="js/instascan.min.js?v=5"></script>  </head>
-
-</body>
+    <script src="js/config.js?v=5"></script>
+    <script src="js/jquery-3.1.1.slim.min.js?v=5"></script>
+    <script src="js/web3.min.js?v=5"></script>
+      <script src="js/hooked-web3-provider.min.js?v=5"></script>
+      <script src="js/async.min.js?v=5"></script>
+      <script src="js/lightwallet.js?v=5"></script>
+      <script src="js/qrcode.min.js?v=5"></script>
+    <script src="js/bootstrap.min.js?v=5"></script>
+      <script src="js/bootbox.min.js?v=5"></script>
+    <script src="js/app.js?v=5"></script>
+      <script src="js/wallet-functions.js?v=5"></script>
+      <script type="text/javascript" src="js/adapter.min.js?v=5"></script>
+      <script type="text/javascript" src="js/vue.min.js?v=5"></script>
+      <script type="text/javascript" src="js/instascan.min.js?v=5"></script>  </head>
+  </body>
 </html>

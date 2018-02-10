@@ -483,7 +483,7 @@ function loadLanguage() {
     $("#enoughFeesSendAVL").html(LANG_ETHER_FEES_REFUNDED);
     $("#source").html(LANG_SOURCE);
 	$(".result span, .result2 span, .result3 span").html(LANG_LOADING);
-	$(".avlicon").attr("title", LANG_EXCHANGE);
+	$(".avlicon").attr("title", LANG_SPECIFICATIONS);
 	$(".slogen").attr("title", LANG_VIEW_GITHUB);
 }
 
@@ -510,7 +510,7 @@ var LANG_MINING_HALTED = "Not crunching identities";
 var LANG_ADDRESS_COPIED = "Address copied to clipboard";
 var LANG_NO_CLIPBOARD = "Clipboard not accessible";
 var LANG_CREATE_AVL_LOW_AMOUNT = "Amount must be at least 0.01 ETH";
-var LANG_EXCHANGE = "Exchange";
+var LANG_SPECIFICATIONS = "Specifications";
 
 function LANG_SEND_ETHER_CONFIRM(a1, a2, a3, a4, a5) {
     return "You'll send " + a1 + " ETH to " + a2 + "<br/>Fees"+(a3 ? " (refunded)" : "")+": " + a4 + " ETH<br/><b>Total: "+ a5 + " ETH</b><br/><br/>WARNING: Do NOT send to smart contracts.";
