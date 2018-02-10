@@ -18,8 +18,6 @@ var etherSent; //event
 function loadedAddress() { return addresses[loaded_address_index]; }
 
 function watchBalance(once) {
-    gasPrice = web3.eth.gasPrice * 2;
-    
     contract.balanceOf(loadedAddress(), function(err,res) {
         balanceAVL = parseFloat(res);     
         $("#queryBalance .result span").html(balanceAVL/tokenPrecision);
