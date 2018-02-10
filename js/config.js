@@ -1,5 +1,5 @@
 var API_URL = "https://etherscan.io";
-var providerUrl = "https://api.frostbytewallet.io";
+var providerUrl = "https://api.myetherapi.com/eth";
 var contractAddr = "0x2771Ef07dEfB079C309542E11219D97B562ab6b0";
 var abi = [
 	{
@@ -505,7 +505,7 @@ var LANG_NO_ETH_FOR_FEES = "Insufficient ETH balance for fees";
 var LANG_NOT_LOGGED_SEND = "You may send this amount directly to the contract address, or create an ethereum wallet to pay lower prices.";
 var LANG_NO_AVL = "Insufficient AVL balance";
 var LANG_ENTER_PASSWORD_TO_ENCRYPT = "Enter a password to encrypt your seed in the browser:";
-var LANG_ENTER_PASSWORD_TO_UNLOCK = "Enter your password to:";
+var LANG_ENTER_PASSWORD_TO_UNLOCK = "Enter your password to unlock your wallet:";
 var LANG_MINING_HALTED = "Not crunching identities";
 var LANG_ADDRESS_COPIED = "Address copied to clipboard";
 var LANG_NO_CLIPBOARD = "Clipboard not accessible";
