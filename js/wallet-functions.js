@@ -403,7 +403,7 @@ function switchToAccount(idx,hdidx) {
     $("#queryBalance").hide();
     watchBalance(true);
     $("#addr").html(loadedAddress());
-    $("#addr").attr("href", API_URL+"/address/0x"+loadedAddress());
+    $("#addr").attr("href", API_URL+"/address/"+loadedAddress());
     $("#addressdepth").html("Depth: "+getHexAddressLevel(loadedAddress()));
     $("#addressdepth").show();
     $(".my.sec h3").html(hdidx == 0 ? "Main Account" : "Account #"+hdidx);
