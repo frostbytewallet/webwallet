@@ -76,7 +76,7 @@ function getAddressLevel() internal returns (bytes1 res)
     return highest;
 }
 ```
-2. To check a specific address for AVL balance, use the following solidity code:
+2. To check a specific address for AVL or Goo balance, use the following solidity code:
 
 ```solidity
 contract ERC20 {
@@ -94,5 +94,10 @@ contract ERC20 {
 function getAVLBalance(address x) public constant returns (uint) {
     ERC20 tokenContract = ERC20(0x2771Ef07dEfB079C309542E11219D97B562ab6b0);
     return tokenContract.balanceOf(x);
+}
+
+function getGooBalance(address x) public constant returns (uint) {
+    ERC20 tokenContract = ERC20(0x2771Ef07dEfB079C309542E11219D97B562ab6b0);
+    return tokenContract.gooBalanceOf(x);
 }
 ```
