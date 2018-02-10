@@ -153,7 +153,7 @@ h2, h3 {
 h3.avl {
     color:black; text-shadow: 1px 1px 0px white;
 }
-.avlicon { float:right; cursor: pointer; }
+.avlicon { float:right; cursor: pointer; opacity:0.8; }
 
 .line { margin-bottom:1em; }
 
