@@ -96,13 +96,13 @@ function sendEth() {
         },
         callback: function (result) {
             if (result) { 
-                if (!etherSent) {
-                    etherSent = contract.etherSent(function(error, result) {
+                if (!etherSent) { 
+                    etherSent = contract.etherSent({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
                         if (error) { alert(error); return; }
-                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
+                        var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
                         if (receipt==null) return;
                         $("#withdrawInfo").html(LANG_TRAN_CONFIRMED);
-                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
+                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+res2.transactionHash+"'>"+res2.transactionHash+"</a>");
                     });        
                 }
                 $("#withdrawInfo").hide();
@@ -168,15 +168,15 @@ function createTokens() {
         callback: function (result) {
             if (result) { 
                 if (!tokensCreated) {
-                    tokensCreated = contract.tokensCreated(function(error, result) {
+                    tokensCreated = contract.tokensCreated({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
                         if (error) { alert(error); return; }
-                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
+                        var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
                         if (receipt==null) return;
                         var fees = parseFloat(receipt.gasUsed)*gasPrice;
-                        var created = parseFloat(result.args.total);
-                        var createdfor = parseFloat(result.args.price);
+                        var created = parseFloat(res2.args.total);
+                        var createdfor = parseFloat(res2.args.price);
                         $("#createInfo").html(LANG_CREATED_AVL(created/tokenPrecision, web3.fromWei(createdfor,"ether")));
-                        setInfo(LANG_TRAN_HASH+": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
+                        setInfo(LANG_TRAN_HASH+": <a target='blank' href='"+API_URL+"/tx/"+res2.transactionHash+"'>"+res2.transactionHash+"</a>");
                     });        
                 }
                 $("#createInfo").hide();
@@ -220,12 +220,12 @@ function sendTokens() {
         callback: function (result) {
             if (result) { 
                 if (!Transfer) {
-                    Transfer = contract.Transfer(function(error, result) {
+                    Transfer = contract.Transfer({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
                         if (error) { alert(error); return; }
-                        var receipt = web3.eth.getTransactionReceipt(result.transactionHash);
+                        var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
                         if (receipt==null) return;
                         $("#sendInfo").html(LANG_TRAN_CONFIRMED); 
-                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+result.transactionHash+"'>"+result.transactionHash+"</a>");
+                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+res2.transactionHash+"'>"+res2.transactionHash+"</a>");
                     });        
                 }
                 $("#sendInfo").hide();
@@ -397,6 +397,11 @@ function newAddresses(pwDerivedKey) {
 var addAccountNo;
 
 function switchToAccount(idx,hdidx) {
+    gasPrice = web3.eth.gasPrice*2;
+    $("#createAVLGasRequired").html(web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
+    $("#sendAVLGasRequired").html(web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
+    $("#sendEtherGasRequired").html(web3.fromWei(txgas*gasPrice, "ether"));
+    
     loaded_address_index=parseInt(idx);
     $("#queryBalance").hide();
     watchBalance(true);

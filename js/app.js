@@ -17,6 +17,7 @@ function loadSection(sel) { if (sel=="github") return;
     loadedSection = sel;
 }
 function initGUI() {
+    $("input").attr("autocomplete","off");
     $(".menu ul li a").on("click", function() { loadSection($(this).attr("id").split("_")[1]); });
     $(".logoname").on("click", function() { loadSection("wallet"); });
     $(".avlicon").on("click", function() { loadSection("specs");window.scrollTo(0,0); });
