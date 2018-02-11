@@ -19,6 +19,8 @@ a:active { text-decoration: none; }
     width: 1020px;
     margin: 0 auto 0 auto;
 }
+.footer_licenses { cursor:pointer; }
+.footer_licenses:hover { text-decoration: underline; }
 
 #content .wallet { display: block; }
 #content .about { display: none; }
@@ -26,6 +28,7 @@ a:active { text-decoration: none; }
 #content .specs { display: none;background-color:rgba(0, 0, 0, 0.6); }
 #content .crunching { display: none; }
 #content .integrate { display: none;background-color:rgba(0, 0, 0, 0.6); }
+#content .licenses { display: none; }
 
 .informative { background-color:rgba(81, 122, 153, 0.8); cursor: default; margin-bottom:1em; padding:2em; }
 .informative * { font-family: "Iceland"; }
@@ -81,6 +84,16 @@ a:active { text-decoration: none; }
     margin-top: 0.5em;
     cursor: pointer;
     display: block;
+}
+
+.licenses textarea {
+    width: 100%;margin-bottom: 0.5em;
+    height: 600px;
+    font-family: 'Courier New', Courier, monospace;
+    opacity: 0.8;
+    color: white;
+    background-color: transparent;
+    border: solid 1px palegoldenrod;
 }
 
 .modal-open {

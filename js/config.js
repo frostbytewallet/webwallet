@@ -446,7 +446,7 @@ var LANG_IN_CIRCULATION = "Total in circulation";
 var LANG_CREATE = "Create";
 var LANG_ETHER_FEES_USED_REFUNDED = "ether fees are used and refunded immediately";
 var LANG_SEND_AVL = "Send Avalanche";
-var LANG_SOURCE = "Full source code available, uncompressed (viewsource)";
+var LANG_SOURCE = "Uncompressed code (viewsource)";
 var LANG_LOADING = "(loading)";
 var LANG_VIEW_GITHUB = "View on Github";
 
