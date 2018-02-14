@@ -495,7 +495,7 @@ var LANG_CANCEL = "Cancel";
 var LANG_LOGIN_ERR_MSG = "Please create an address or login";
 var LANG_ADDRESS_ERR_MSG = "Invalid ETH address";
 var LANG_INVALID_AMOUNT_ERR_MSG = "Invalid amount";
-var LANG_PLEASE_WAIT = "Please wait...";
+var LANG_PLEASE_WAIT = "Broadcasting, please wait...";
 var LANG_TRAN_CONFIRMED = "Transaction confirmed";
 var LANG_TRAN_SENT = "Transaction sent";
 var LANG_TRAN_FAILED = "Transaction failed";
@@ -512,8 +512,8 @@ var LANG_NO_CLIPBOARD = "Clipboard not accessible";
 var LANG_CREATE_AVL_LOW_AMOUNT = "Amount must be at least 0.01 ETH";
 var LANG_SPECIFICATIONS = "Specifications";
 
-function LANG_SEND_ETHER_CONFIRM(a1, a2, a3, a4, a5) {
-    return "You'll send " + a1 + " ETH to " + a2 + "<br/>Fees"+(a3 ? " (refunded)" : "")+": " + a4 + " ETH<br/><b>Total: "+ a5 + " ETH</b><br/><br/>WARNING: Do NOT send to smart contracts.";
+function LANG_SEND_ETHER_CONFIRM(a1, a2, a3, a4, a5, a6) {
+    return "You'll send " + a1 + " ETH to " + a2 + "<br/>Fees"+(a3 && !a6 ? " (refunded)" : "")+": " + a4 + " ETH<br/><b>Total: "+ a5 + " ETH</b>";
 }
 
 function LANG_LEAK_ETHER_CONFIRM(a1, a2, a3) {

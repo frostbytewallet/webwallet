@@ -605,8 +605,8 @@ function isHex(h) {
 var loadIndex=0;
 var loadingAddresses=true;
 KeyStore.prototype.generateHardAddress = function (pwDerivedKey) {
-  if (addAccountNo!=null) {
-    if (addAccountNo.length==64 && isHex(addAccountNo)) {
+    if (addAccountNo!=null) {
+      if (addAccountNo.length==64 && isHex(addAccountNo)) {
         global_keystore.generateSpecificAddressFromPrivKey(pwDerivedKey, addAccountNo);
       } else if (!isNaN(addAccountNo)) { 
         global_keystore.generateSpecificAddress(pwDerivedKey, parseInt(addAccountNo));
@@ -615,7 +615,7 @@ KeyStore.prototype.generateHardAddress = function (pwDerivedKey) {
       return;
     }
 
-    if (mining) {
+    if (mining || loadingAddresses) {
       var tryA=null, tryK=null;
       if (loadingAddresses && loadIndex>0) {
         var loadSingle = localStorage.getItem(addresses[0]+"_"+loadIndex);

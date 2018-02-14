@@ -38,7 +38,11 @@ a:active { text-decoration: none; }
 
 .about .presentation { text-align:center;margin-left:2em; float:right; width:90px; }
 .about .presentation img { width:90px;height:90px;display: block; }
-.about .presentation div { margin-bottom:1em; }
+.about .presentation div {
+    margin-bottom: 1em;
+    line-height: 1em;
+    margin-top: 0.5em;
+}
 
 .features .featuresimage { margin-right:-20px;text-align:center;width:280px; float:right; }
 .features .featuresimage img { width:200px;margin-bottom:1em; }

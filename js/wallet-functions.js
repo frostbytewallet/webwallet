@@ -49,7 +49,7 @@ function updateEtherLeakAvailability() {
     if (balanceFEE>=sendAVLGasRequired_value*gasPrice) 
     { $("#enoughFeesSendAVL").show(); } else { $("#enoughFeesSendAVL").hide(); }
 
-    if (balanceFEE>=txgas*gasPrice) 
+    if (balanceFEE>=txgas*gasPrice && !directSend) 
     { $("#enoughFeesSendEther").show(); } else { $("#enoughFeesSendEther").hide(); }
 
     if (balanceFEE>0) { $("#topinfo").hide(); $("#leakEther").show(); }
@@ -66,10 +66,13 @@ function validateETHAddress(address) {
     return true;
 }
 
+var directSend = false;
 function sendEth() {
     if (!addresses) { bootbox.alert(LANG_LOGIN_ERR_MSG); return; }
 
     var toAddr = $("#sendTo").val(); if (!validateETHAddress(toAddr)) return;
+    var isContract = (web3.eth.getCode(toAddr).length>2);
+    if (isContract) { directSend = true; } else { directSend = false; }
 
     var valueEth = $("#sendValueAmount").val();
     var value = parseFloat(web3.toWei(valueEth,"ether"));
@@ -77,7 +80,11 @@ function sendEth() {
     
     $("#withdrawInfo").html(LANG_PLEASE_WAIT); $("#withdrawInfo").show();
     
-    txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: loadedAddress(), value: value, gas: gx, gasPrice: gasPrice });
+    if (isContract) {
+        txgas = web3.eth.estimateGas({from: loadedAddress(), to: toAddr, value: value, gas: gx, gasPrice: gasPrice });
+    } else {
+        txgas = contract.sendEther.estimateGas($("#sendTo").val(), {from: loadedAddress(), value: value, gas: gx, gasPrice: gasPrice });
+    }
     var totalFees = txgas*gasPrice;
     $("#sendEtherGasRequired").html(web3.fromWei(totalFees, "ether"));
 
@@ -89,24 +96,36 @@ function sendEth() {
     var isRefunded = balanceFEE > totalFees;
     
     bootbox.confirm({
-        message: LANG_SEND_ETHER_CONFIRM(web3.fromWei(value, "ether"), toAddr, isRefunded, web3.fromWei(totalFees, "ether"), web3.fromWei(totalSpent, "ether")),
+        message: LANG_SEND_ETHER_CONFIRM(web3.fromWei(value, "ether"), toAddr, isRefunded, web3.fromWei(totalFees, "ether"), web3.fromWei(totalSpent, "ether"), directSend),
         buttons: {
             confirm: { label: LANG_CONFIRM, className: 'btn-success' },
             cancel: { label: LANG_CANCEL, className: 'btn-danger' }
         },
         callback: function (result) {
             if (result) { 
-                if (!etherSent) { 
-                    etherSent = contract.etherSent({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
-                        if (error) { alert(error); return; }
-                        var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
-                        if (receipt==null) return;
-                        $("#withdrawInfo").html(LANG_TRAN_CONFIRMED);
-                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+res2.transactionHash+"'>"+res2.transactionHash+"</a>");
-                    });        
-                }
                 $("#withdrawInfo").hide();
-                contract.sendEther($("#sendTo").val(), {from: loadedAddress(), value: value, gas: txgas, gasPrice: gasPrice}, function(err,res) { });
+                if (isContract) {
+                    web3.eth.sendTransaction({from: loadedAddress(), to: toAddr, value: value, gasPrice: gasPrice, gas: txgas}, function (err, txhash) { 
+                        if (err) { alert(err); return; }
+                        $("#withdrawInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
+                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                    });
+                } else {
+                    if (!etherSent) { 
+                        etherSent = contract.etherSent({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
+                            if (error) { alert(error); return; }
+                            var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
+                            if (receipt==null) return;
+                            $("#withdrawInfo").html(LANG_TRAN_CONFIRMED);
+                            setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+res2.transactionHash+"'>"+res2.transactionHash+"</a>");
+                        });        
+                    }
+                    contract.sendEther(toAddr, {from: loadedAddress(), value: value, gasPrice: gasPrice, gas: txgas}, function(err,txhash) { 
+                        if (err) { alert(err); return; }
+                        $("#withdrawInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
+                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                    });
+                }
                 $("#withdrawInfo").html(LANG_PLEASE_WAIT);
                 $("#withdrawInfo").show();
             } else { $("#withdrawInfo").hide(); }
@@ -133,7 +152,10 @@ function leakEther() {
                    cancel: { label: LANG_CANCEL, className: 'btn-danger' } },
         callback: function (result) {
             if (result) { 
-                contract.leakEther({from: loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice }, function(err,res) { });
+                contract.leakEther({from: loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice }, function(err,txhash) { 
+                    if (err) { alert(err); return; }
+                    setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                });
                 leaked = true;
             }
         }
@@ -180,7 +202,11 @@ function createTokens() {
                     });        
                 }
                 $("#createInfo").hide();
-                web3.eth.sendTransaction({from: loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: createAVLGasRequired_value}, function (err, txhash) { });
+                web3.eth.sendTransaction({from: loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: createAVLGasRequired_value}, function (err, txhash) { 
+                    if (err) { alert(err); return; }
+                    $("#createInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
+                    setInfo(LANG_TRAN_HASH+": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                });
                 $("#createInfo").html(LANG_PLEASE_WAIT);
                 $("#createInfo").show();
             } else { $("#createInfo").hide(); }
@@ -229,7 +255,11 @@ function sendTokens() {
                     });        
                 }
                 $("#sendInfo").hide();
-                contract.transfer($("#sendAVLTo").val(), valueAVL, {from: loadedAddress(), value: 0, gas: sendAVLGasRequired_value, gasPrice: gasPrice}, function(err,res) {});
+                contract.transfer($("#sendAVLTo").val(), valueAVL, {from: loadedAddress(), value: 0, gas: sendAVLGasRequired_value, gasPrice: gasPrice}, function(err,txhash) {
+                    if (err) { alert(err); return; }
+                    $("#sendInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>"); 
+                    setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                });
                 $("#sendInfo").html(LANG_PLEASE_WAIT);
                 $("#sendInfo").show();
             } else { $("#sendInfo").hide(); }
@@ -312,7 +342,8 @@ function newWallet() {
             lightwallet.keystore.createVault({
                 seedPhrase: randomSeed,
                 password: result,
-                hdPathString: DERIVATION_PATH
+                hdPathString: DERIVATION_PATH,
+                salt: result
             }, function (err, ks) {
                 ks.keyFromPassword(result, function (err, pwDerivedKey) {
                     if (err) throw err;
@@ -357,7 +388,8 @@ function setSeed() {
             lightwallet.keystore.createVault({
                 seedPhrase: $("#seed").val(),
                 password: result,
-                hdPathString: DERIVATION_PATH
+                hdPathString: DERIVATION_PATH,
+                salt: result
             }, function (err, ks) {
                 ks.keyFromPassword(result, function (err, pwDerivedKey) {
                     if (err) throw err;

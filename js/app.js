@@ -123,7 +123,7 @@ function setQRScanner() {
 
         scanner.addListener('scan', function (content) {
             var cparts = content.split(":");
-            $(inp).val(cparts[1]);
+            $(inp).val(cparts[cparts.length==2 ? 1 : 0]);
             $(prv).hide();$(form).show();$(h3).show();
             scanner.stop(camera);
             scanner = null;
