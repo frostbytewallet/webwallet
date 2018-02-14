@@ -15,7 +15,7 @@ body {
 }
 a:active { text-decoration: none; }
 
-.main {
+.main, .tmain {
     width: 1020px;
     margin: 0 auto 0 auto;
 }
@@ -295,7 +295,7 @@ input.fb {
     font-size:1.2em;
 }
 
-#walletFunctions { width:100%; margin-left:auto; margin-right:auto; }
+#walletFunctions { width:100%; margin-left:auto; margin-right:auto; padding-left:1.5%; padding-right:1.5%; }
 #walletLoader { white-space:nowrap;position:absolute;bottom:1em;right:1em; }
 #addr { display:block;font-size:1em; }
 .addr { font-size:1em;font-family: "Iceland";font-weight:normal;text-decoration: none; }
@@ -551,6 +551,8 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
         margin-top: -1.6em;
         margin-left: 20.8em;
     }
+    
+    #walletFunctions { padding-left:0; padding-right:0; }
     
     #createInfo { margin-left:21.4em; }
     .modal-dialog { width:96%;margin:2%;position:fixed; }
