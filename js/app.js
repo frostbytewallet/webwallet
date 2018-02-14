@@ -7,8 +7,19 @@ $(window).on("load", function() {
     updateEtherLeakAvailability();  
     loadLanguage();  
     $("body").show();
+    adjustWidth();
     confirmTerms();    
 });
+
+$(window).on("resize", function() { adjustWidth(); });
+function adjustWidth() {
+    var n = 100/($(".tmain").width()/$("body").width());
+    if (n<100) n = 100;
+    $(".main").css("-moz-transform", "scale("+n/100+", "+n/100+")");
+    $(".main").css("-moz-transform-origin", "top");
+    $(".main").css("zoom", n/100);
+    $(".main").css("zoom", n + "%");
+}
 
 var loadedSection="wallet";
 function loadSection(sel) { if (sel=="github") return;
