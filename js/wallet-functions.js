@@ -42,8 +42,11 @@ function watchBalance(once) {
 }
 
 function updateEtherLeakAvailability() {
-    contract.totalSupply(function(err,res) { $("#totalSupply").html(parseFloat(res)/tokenPrecision); });
-
+    contract.totalSupply(function(err,res) { 
+        if (err) { bootbox.alert("CONNECTION ERROR: Couldn't connect to node "+providerUrl);return; }    
+        $("#totalSupply").html(parseFloat(res)/tokenPrecision); 
+    });
+    
     if (isNaN(balanceFEE)) return;
 
     if (balanceFEE>=sendAVLGasRequired_value*gasPrice) 
@@ -106,14 +109,14 @@ function sendEth() {
                 $("#withdrawInfo").hide();
                 if (isContract) {
                     web3.eth.sendTransaction({from: loadedAddress(), to: toAddr, value: value, gasPrice: gasPrice, gas: txgas}, function (err, txhash) { 
-                        if (err) { alert(err); return; }
+                        if (err) { bootbox.alert(err.message); return; }
                         $("#withdrawInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
                         setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                     });
                 } else {
                     if (!etherSent) { 
                         etherSent = contract.etherSent({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
-                            if (error) { alert(error); return; }
+                            if (error) { bootbox.alert(error.message); return; }
                             var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
                             if (receipt==null) return;
                             $("#withdrawInfo").html(LANG_TRAN_CONFIRMED);
@@ -121,7 +124,7 @@ function sendEth() {
                         });        
                     }
                     contract.sendEther(toAddr, {from: loadedAddress(), value: value, gasPrice: gasPrice, gas: txgas}, function(err,txhash) { 
-                        if (err) { alert(err); return; }
+                        if (err) { bootbox.alert(err.message); return; }
                         $("#withdrawInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
                         setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                     });
@@ -153,7 +156,7 @@ function leakEther() {
         callback: function (result) {
             if (result) { 
                 contract.leakEther({from: loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice }, function(err,txhash) { 
-                    if (err) { alert(err); return; }
+                    if (err) { bootbox.alert(err.message); return; }
                     setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                 });
                 leaked = true;
@@ -191,7 +194,7 @@ function createTokens() {
             if (result) { 
                 if (!tokensCreated) {
                     tokensCreated = contract.tokensCreated({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
-                        if (error) { alert(error); return; }
+                        if (error) { bootbox.alert(error.message); return; }
                         var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
                         if (receipt==null) return;
                         var fees = parseFloat(receipt.gasUsed)*gasPrice;
@@ -203,7 +206,7 @@ function createTokens() {
                 }
                 $("#createInfo").hide();
                 web3.eth.sendTransaction({from: loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: createAVLGasRequired_value}, function (err, txhash) { 
-                    if (err) { alert(err); return; }
+                    if (err) { bootbox.alert(err.message); return; }
                     $("#createInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
                     setInfo(LANG_TRAN_HASH+": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                 });
@@ -247,7 +250,7 @@ function sendTokens() {
             if (result) { 
                 if (!Transfer) {
                     Transfer = contract.Transfer({}, {from: loadedAddress(), fromBlock: web3.eth.blockNumber, toBlock: 'latest' },function(error, res2) {
-                        if (error) { alert(error); return; }
+                        if (error) { bootbox.alert(error.message); return; }
                         var receipt = web3.eth.getTransactionReceipt(res2.transactionHash);
                         if (receipt==null) return;
                         $("#sendInfo").html(LANG_TRAN_CONFIRMED); 
@@ -256,7 +259,7 @@ function sendTokens() {
                 }
                 $("#sendInfo").hide();
                 contract.transfer($("#sendAVLTo").val(), valueAVL, {from: loadedAddress(), value: 0, gas: sendAVLGasRequired_value, gasPrice: gasPrice}, function(err,txhash) {
-                    if (err) { alert(err); return; }
+                    if (err) { bootbox.alert(err.message); return; }
                     $("#sendInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>"); 
                     setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                 });
@@ -336,6 +339,10 @@ function newWallet() {
         inputType: 'password',
         callback: function (result) {
             if (!result) return;
+            $(".my .above").css("visibility", "hidden");
+            $(".my .spinner").show();
+            $("#cmdNewWallet").hide();
+            $(".my.sec .comment").hide();
             $("#walletLoader > *").hide();
             $("#logOut").show();
 
@@ -374,12 +381,18 @@ function newWallet() {
 }
 
 function setSeed() {
+    if ($("#seed").val().split(" ").length!=12) {
+        bootbox.alert("Invalid seed"); return;
+    }
+
     var infoString = LANG_ENTER_PASSWORD_TO_ENCRYPT;
     bootbox.prompt({
         title: infoString,
         inputType: 'password',
         callback: function (result) {
             if (!result) return;
+            $(".my .above").css("visibility", "hidden");
+            $(".my .spinner").show();
             $("#cmdNewWallet").hide();
             $(".my.sec .comment").hide();
             $("#walletLoader > *").hide();
@@ -424,7 +437,9 @@ function newAddresses(pwDerivedKey) {
     evop=1;
     updateEntLabel();
     $("#accsec").show();
-    global_keystore.generateHardAddress(pwDerivedKey);
+    try {
+        global_keystore.generateHardAddress(pwDerivedKey);
+    } catch(ex) { bootbox.alert(ex.message); throw ex; }
 }
 var addAccountNo;
 
@@ -509,6 +524,10 @@ function finishedGenerating(hdidx, addrLevel, forceSwitch,pwDerivedKey) {
     $("#accounts").append(listitem);
     if (forceSwitch) $("#accounts option:last-child").prop('selected', true); 
     if (totalGenerated>0) localStorage.setItem(addresses[0]+"_"+totalGenerated, hdidx);
+    if (totalGenerated==0) {
+        $(".my .above").css("visibility", "visible");
+        $(".my .spinner").hide();
+    }
     totalGenerated++;
     updateEntLabel();
     if (forceSwitch) {

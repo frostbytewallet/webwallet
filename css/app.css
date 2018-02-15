@@ -1,6 +1,6 @@
 * { font-family:Arial;box-sizing: border-box; outline:none; }
 
-html, body { position:relative;min-width:640px;overflow-x:hidden;margin:0;min-height:100%; }
+html, body { position:relative;min-width:600px;overflow-x:hidden;margin:0;min-height:100%; }
 
 body { 
     background-image:url(../images/bg.jpg);
@@ -15,14 +15,14 @@ body {
 }
 a:active { text-decoration: none; }
 
-.main, .tmain {
+.main {
     width: 1020px;
     margin: 0 auto 0 auto;
 }
 .footer_licenses { cursor:pointer; }
 .footer_licenses:hover { text-decoration: underline; }
 
-#content .wallet { display: block; }
+#content .wallet { display: none; }
 #content .about { display: none; }
 #content .features { display: none; }
 #content .specs { display: none;background-color:rgba(0, 0, 0, 0.6); }
@@ -105,7 +105,7 @@ a:active { text-decoration: none; }
 }
 
 .bootbox-body { color:black; }
-.footer { font-family:"Coda";font-size:0.8em;color:white;margin-top:0;margin-bottom:2em;text-align:right;margin-right:1em; }
+.footer { font-family:"Coda";font-size:0.8em;color:white;margin-top:0;padding-bottom:1em;text-align:right;margin-right:1em; }
 
 h1 { width:100%;color:whitesmoke;margin-bottom:0;font-size:1em;margin-top:1em;margin-left:1.5em;
 padding-bottom: 0.5em; vertical-align:middle;float:left;cursor:default; }
@@ -170,7 +170,7 @@ h2, h3 {
 h3.avl {
     color:black; text-shadow: 1px 1px 0px white;
 }
-.avlicon { float:right; cursor: pointer; opacity:0.8; }
+.avlicon { float:right; cursor: pointer; opacity:0.7; }
 
 .line { margin-bottom:1em; }
 
@@ -330,7 +330,7 @@ input.fb {
 
 .AVLPrice { font-size:1.2em; }
 .totalSupply { margin-bottom:1em;font-size:1.2em; }
-#seed { width:25em;}
+#seed { width:23.2em;height:1em; }
 #sendValueAmount { width:6em; }
 #txtAVLValue { width: 6em; }
 #txtETHValue { width: 6em; }
@@ -390,11 +390,11 @@ input.fb {
 .menu ul li a:hover { opacity: 1; }
 .menu ul li a:hover, .menu ul li a:active {text-decoration: none;}
 
-.my { margin-right:1.5%;opacity:1;-moz-opacity:1; }
+.my { width:50%; margin-right:1.5%;opacity:1;-moz-opacity:1; }
 .my .glass, .withdraw .glass { border-top-left-radius: 0; border-top-right-radius: 0;}
-
-.buy { margin-right:1.5%; }
-
+.withdraw { width:48.5%; }
+.buy { width:50%; margin-right:1.5%; }
+.send { width:48.5%; }
 .buy .glass, .send .glass { background-color:#517A99;opacity:0.555; }
 
 .info {
@@ -516,6 +516,56 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     background-color:lightgray;border-color:lightgray;
 }
 
+  .spinner {
+    display: none;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top:50%;left:50%;margin-left:-40px;margin-top:-40px;
+    text-align: center;
+    
+    -webkit-animation: sk-rotate 2.0s infinite linear;
+    animation: sk-rotate 2.0s infinite linear;
+  }
+  
+  .dot1, .dot2 {
+    width: 60%;
+    height: 60%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    background-color: snow;
+    border-radius: 100%;
+    
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+  }
+  
+  .dot2 {
+    top: auto;
+    bottom: 0;
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+  }
+  
+  @-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+  @keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+  
+  @-webkit-keyframes sk-bounce {
+    0%, 100% { -webkit-transform: scale(0.0) }
+    50% { -webkit-transform: scale(1.0) }
+  }
+  
+  @keyframes sk-bounce {
+    0%, 100% { 
+      transform: scale(0.0);
+      -webkit-transform: scale(0.0);
+    } 50% { 
+      transform: scale(1.0);
+      -webkit-transform: scale(1.0);
+    }
+  }
+
 @media screen and (max-width: 1020px) {
     .main {width: 100%;}
     .sec { width:100%; font-size:1.2em; }
@@ -553,7 +603,8 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     }
     
     #walletFunctions { padding-left:0; padding-right:0; }
-    
+    #queryBalance { margin-top:0; }
+
     #createInfo { margin-left:21.4em; }
     .modal-dialog { width:96%;margin:2%;position:fixed; }
     .result3 { margin-top: -0.2em; }

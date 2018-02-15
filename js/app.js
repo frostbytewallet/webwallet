@@ -4,36 +4,65 @@ $(window).on("load", function() {
     setQRScanner();
     initQRCodes();
     timeCycle();
-    updateEtherLeakAvailability();  
     loadLanguage();  
-    $("body").show();
-    adjustWidth();
-    confirmTerms();    
 });
 
-$(window).on("resize", function() { adjustWidth(); });
-function adjustWidth() {
-    var n = 100/($(".tmain").width()/$("body").width());
-    if (n<100) n = 100;
-    $(".main").css("-moz-transform", "scale("+n/100+", "+n/100+")");
-    $(".main").css("-moz-transform-origin", "top");
-    $(".main").css("zoom", n/100);
-    $(".main").css("zoom", n + "%");
+$(document).ready(function() {
+    $("body").show();
+    loadContent();
+    confirmTerms();    
+    updateEtherLeakAvailability();  
+});
+
+function loadContent() {
+    var wh = window.location.hash;
+    if (wh.length>1) { loadSection(wh.substr(1,wh.length-1)); }
+    else { loadSection("wallet"); }
 }
 
-var loadedSection="wallet";
-function loadSection(sel) { if (sel=="github") return;
-    $("#content ."+loadedSection).hide();
+$(window).on("resize", function() { adjustWidth(); });
+
+var currentScale=100;
+function adjustWidth() {
+    var n = 100/(1020/$("body").width());
+    if (n<100) n = 100;
+    $(".main").css({
+        "-moz-transform" : "scale("+n/100+", "+n/100+")",
+        "-moz-transform-origin" : "top",
+        "zoom" : n/100,
+        "zoom" : n + "%"
+     }).promise().done(function(){
+        $("html").css("height", $(".main").height());
+    });
+    currentScale = n / 100;
+}
+
+var loadedSection;
+function loadSection(sel, scroll) { 
+    if (sel=="github") return;
+    if (loadedSection) $("#content ."+loadedSection).hide();
     $("#content ."+sel).show();
     loadedSection = sel;
+    window.location.hash = sel == "wallet" ? "" : sel;
+    adjustWidth();
+    if (scroll) scrollToContent();
 }
+
+function scrollToContent() {
+    var y = $(".menu")[0].offsetTop;
+    $(document).scrollTop(y * currentScale + 2);
+}
+
 function initGUI() {
-    $(".footer_licenses").on("click", function() { loadSection("licenses");window.scrollTo(0,220); });
+    $(".footer_licenses").on("click", function() { loadSection("licenses", true); });
     $("input").attr("autocomplete","off");
-    $(".menu ul li a").on("click", function() { loadSection($(this).attr("id").split("_")[1]); });
+    $(".menu ul li a").on("click", function() { 
+        var sec = $(this).attr("id").split("_")[1]; 
+        loadSection(sec, true); 
+    });
     $(".logoname").on("click", function() { loadSection("wallet"); });
-    $(".avlicon").on("click", function() { loadSection("specs");window.scrollTo(0,220); });
-    $(".crunching .readmore").on("click", function() { loadSection("about");window.scrollTo(0,220); });
+    $(".avlicon").on("click", function() { loadSection("specs", true); });
+    $(".crunching .readmore").on("click", function() { loadSection("about", true); });
     $("#leakEther").on("click",function() { leakEther(); });
     $("#cmdSetSeed").on("click", function() { setSeed(); });
     $("#halt").on("click", function() { stopMining(); });
@@ -43,10 +72,10 @@ function initGUI() {
     $("#cmdSendETH").on("click", function() { $("#withdrawInfo").hide(); sendEth(); });
     $("#cmdCreateAVL").on("click", function() { $("#createInfo").hide(); createTokens(); });
     $("#cmdSendAVL").on("click", function() { $("#sendInfo").hide(); sendTokens(); });
-    $("#logOut button").on("click", function() { self.location=self.location.href; });
-    $("#createAVLGasRequired").html("Less than " + web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
-    $("#sendAVLGasRequired").html("Less than " + web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
-    $("#sendEtherGasRequired").html("Less than " + web3.fromWei(txgas*gasPrice, "ether"));
+    $("#logOut button").on("click", function() { self.location=self.location.href.replace("#",""); });
+    $("#createAVLGasRequired").html("~ " + web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
+    $("#sendAVLGasRequired").html("~ " + web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
+    $("#sendEtherGasRequired").html("~ " + web3.fromWei(txgas*gasPrice, "ether"));
     $("#copyaddr").on("click",function() { copyAddress(); });
     $("#overlay, #qrCodeLarge").on("click",function() { $("#overlay").hide(); $("#qrCodeLarge").hide(); });
     $(".info u").on("click", function() { $(".info").hide(); $(".info2").show(); });
