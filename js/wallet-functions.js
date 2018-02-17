@@ -43,7 +43,7 @@ function watchBalance(once) {
 
 function updateEtherLeakAvailability() {
     contract.totalSupply(function(err,res) { 
-        if (err) { bootbox.alert("CONNECTION ERROR: Couldn't connect to node "+providerUrl);return; }    
+        if (err) { return; }    
         $("#totalSupply").html(parseFloat(res)/tokenPrecision); 
     });
     
