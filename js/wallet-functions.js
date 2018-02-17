@@ -352,7 +352,7 @@ function newWallet() {
                 salt: result
             }, function (err, ks) {
                 ks.keyFromPassword(result, function (err, pwDerivedKey) {
-                    if (err) throw err;
+                    if (err) { throw err; }
 
                     ks.passwordProvider = function (pwcallback) {
                         bootbox.prompt({
@@ -364,9 +364,9 @@ function newWallet() {
                         });
                     };
 
+                    loadWalletEnd();
                     global_keystore = ks;
                     setWeb3Provider(global_keystore);
-                    loadWalletEnd();
                     newAddresses(pwDerivedKey);
                 });
             });
@@ -394,7 +394,7 @@ function setSeed() {
                 salt: result
             }, function (err, ks) {
                 ks.keyFromPassword(result, function (err, pwDerivedKey) {
-                    if (err) throw err;
+                    if (err) { throw err; }
 
                     ks.passwordProvider = function (pwcallback) {
                         bootbox.prompt({
@@ -406,9 +406,9 @@ function setSeed() {
                         });
                     };
 
+                    loadWalletEnd();
                     global_keystore = ks;
                     setWeb3Provider(global_keystore);
-                    loadWalletEnd();
                     newAddresses(pwDerivedKey);
                 });
             });
@@ -424,7 +424,7 @@ function loadWalletStart() {
         $(".my.sec .comment").hide();
         $("#walletLoader > *").hide();
         $("#logOut").show();
-        $(".entgen").hide();
+        $(".entgen").css("visibility", "hidden");
     });
 }
 function loadWalletEnd() {
@@ -433,23 +433,30 @@ function loadWalletEnd() {
         $(document).off("mousemove");
         $(".info").show();
         $("#cmdNewWallet").hide();
-        $(".entgen").show();
+        $(".entgen").css("visibility", "visible");
     });
     timeCycle2();
+}
+function loadWalletError() {
+    $(".my .above").css("visibility", "visible");
+    $(".my .spinner").hide();
+    $("#cmdNewWallet").show();
+    $(".my.sec .comment").show();
+    $("#walletLoader > *").show();
+    $("#logOut").hide();
+    $(".entgen").css("visibility", "visible");
 }
 
 function newAddresses(pwDerivedKey) {
     evop=1;
     updateEntLabel();
     $("#accsec").show();
-    try {
-        global_keystore.generateHardAddress(pwDerivedKey);
-    } catch(ex) { bootbox.alert(ex.message); throw ex; }
+    global_keystore.generateHardAddress(pwDerivedKey);
 }
 var addAccountNo;
 
 function switchToAccount(idx,hdidx) {
-    gasPrice = web3.eth.gasPrice*2;
+    if (nodeConnected) gasPrice = web3.eth.gasPrice*2;
     $("#createAVLGasRequired").html(web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
     $("#sendAVLGasRequired").html(web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
     $("#sendEtherGasRequired").html(web3.fromWei(txgas*gasPrice, "ether"));
