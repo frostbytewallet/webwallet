@@ -19,6 +19,12 @@ a:active { text-decoration: none; }
     width: 1020px;
     margin: 0 auto 0 auto;
 }
+
+#nodestatus {
+    margin-left: 25.5em;font-family: "Coda";font-size: 0.7em;
+    margin-top: 0.5em;color: palegoldenrod;
+}
+
 .footer_licenses { cursor:pointer; }
 .footer_licenses:hover { text-decoration: underline; }
 

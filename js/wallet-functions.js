@@ -42,6 +42,14 @@ function watchBalance(once) {
 }
 
 function updateEtherLeakAvailability() {
+    var syn = web3.eth.syncing;
+    if (syn!=false) {
+        var prc = parseInt(parseFloat(syn.currentBlock) / parseFloat(syn.highestBlock) * 100);
+        $("#nodestatus").html("Syncing: "+prc+ "%");
+    } else {
+        $("#nodestatus").html("");
+    }
+    
     contract.totalSupply(function(err,res) { 
         if (err) { return; }    
         $("#totalSupply").html(parseFloat(res)/tokenPrecision); 
