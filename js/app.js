@@ -13,20 +13,27 @@ $(document).ready(function() {
     loadContent();
     confirmTerms();    
     
-    web3.eth.isSyncing(function(error, sync){
-        if (!error) {
-            if (sync === true) {
-               web3.reset(true);
-            } else if (sync) {
-                var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
-                $("#nodestatus").html("Syncing: "+prc+ "%");
-                nodeConnected = true;
-                updateEtherLeakAvailability();  
+    try {
+        var syncing = web3.eth.syncing;
+        web3.eth.isSyncing(function(error, sync){
+            if (!error) {
+                if (sync === true) {
+                   web3.reset(true);
+                } else if (sync) {
+                    var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
+                    $("#nodestatus").html("Syncing: "+prc+ "%");
+                    nodeConnected = true;
+                    updateEtherLeakAvailability();  
+                } else {
+                    $("#nodestatus").html("");
+                }
+            } else {
+                $("#nodestatus").html("Node down");
             }
-        } else {
-            $("#nodestatus").html("");
-        }
-    });
+        });
+    } catch(ex) {
+        $("#nodestatus").html("Node down");
+    }
 });
 
 function loadContent() {
