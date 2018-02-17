@@ -4,7 +4,7 @@ Secure client-side ethereum wallet
 
 https://www.frostbytewallet.io
 
-### Featured currency: Avalanche!
+### Integrated currency: Avalanche!
 
 A decentralized currency for anonymous identities. A wrapper for Ethereum, with various incentives for creating ethereum addresses that are hard to generate.
 
