@@ -42,14 +42,19 @@ function watchBalance(once) {
 }
 
 function updateEtherLeakAvailability() {
-    var syn = web3.eth.syncing;
-    if (syn!=false) {
-        var prc = parseInt(parseFloat(syn.currentBlock) / parseFloat(syn.highestBlock) * 100);
-        $("#nodestatus").html("Syncing: "+prc+ "%");
-    } else {
-        $("#nodestatus").html("");
+    try {
+        var syn = web3.eth.syncing;
+        if (syn!=false) {
+            var prc = parseInt(parseFloat(syn.currentBlock) / parseFloat(syn.highestBlock) * 100);
+            $("#nodestatus").html("Syncing: "+prc+ "%");
+            setTimeout(function() { updateEtherLeakAvailability(); }, BLOCK_TIME);
+        } else {
+            $("#nodestatus").html("");
+        }
+    } catch(ex) {
+        $("#nodestatus").html("Node down"); return;
     }
-    
+
     contract.totalSupply(function(err,res) { 
         if (err) { return; }    
         $("#totalSupply").html(parseFloat(res)/tokenPrecision); 
@@ -347,12 +352,7 @@ function newWallet() {
         inputType: 'password',
         callback: function (result) {
             if (!result) return;
-            $(".my .above").css("visibility", "hidden");
-            $(".my .spinner").show();
-            $("#cmdNewWallet").hide();
-            $(".my.sec .comment").hide();
-            $("#walletLoader > *").hide();
-            $("#logOut").show();
+            loadWalletStart();
 
             lightwallet.keystore.createVault({
                 seedPhrase: randomSeed,
@@ -375,12 +375,7 @@ function newWallet() {
 
                     global_keystore = ks;
                     setWeb3Provider(global_keystore);
-                    $(".entgen").hide();
-                    $("#halt").css("visibility", "visible");
-                    $(document).off("mousemove");
-                    $(".info").show();
-                    $("#cmdNewWallet").hide();
-                    timeCycle2();
+                    loadWalletEnd();
                     newAddresses(pwDerivedKey);
                 });
             });
@@ -399,12 +394,7 @@ function setSeed() {
         inputType: 'password',
         callback: function (result) {
             if (!result) return;
-            $(".my .above").css("visibility", "hidden");
-            $(".my .spinner").show();
-            $("#cmdNewWallet").hide();
-            $(".my.sec .comment").hide();
-            $("#walletLoader > *").hide();
-            $("#logOut").show();
+            loadWalletStart();
 
             lightwallet.keystore.createVault({
                 seedPhrase: $("#seed").val(),
@@ -427,17 +417,34 @@ function setSeed() {
 
                     global_keystore = ks;
                     setWeb3Provider(global_keystore);
-                    $(".entgen").hide();
-                    $("#halt").css("visibility", "visible");
-                    $(document).off("mousemove");
-                    $(".info").show();
-                    $("#cmdNewWallet").hide();
-                    timeCycle2();
+                    loadWalletEnd();
                     newAddresses(pwDerivedKey);
                 });
             });
         }
     });
+}
+
+function loadWalletStart() {
+    window.requestAnimationFrame(function() {
+        $(".my .above").css("visibility", "hidden");
+        $(".my .spinner").show();
+        $("#cmdNewWallet").hide();
+        $(".my.sec .comment").hide();
+        $("#walletLoader > *").hide();
+        $("#logOut").show();
+        $(".entgen").hide();
+    });
+}
+function loadWalletEnd() {
+    window.requestAnimationFrame(function() {
+        $("#halt").css("visibility", "visible");
+        $(document).off("mousemove");
+        $(".info").show();
+        $("#cmdNewWallet").hide();
+        $(".entgen").show();
+    });
+    timeCycle2();
 }
 
 function newAddresses(pwDerivedKey) {
@@ -465,21 +472,8 @@ function switchToAccount(idx,hdidx) {
     $("#addressdepth").show();
     $(".my.sec h3").html(hdidx == 0 ? "Main Account" : "Account #"+hdidx);
     $(".my.sec .comment").hide();
-    $("#qrCode").html("");
-    new QRCode(
-        document.getElementById("qrCode"), 
-        {
-            text: "ethereum:"+$("#addr").html(),
-            width: 140,
-            height: 140,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        }
-    );
-    $("#qrCode").show();
+    qrCodeObject.makeCode("ethereum:"+$("#addr").html());
     updateEntLabel();
-    if (mining) $(".entgen").show();
 }
 
 function getHexAddressLevel(addr) {

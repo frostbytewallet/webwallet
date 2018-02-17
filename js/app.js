@@ -96,17 +96,22 @@ function initGUI() {
 
 function initEntropyGenerator() { for (var x=0;x<40;x++) { $("#ev"+x).attr("class", "color"+(Math.floor(Math.random()*12))); } }
 
+var qrCodeObject;
+var qrCodeLargeObject;
 function initQRCodes() {
     $("#qrCode").on("click",function() {
-        $("#qrCodeLarge").html("");
-        new QRCode(
-            document.getElementById("qrCodeLarge"), 
-            {
-                text: "ethereum:"+$("#addr").html(),
-                width: 384, height: 384, colorDark : "#000000", colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            }
-        );
+        if (!qrCodeLargeObject) {
+            qrCodeLargeObject = new QRCode(
+                document.getElementById("qrCodeLarge"), 
+                {
+                    text: "ethereum:"+$("#addr").html(),
+                    width: 384, height: 384, colorDark : "#000000", colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                }
+            );
+        } else {
+            qrCodeLargeObject.makeCode("ethereum:"+$("#addr").html());
+        }
         $("#overlay").show();
         $("#qrCodeLarge").show();
     });
@@ -115,7 +120,7 @@ function initQRCodes() {
     $("#addr, .addr").attr("href", API_URL + "/address/"+contractAddr);
     $("#qrCode").html("");
 
-    new QRCode(
+    qrCodeObject = new QRCode(
         document.getElementById("qrCode"), 
         {
             text: "ethereum:"+contractAddr,
