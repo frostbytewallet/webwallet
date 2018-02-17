@@ -18,42 +18,33 @@ var etherSent; //event
 function loadedAddress() { return addresses[loaded_address_index]; }
 
 function watchBalance(once) {
-    contract.balanceOf(loadedAddress(), function(err,res) {
-        balanceAVL = parseFloat(res);     
-        $("#queryBalance .result span").html(balanceAVL/tokenPrecision);
-    });
+    if (nodeConnected) {
+        contract.balanceOf(loadedAddress(), function(err,res) {
+            balanceAVL = parseFloat(res);     
+            $("#queryBalance .result span").html(balanceAVL/tokenPrecision);
+        });
 
-    web3.eth.getBalance(loadedAddress(), function(err,res) {
-        balanceETH = parseFloat(res);
-        $("#queryBalance .result2 span").html(web3.fromWei(balanceETH,"ether"));
-    });
+        web3.eth.getBalance(loadedAddress(), function(err,res) {
+            balanceETH = parseFloat(res);
+            $("#queryBalance .result2 span").html(web3.fromWei(balanceETH,"ether"));
+        });
 
-    contract.gooBalanceOf(loadedAddress(),function(err,res) {
-        balanceFEE = parseFloat(res);
-        $("#queryBalance .result3 span").html(web3.fromWei(balanceFEE,"ether"));
-        updateEtherLeakAvailability();
-    });
-    
-    $("#queryBalance").show();
+        contract.gooBalanceOf(loadedAddress(),function(err,res) {
+            balanceFEE = parseFloat(res);
+            $("#queryBalance .result3 span").html(web3.fromWei(balanceFEE,"ether"));
+            updateEtherLeakAvailability();
+        });
+        
+        $("#queryBalance").show();
 
-    $("#AVLPrice").html(web3.fromWei(PIECE_PRICE * (getHexAddressLevel(loadedAddress()) + 1), "ether"));
+        $("#AVLPrice").html(web3.fromWei(PIECE_PRICE * (getHexAddressLevel(loadedAddress()) + 1), "ether"));
+    }
     
     if (!once) setTimeout(function() { watchBalance(); }, BLOCK_TIME);
 }
 
 function updateEtherLeakAvailability() {
-    try {
-        var syn = web3.eth.syncing;
-        if (syn!=false) {
-            var prc = parseInt(parseFloat(syn.currentBlock) / parseFloat(syn.highestBlock) * 100);
-            $("#nodestatus").html("Syncing: "+prc+ "%");
-            setTimeout(function() { updateEtherLeakAvailability(); }, BLOCK_TIME);
-        } else {
-            $("#nodestatus").html("");
-        }
-    } catch(ex) {
-        $("#nodestatus").html("Node down"); return;
-    }
+    if (!nodeConnected) return;
 
     contract.totalSupply(function(err,res) { 
         if (err) { return; }    

@@ -7,11 +7,26 @@ $(window).on("load", function() {
     loadLanguage();  
 });
 
+var nodeConnected = false;
 $(document).ready(function() {
     $("body").show();
     loadContent();
     confirmTerms();    
-    updateEtherLeakAvailability();  
+    
+    web3.eth.isSyncing(function(error, sync){
+        if (!error) {
+            if (sync === true) {
+               web3.reset(true);
+            } else if (sync) {
+                var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
+                $("#nodestatus").html("Syncing: "+prc+ "%");
+                nodeConnected = true;
+                updateEtherLeakAvailability();  
+            }
+        } else {
+            $("#nodestatus").html("");
+        }
+    });
 });
 
 function loadContent() {
