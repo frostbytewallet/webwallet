@@ -4298,7 +4298,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
         request.timeout = this.timeout;
       } else {
         request = new XMLHttpRequest();
-        request.timeout = 2000;
       }
     
       request.open('POST', this.host, async);
@@ -4325,6 +4324,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
       var request = this.prepareRequest(false);
     
       try {
+        setTimeout(function(){ request.abort(); }, 2000);
         request.send(JSON.stringify(payload));
       } catch (error) {
         throw errors.InvalidConnection(this.host);
