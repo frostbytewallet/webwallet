@@ -12,25 +12,31 @@ $(document).ready(function() {
     $("body").show();
     loadContent();
     confirmTerms();    
-    
+
     try {
         var syncing = web3.eth.syncing;
-        web3.eth.isSyncing(function(error, sync){
-            if (!error) {
-                if (sync === true) {
-                   web3.reset(true);
-                } else if (sync) {
-                    var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
-                    $("#nodestatus").html("Syncing: "+prc+ "%");
-                    nodeConnected = true;
-                    updateEtherLeakAvailability();  
+        if (syncing==false) {
+            $("#nodestatus").html("Node self-maintenance");
+        } else {
+            web3.eth.isSyncing(function(error, sync){
+                if (!error) {
+                    if (sync === true) {
+                    web3.reset(true);
+                    } else if (sync) {
+                        var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
+                        $("#nodestatus").html("Syncing: "+prc+ "%");
+                        nodeConnected = true;
+                        updateEtherLeakAvailability();  
+                    } else if (parseInt(web3.eth.blockNumber)==0) {
+                        $("#nodestatus").html("Node syncing");
+                    } else {
+                        $("#nodestatus").html("");
+                    }
                 } else {
-                    $("#nodestatus").html("");
+                    $("#nodestatus").html("Node down");
                 }
-            } else {
-                $("#nodestatus").html("Node down");
-            }
-        });
+            });
+        }
     } catch(ex) {
         $("#nodestatus").html("Node down");
     }
