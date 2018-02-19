@@ -15,7 +15,7 @@ $(document).ready(function() {
 
     try {
         var syncing = web3.eth.syncing;
-        if (syncing==false) {
+        if (syncing==false && parseInt(web3.eth.blockNumber)==0) {
             $("#nodestatus").html("Node self-maintenance");
         } else {
             web3.eth.isSyncing(function(error, sync){
