@@ -15,35 +15,29 @@ $(document).ready(function() {
     confirmTerms();    
 
     try {
-        var syncing = web3.eth.syncing;
-        if (syncing==false && parseInt(web3.eth.blockNumber)==0) {
-            $("#nodestatus").html("Node loading");
-            nodeConnected = false;
-        } else {
-            web3.eth.isSyncing(function(error, sync){
-                if (!error) {
-                    if (sync === true) {
-                        web3.reset(true);
-                    } else if (sync) {
-                        var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
-                        $("#nodestatus").html("Syncing: "+prc+ "%");
-                        updateEtherLeakAvailability();
-                        nodeConnected = true;
-                    } else if (parseInt(web3.eth.blockNumber)==0) {
-                        $("#nodestatus").html("Node loading");
-                        nodeConnected = false;
-                    } else {
-                        $("#nodestatus").html("");
-                        nodeConnected = true;
-                        updateEtherLeakAvailability();
-                    }
-                } else {
-                    $("#nodestatus").html("Node down");
+        web3.eth.isSyncing(function(error, sync){
+            if (!error) {
+                if (sync === true) {
+                    web3.reset(true);
+                } else if (sync) {
+                    var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
+                    $("#nodestatus").html("Syncing: "+prc+ "%");
+                    updateEtherLeakAvailability();
+                    nodeConnected = true;
+                } else if (parseInt(web3.eth.blockNumber)==0) {
+                    $("#nodestatus").html("Node loading");
                     nodeConnected = false;
+                } else {
+                    $("#nodestatus").html("");
+                    nodeConnected = true;
+                    updateEtherLeakAvailability();
                 }
-            });
-            updateEtherLeakAvailability();
-        }
+            } else {
+                $("#nodestatus").html("Node down");
+                nodeConnected = false;
+            }
+        });
+        updateEtherLeakAvailability();
     } catch(ex) {
         $("#nodestatus").html("Node down");
         nodeConnected = false;
