@@ -1,7 +1,6 @@
 * { font-family:Arial;box-sizing: border-box; outline:none; }
 
 html, body { position:relative;min-width:600px;overflow-x:hidden;margin:0;min-height:100%; }
-
 body { 
     background-image:url(../images/bg.jpg);
     padding:0;margin:0;display: none;
@@ -27,6 +26,17 @@ a:active { text-decoration: none; }
 
 .footer_licenses { cursor:pointer; }
 .footer_licenses:hover { text-decoration: underline; }
+
+#tokens {}
+.token {
+    width:48px;height:48px;
+    border-radius:50%;
+    overflow: hidden;
+    opacity: 0.8;
+    cursor: pointer;
+}
+.token img { width:48px; }
+.token:hover { opacity:0.9; }
 
 #content .wallet { display: none; }
 #content .about { display: none; }
@@ -176,7 +186,8 @@ h2, h3 {
 h3.avl {
     color:black; text-shadow: 1px 1px 0px white;
 }
-.avlicon { float:right; cursor: pointer; opacity:0.7; }
+.avlicon { float:right; cursor: pointer; opacity:0.8; }
+.avlicon:hover { opacity: 0.9; }
 
 .line { margin-bottom:1em; }
 

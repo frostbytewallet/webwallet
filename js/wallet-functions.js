@@ -456,7 +456,7 @@ function newAddresses(pwDerivedKey) {
 var addAccountNo;
 
 function switchToAccount(idx,hdidx) {
-    if (nodeConnected) gasPrice = web3.eth.gasPrice*2;
+    if (nodeConnected) gasPrice = web3.eth.gasPrice;
     $("#createAVLGasRequired").html(web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
     $("#sendAVLGasRequired").html(web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
     $("#sendEtherGasRequired").html(web3.fromWei(txgas*gasPrice, "ether"));

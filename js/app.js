@@ -4,41 +4,49 @@ $(window).on("load", function() {
     setQRScanner();
     initQRCodes();
     timeCycle();
-    loadLanguage();  
+    loadLanguage();
 });
 
-var nodeConnected = false;
+var nodeConnected = true;
 $(document).ready(function() {
     $("body").show();
     loadContent();
+    //loadtokens();
     confirmTerms();    
 
     try {
         var syncing = web3.eth.syncing;
         if (syncing==false && parseInt(web3.eth.blockNumber)==0) {
-            $("#nodestatus").html("Node self-maintenance");
+            $("#nodestatus").html("Node loading");
+            nodeConnected = false;
         } else {
             web3.eth.isSyncing(function(error, sync){
                 if (!error) {
                     if (sync === true) {
-                    web3.reset(true);
+                        web3.reset(true);
                     } else if (sync) {
                         var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
                         $("#nodestatus").html("Syncing: "+prc+ "%");
+                        updateEtherLeakAvailability();
                         nodeConnected = true;
-                        updateEtherLeakAvailability();  
                     } else if (parseInt(web3.eth.blockNumber)==0) {
-                        $("#nodestatus").html("Node syncing");
+                        $("#nodestatus").html("Node loading");
+                        nodeConnected = false;
                     } else {
                         $("#nodestatus").html("");
+                        nodeConnected = true;
+                        updateEtherLeakAvailability();
                     }
                 } else {
                     $("#nodestatus").html("Node down");
+                    nodeConnected = false;
                 }
             });
+            updateEtherLeakAvailability();
         }
     } catch(ex) {
         $("#nodestatus").html("Node down");
+        nodeConnected = false;
     }
 });
 
@@ -47,6 +55,39 @@ function loadContent() {
     if (wh.length>1) { loadSection(wh.substr(1,wh.length-1)); }
     else { loadSection("wallet"); }
 }
+
+function loadTokens() {
+    var url1 = "https://min-api.cryptocompare.com/data/all/coinlist";
+    getCache(url1, function(d1) {
+        var url2 = "https://api.ethplorer.io/getTop?apiKey=freekey&criteria=trade&limit=100";
+        getCache(url2, function(d2) {
+            d2 = JSON.parse(d2);
+            for (var i=0;i<d2.tokens.length;i++) {
+                if (d2.tokens[i].price && d1.Data[d2.tokens[i].symbol]) {
+                    if (d1.Data[d2.tokens[i].symbol].ImageUrl!="") {
+                        var tokenHtml = "<img />";
+                        /*$("#main").append(d2.tokens[i].address+"<br/>");
+                        $("#main").append((d2.tokens[i].decimals ? d2.tokens[i].decimals : 18) +"<br/>");
+                        $("#main").append(d2.tokens[i].symbol+"<br/>");
+                        $("#main").append(d1.Data[d2.tokens[i].symbol].CoinName+"<br/>");
+                        $("#main").append(d1.Data[d2.tokens[i].symbol].TotalCoinSupply+"<br/>");
+                        $("#main").append("<div class='token'><img src='https://www.cryptocompare.com"+d1.Data[d2.tokens[i].symbol].ImageUrl+"' /></div>");
+                        $("#main").append("<hr/>");*/
+                    }
+                }
+            }
+        });
+    });
+}
+
+function getCache(url, callback) {
+    var item = localStorage.getItem(url);
+    if (item!=null) { callback(JSON.parse(item)); return; }
+    $.get(url).then(function(d) { 
+        localStorage.setItem(url, JSON.stringify(d)); 
+        callback(d); 
+    });
+}     
 
 $(window).on("resize", function() { adjustWidth(); });
 
@@ -60,7 +101,7 @@ function adjustWidth() {
         "zoom" : n/100,
         "zoom" : n + "%"
      }).promise().done(function(){
-        $("html").css("height", $(".main").height());
+        $("html").css("height", $(document).height());
     });
     currentScale = n / 100;
 }
