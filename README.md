@@ -1,6 +1,6 @@
-## Frostbyte web wallet
+## FrostByte
 
-Secure client-side ethereum wallet
+Secure client-side ethereum wallet. Safest way to store ether and tokens. Supports offline mode with optic synchronization (no cables).
 
 https://www.frostbytewallet.io
 
