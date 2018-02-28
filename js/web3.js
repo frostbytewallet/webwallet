@@ -4324,7 +4324,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
       var request = this.prepareRequest(false);
     
       try {
-        setTimeout(function(){ request.abort(); }, 2000);
+        //setTimeout(function(){ request.abort(); }, 2000);
         request.send(JSON.stringify(payload));
       } catch (error) {
         throw errors.InvalidConnection(this.host);

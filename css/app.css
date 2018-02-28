@@ -23,20 +23,43 @@ a:active { text-decoration: none; }
     margin-left: 25.5em;font-family: "Coda";font-size: 0.7em;
     margin-top: 0.5em;color: palegoldenrod;
 }
+#sync { 
+    visibility:hidden;
+    position: absolute;
+    right: 1.5em;width:154px;
+    top: 4.5em;
+    display: block;
+    font-family: "Coda";
+    font-size: 0.7em;
+    color: palegoldenrod;
+    cursor: pointer;
+}
+#assistoffline { display:block;font-family: "Coda";font-size: inherit;color:palegoldenrod;cursor:pointer; }
+#sync:hover, #assistoffline:hover { text-decoration:underline; }
 
 .footer_licenses { cursor:pointer; }
 .footer_licenses:hover { text-decoration: underline; }
 
-#tokens {}
+#tokensBar { height:3em; overflow:hidden; margin-bottom:1em; padding-left:1.5%; }
+#tokens { height:3em; }
 .token {
-    width:48px;height:48px;
+    width:3em;height:3em;
     border-radius:50%;
     overflow: hidden;
     opacity: 0.8;
-    cursor: pointer;
 }
-.token img { width:48px; }
+.token img { width:3em;height:3em; border-radius:50%; }
 .token:hover { opacity:0.9; }
+
+.lSSlideOuter {
+    width: 103%;
+    margin-left: -1.5%;
+}
+
+#tokenName {
+    font-size: inherit;
+    font-family: inherit;
+}
 
 #content .wallet { display: none; }
 #content .about { display: none; }
@@ -63,7 +86,7 @@ a:active { text-decoration: none; }
 .features .featuresimage { margin-right:-20px;text-align:center;width:280px; float:right; }
 .features .featuresimage img { width:200px;margin-bottom:1em; }
 .features .featuresimage div { width:60%;margin-left:auto;margin-right:auto; }
-.features .featureset { float:left;margin-left:1em;margin-right:2em; }
+.features .featureset { float:left;margin-left:1em;margin-right:2em; width:22em; }
 .features ul { padding-left:1em; }
 .features .comingsoon { margin-top:1em; }
 
@@ -177,7 +200,7 @@ h2, h3 {
     min-height:32px;
     float:left;
     margin-top: 0;
-    font-size: 2em;
+    font-size: 1.7em;
     color: snow;
     font-weight: bold;
     font-family:"Coda" !important;
@@ -193,7 +216,7 @@ h3.avl {
 
 a { color:white;text-decoration: none; }
 a:hover, a:hover span.title { text-decoration:underline;color:white; }
-a:visited { color:white; }
+a:visited, a:visited span.title { color:white; }
 
 button {
     display: inline-block;
@@ -334,7 +357,16 @@ input.fb {
 
 #qrCode { cursor:pointer;display:none;position: absolute; right:1em; bottom:1em;background-color:white; padding:0.5em; }
 #overlay { z-index:99;display:none; opacity:0.85;-moz-opacity:0.85; background-color:black; position:absolute; width:100%;height:100%; top:0;left:0;right:0;bottom:0; }
-#qrCodeLarge { z-index:99;display:none;position: fixed; top:50%;left:50%;margin-top:-192px;margin-left:-192px;border:solid 1px black; background-color:white; padding:1em; }
+#qrCodeLarge { z-index:99;display:none;position: fixed; top:50%;left:50%;margin-top:-271px;margin-left:-271px;border:solid 1px black; background-color:white; padding:1em; }
+#assist { 
+    text-align: center;
+    font-family: "Iceland";
+    font-size: 1.5em;
+    color:black;
+    position:fixed;
+    width:100%;
+    background-color: yellow;
+}
 #logOut { display:none; }
 #logOut span { text-decoration:underline; font-size:1em; cursor:pointer; }
 #logOut span:hover { text-decoration: none; }
@@ -359,7 +391,7 @@ input.fb {
     bottom: 0.5em;font-size:1.2em;
 }
 
-.sec { width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;padding:1em; float:left;margin-bottom:1em;}
+.sec { cursor:default;width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;padding:1em; float:left;margin-bottom:1em;}
 .sec .above { padding:1em; }
 .sec .glass { opacity: 0.555;background-color:rgb(24, 86, 156); }
 .sec * { font-family:"Iceland"; }
@@ -437,10 +469,10 @@ input.fb {
     text-decoration: none;    
 }
 
-.info a, .info span, .info2 span {
+.info a, .info span, .info2 div {
     font-family: inherit; text-decoration: none;
 }
-.info2 span { font-weight:bold; }
+.info2 div { font-weight:bold; }
 
 .info a:hover { text-decoration: underline; }
 
@@ -454,6 +486,7 @@ input.fb {
     opacity: 0.9;
     border-top-right-radius: 0.4em;
 }
+.info2 div a { font-size:1em;font-family: "Iceland";font-weight:normal;text-decoration: none; }
 
 #enoughFeesSendEther,#enoughFeesSendAVL { display:none; }
 
@@ -481,9 +514,21 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
 .qrcode:hover { opacity:0.9; }
 
 .preview { opacity:0.7;z-index:10;width:100%;position:absolute;top:-20%;left:0;bottom:0;right:0; }
+.largepreview {
+    display: none;
+    opacity: 0.9;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+}
 
 .result, .result2 { margin-right:0.5em; }
-.result3 { display:block; }
+.result3, .result4 { margin-right:0.5em; }
+.result4 { visibility:hidden; }
 
 .color0 { background-color: #187056 }
 .color1 { background-color: #4D9D85 }
@@ -589,7 +634,7 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     .withdraw .glass { border-top-left-radius: 0.4em; border-top-right-radius: 0.4em;}    
     #entropyVisualizer { width:400px; }
     #accounts { width:156.8px; }
-    .info { width: 26.7em; }
+    .info { width: 26.7em;font-size:1.1em; }
     .info a { font-size:0.7em; }
     .menu ul li { margin-right: 0.3em; }
 
@@ -609,6 +654,8 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
         margin-left: auto;
         margin-right: auto;
     }
+    .features .featureset { width:21em; }
+
     .specs .tokenlogo { width:128px; }
     .crunching .presentationimage { width:164px; }
 
@@ -621,6 +668,8 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     
     #walletFunctions { padding-left:0; padding-right:0; }
     #queryBalance { margin-top:0; }
+
+    #tokensBar { margin-left: 1em; }
 
     #createInfo { margin-left:21.4em; }
     .modal-dialog { width:96%;margin:2%;position:fixed; }

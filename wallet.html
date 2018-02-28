@@ -10,10 +10,11 @@
     <meta http-equiv="pragma" content="no-cache" />    
     <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1" />
     <link href='images/avl/avl16.png' rel='shortcut icon'>
-    <title>FrostByte - Ethereum wallet for anonymous identities</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css?v=20">
-    <link rel="stylesheet" href="css/fonts.css?v=20" />
-    <link rel="stylesheet" href="css/app.css?v=20" />
+    <title>FrostByte - Safest way to store ether and tokens</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css?v=30">
+    <link rel="stylesheet" href="css/fonts.css?v=30" />
+    <link rel="stylesheet" href="css/app.css?v=30" />
+    <link rel="stylesheet" href="css/slider.css?v=30" />
   </head>
   <body>
     <div class="main">
@@ -21,8 +22,8 @@
         <div class="above">
           <h1>
             <span class="logoname">FrostByte</span>
-            <a class="slogen" href="https://github.com/frostbytewallet/webwallet" target="_blank" title="View on Github">Ethereum wallet for anonymous identities</a>
-            <div id="nodestatus"></div>
+            <a class="slogen" href="https://github.com/frostbytewallet/webwallet" target="_blank" title="View on Github">Safest way to store ether and tokens</a>
+            <div id="nodestatus"><span id='assistoffline'>Assist an offline device</span></div>
           </h1>
           <div id="walletLoader">
               <div id="logOut">
@@ -33,7 +34,10 @@
           </div>
           <div class="cl"></div>
           <div class="info"><span>Write down the account numbers that you use. Deeper addresses can create avalanche for lower prices.</span> <u>X</u></div>
-          <div class="info2"><span>Contract address</span>: <a class="addr" target="_blank"></a></div>
+          <div class="info2">
+            <div>Contract address: <a class="addr" target="_blank"></a></div>
+            <div>Donations: <a>0xFAB873F0f71dCa84CA33d959C8f017f886E10C63</a></div>
+          </div>
           <div class="aioppressor">
             <span id="dac">Decentralized autonomous contract</span> | <span id="topinfo">Create avalanche to receive fee refunds</span><span id="leakEther">Leak some ether</span>
           </div>
@@ -58,8 +62,8 @@
 
       <div id="content">
         <div id="walletFunctions" class="wallet">
-          <div id="tokens">
-          </div>
+          <div id="tokensBar" class="owl-carousel owl-theme"></div>
+          <div class="cl"></div>
           <div class="my sec">
             <div class="above">
               <h3>Contract Address</h3>
@@ -67,14 +71,20 @@
                 <span id="addaccount">+ Add Account</span>
                 <select id="accounts"></select>
               </div>
+              <span id='sync'>Synchronize (optic)</span>
               <div class="cl line"></div>
               <a id="addr" target="_blank"></a>
               <span id="addressdepth"></span><span id="copyaddr">Copy Address</span>
               <div class="cl" style="margin-bottom:0.8em;"></div>
               <div id="queryBalance">
-                <span class="result"><b>AVL:</b> <span>(loading)</span></span>
-                <span class="result2"><b>ETH:</b> <span>(loading)</span></span>
-                <span class="result3"><b>Goo:</b> <span>(loading)</span></span>
+                <div>
+                  <span class="result"><b>AVL:</b> <span>(loading)</span></span>
+                  <span class="result2"><b>ETH:</b> <span>(loading)</span></span>
+                </div>
+                <div>
+                  <span class="result3"><b>Goo:</b> <span>(loading)</span></span>
+                  <span class="result4"><b id="tokenSymbol"></b> <span>(loading)</span></span>
+                </div>
               </div>
 
               <button id="cmdNewWallet">Create Ethereum wallet</button>
@@ -147,7 +157,7 @@
         
           <div class="send sec">
             <div class="above">
-              <h3>Send Avalanche</h3>
+              <h3>Send <span id='tokenName'>Avalanche</span></h3>
               <span class="qrcode"></span>
               <div class="cl line"></div>
               <div class="form">
@@ -155,7 +165,7 @@
                   <div class="caption"><span>To address</span>:</div>
                   <input class="fb" type="text" id="sendAVLTo" placeholder="0x0000000000000000000000000000000000000000" />
                 </div>
-                <span class="caption v"><span>Value</span> (AVL):</span>
+                <span class="caption v"><span class="v">Value</span> (<span id="sendTokenSymbol">AVL</span>):</span>
                 <input class="fb" type="text" id="txtAVLValue" placeholder="0" />
                 <button id="cmdSendAVL">Send</button>
                 <div class="comment"><span id="sendAVLGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendAVL">and refunded immediately</span></div>
@@ -196,10 +206,6 @@
           
           <p>Nowhere. It's 100% yours, locked inside the contract as "Goo", and used by the contract to refund your ether fees while you use any AVL supported wallet. Fees are refunded for sending ether, and for creating and sending AVL. Also, you may leak your current Goo amount, divided by your address depth, back to ether every 24 hours. When buying and selling AVL coins in online exchanges, only the AVL is transferred.</p>
 
-          <h4>Exchanges</h4>
-
-          <p>EtherDelta - <a target="_blank" href="https://etherdelta.com/#0x2771ef07defb079c309542e11219d97b562ab6b0-ETH">https://etherdelta.com</a></p>
-
           <div class="cl"></div>
         </div>
         <div class="features informative">
@@ -216,6 +222,8 @@
             <h4>FrostByte Wallet</h4>
             <ul>
               <li><span>Fully client-side</span></li>
+              <li><span>Enhanced offline mode support (no cables!)</span></li>
+              <li><span>Token support</span></li>
               <li><span>Fast transaction confirmation</span></li>
               <li><span>Improved HD wallet security</span></li>
               <li><span>Camera QR scanner</span></li>
@@ -240,7 +248,7 @@
           
           <div class="cl"></div>
 
-          <p class="comingsoon"><b>COMING SOON!</b>&nbsp;Currently under development: A decentralized token faucet and a decentralized survey application for artificial intelligences. With Avalanche, they will be able reward you according to your identity depth or AVL holdings.</p>
+          <p class="comingsoon"><b>COMING SOON!</b>&nbsp;Currently under development: A decentralized exchange and token faucet. With Avalanche, they will be able reward you according to your identity depth or AVL holdings.</p>
         </div>
         <div class="specs informative">
           <h3>ERC-20 specifications</h3>
@@ -514,7 +522,7 @@ function getAddressLevel() internal returns (bytes1 res)
               <div>Identity crunching</div>
           </div>
 
-          <p>Identity crunching is done automatically when you create an Ethereum wallet through FrostByte.io. You can halt it at any time, but it's process power friendly. It tries to find an address with bytes as low as possible. The harder it is to generate an address - the lower the price will be to create AVL tokens.</p>
+          <p>Identity crunching is done automatically when you create an Ethereum wallet through frostbytewallet.io. You can halt it at any time, but it's process power friendly. It tries to find an address with bytes as low as possible. The harder it is to generate an address - the lower the price will be to create AVL tokens.</p>
 
           <p>For instance, if all bytes in an address are below 128, then you can create 1 AVL for 0.5 ether. If all bytes are below 64, you'll get each one for 0.25 ether.</p>
           
@@ -695,6 +703,31 @@ Coda font is licensed under the Open Font License (Vernon Adams)
 Iceland font is licensed under the Open Font License (Cyreal)
 
 Black Ops One font is licensed under the Open Font License (James Grieshaber)
+
+Owl Carousel 2 is licensed under the MIT license:
+Copyright (c) 2014 Owl
+Modified work Copyright 2016-2018 David Deutsch
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
           </textarea>
           </div>
       </div>
@@ -704,20 +737,26 @@ Black Ops One font is licensed under the Open Font License (James Grieshaber)
       </div>      
     </div>
     
-    <div id="overlay"></div>
+    <div id="overlay">
+      <div id="assist">Assistance required (from online device)</div>
+    </div>
     <div id="qrCodeLarge"></div>
+    <video id="largePrv" class="largepreview"></video>
 
-    <script src="js/config.js?v=20"></script>
-    <script src="js/jquery-3.3.1.min.js?v=20"></script>
-    <script src="js/web3.js?v=20"></script>
-      <script src="js/hooked-web3-provider.min.js?v=20"></script>
-      <script src="js/async.min.js?v=20"></script>
-      <script src="js/lightwallet.js?v=20"></script>
-    <script src="js/bootstrap.min.js?v=20"></script>
-      <script src="js/bootbox.min.js?v=20"></script>
-    <script src="js/app.js?v=20"></script>
-      <script src="js/wallet-functions.js?v=20"></script>
-    <script src="js/qrcode.min.js?v=20"></script>
-    <script type="text/javascript" src="js/instascan.min.js?v=20"></script>  
+    <script src="js/config.js?v=30"></script>
+    <script src="js/jquery-3.3.1.min.js?v=30"></script>
+    <script src="js/web3.js?v=30"></script>
+      <script src="js/hooked-web3-provider.min.js?v=30"></script>
+      <script src="js/async.min.js?v=30"></script>
+      <script src="js/lightwallet.js?v=30"></script>
+    <script src="js/bootstrap.min.js?v=30"></script>
+      <script src="js/bootbox.min.js?v=30"></script>
+    <script src="js/slider.js?v=30"></script>
+    <script src="js/app.js?v=30"></script>
+      <script src="js/wallet-functions.js?v=30"></script>
+      <script src="js/tokens.js?v=30"></script>
+      <script src="js/assistance.js?v=30"></script>
+    <script src="js/qrcode.min.js?v=30"></script>
+    <script type="text/javascript" src="js/instascan.min.js?v=30"></script>  
   </body>
 </html>

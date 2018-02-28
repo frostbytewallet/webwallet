@@ -1,6 +1,7 @@
 var API_URL = "https://etherscan.io";
 var providerUrl = "https://api.frostbytewallet.io";
 var contractAddr = "0x2771Ef07dEfB079C309542E11219D97B562ab6b0";
+var tokenBalanceReader = "0x9bc9eeb5581315f63c28fdbaeee6a8ff0f7dedc9";
 var abi = [
 	{
 		"constant": true,
@@ -401,6 +402,229 @@ var abi = [
 		"type": "event"
 	}
 ];
+var tokenBalanceReaderABI = [
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "x",
+				"type": "address"
+			},
+			{
+				"name": "contracts",
+				"type": "address[200]"
+			}
+		],
+		"name": "getTokenBalances",
+		"outputs": [
+			{
+				"name": "result",
+				"type": "uint256[200]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "x",
+				"type": "address"
+			},
+			{
+				"name": "y",
+				"type": "address"
+			}
+		],
+		"name": "getTokenBalance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+var ERC20abi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_spender",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalSupply",
+		"outputs": [
+			{
+				"name": "totalsupply",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"name": "balance",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"name": "_spender",
+				"type": "address"
+			}
+		],
+		"name": "allowance",
+		"outputs": [
+			{
+				"name": "remaining",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "Transfer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_spender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "Approval",
+		"type": "event"
+	}
+];
 
 var DERIVATION_PATH = "m/44'/60'/0'/0";
 
@@ -421,8 +645,8 @@ var gasPrice = 20000000000;
 var txgas = 60000;
 var gx=5000000;
 
-var LANG_DOC_TITLE = "FrostByte - Ethereum wallet for anonymous identities";
-var LANG_SLOGEN = "Ethereum wallet for anonymous identities";
+var LANG_DOC_TITLE = "FrostByte - Safest way to store ether and tokens";
+var LANG_SLOGEN = "Safest way to store ether and tokens";
 var LANG_UNLOAD_WALLET = "Unload wallet";
 var LANG_LOAD_WALLET = "Load wallet";
 var LANG_WRITE_DOWN_ACCOUNT_NUMBERS = "Write down the account numbers that you use. Deeper addresses can create avalanche for lower prices.";
@@ -445,7 +669,7 @@ var LANG_CREATE_AVL = "Create Avalanche";
 var LANG_IN_CIRCULATION = "Total in circulation";
 var LANG_CREATE = "Create";
 var LANG_ETHER_FEES_USED_REFUNDED = "ether fees are used and refunded immediately";
-var LANG_SEND_AVL = "Send Avalanche";
+var LANG_SEND_AVL = "Send <span id='tokenName'>Avalanche";
 var LANG_SOURCE = "Uncompressed code (viewsource)";
 var LANG_LOADING = "(loading)";
 var LANG_VIEW_GITHUB = "View on Github";
@@ -478,7 +702,7 @@ function loadLanguage() {
     $(".lan_fees_used_refunded").html(LANG_ETHER_FEES_USED_REFUNDED);
     $(".send h3").html(LANG_SEND_AVL);
     $(".send .to .caption span").html(LANG_TO_ADDRESS);
-    $(".send .caption.v span").html(LANG_VALUE);
+    $(".send .caption.v span.v").html(LANG_VALUE);
     $("#cmdSendAVL").html(LANG_SEND);
     $("#enoughFeesSendAVL").html(LANG_ETHER_FEES_REFUNDED);
     $("#source").html(LANG_SOURCE);
@@ -503,7 +727,7 @@ var LANG_TRAN_HASH = "Transaction hash";
 var LANG_NO_ETH = "Insufficient balance";
 var LANG_NO_ETH_FOR_FEES = "Insufficient ETH balance for fees";
 var LANG_NOT_LOGGED_SEND = "You may send this amount directly to the contract address, or create an ethereum wallet to pay lower prices.";
-var LANG_NO_AVL = "Insufficient AVL balance";
+var LANG_NO_AVL = "Insufficient balance";
 var LANG_ENTER_PASSWORD_TO_ENCRYPT = "Enter a password to encrypt your seed in the browser:";
 var LANG_ENTER_PASSWORD_TO_UNLOCK = "Enter your password to unlock your wallet:";
 var LANG_MINING_HALTED = "Not crunching identities";
@@ -528,8 +752,8 @@ function LANG_CREATED_AVL(a1, a2) {
     return "Created " + a1 + " AVL for " + a2 + " ether";
 }
 
-function LANG_SEND_AVL_CONFIRM(a1, a2, a3, a4) {
-    return "You are sending " + a1 + " AVL to " + a2 + "<br/>Fees"+(a3 ? " (refunded)" : "")+": " + web3.fromWei(a4, "ether") + " ETH";
+function LANG_SEND_AVL_CONFIRM(a1, a2, a3, a4, a5) {
+    return "You are sending " + a1 + " "+a5+" to " + a2 + "<br/>Fees"+(a3 ? " (refunded)" : "")+": " + web3.fromWei(a4, "ether") + " ETH";
 }
 
 function LANG_CREATE_WALLET_PROMPT(a1) {
