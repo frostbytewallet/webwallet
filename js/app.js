@@ -8,6 +8,7 @@ $(document).ready(function() {
     $("body").show(); loadContent();
     loadTokens(); confirmTerms();    
     getNodeStatus();
+    $("head").append('<link rel="stylesheet" href="css/tokens.css?v=32" />');
 });
 
 var currentScale=100;

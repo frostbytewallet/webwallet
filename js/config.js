@@ -705,7 +705,6 @@ function loadLanguage() {
     $(".send .caption.v span.v").html(LANG_VALUE);
     $("#cmdSendAVL").html(LANG_SEND);
     $("#enoughFeesSendAVL").html(LANG_ETHER_FEES_REFUNDED);
-    $("#source").html(LANG_SOURCE);
 	$(".result span, .result2 span, .result3 span").html(LANG_LOADING);
 	$(".avlicon").attr("title", LANG_SPECIFICATIONS);
 	$(".slogen").attr("title", LANG_VIEW_GITHUB);

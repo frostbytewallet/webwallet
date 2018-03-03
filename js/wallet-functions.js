@@ -216,7 +216,7 @@ function leakEther() {
     
     if (nodeConnected) leakGas = contract.leakEther.estimateGas({from: loadedAddress(), value: 0, gas: gx, gasPrice: gasPrice });
     var totalFees = leakGas*gasPrice;
-    if (totalFees>balanceETH) { bootbox.alert(LANG_NO_ETH_FOR_FEES); return; }
+    if (nodeConnected && totalFees>balanceETH) { bootbox.alert(LANG_NO_ETH_FOR_FEES); return; }
     var leakAmount = balanceFEE / getHexAddressLevel(loadedAddress());
     var isRefunded = balanceFEE - leakAmount > totalFees;
 
@@ -292,8 +292,8 @@ function sendTokens() {
     var toAddr = $("#sendAVLTo").val(); if (!validateETHAddress(toAddr)) return;
 
     var valueAVL = parseFloat($("#txtAVLValue").val()) * activePrecision;
-    if (valueAVL==0) { bootbox.alert(LANG_INVALID_AMOUNT_ERR_MSG); return; }
-    if (valueAVL > (loadedContract ? readLoadedTokenBalance() : balanceAVL)) 
+    if (nodeConnected && valueAVL==0) { bootbox.alert(LANG_INVALID_AMOUNT_ERR_MSG); return; }
+    if (nodeConnected && valueAVL > (loadedContract ? readLoadedTokenBalance() : balanceAVL)) 
     { bootbox.alert(LANG_NO_AVL); return; }
 
     $("#sendInfo").html(LANG_PLEASE_WAIT); $("#sendInfo").show();

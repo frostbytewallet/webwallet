@@ -40,15 +40,22 @@ a:active { text-decoration: none; }
 .footer_licenses { cursor:pointer; }
 .footer_licenses:hover { text-decoration: underline; }
 
-#tokensBar { height:3em; overflow:hidden; margin-bottom:1em; padding-left:1.5%; }
-#tokens { height:3em; }
+#tokensBar {
+    height: 4.5em !important;
+    padding-top: 0.5em;
+    overflow: hidden;
+    margin-bottom: 0.5em;
+    padding-left: 1.5%;
+}
 .token {
-    width:3em;height:3em;
-    border-radius:50%;
+    width: 3.5em;
+    height: 3.5em;
     overflow: hidden;
     opacity: 0.8;
+    background-size: 18.8em !important;
+    border-radius: 50%;
+    box-shadow: 0 0 0.5em snow;
 }
-.token img { width:3em;height:3em; border-radius:50%; }
 .token:hover { opacity:0.9; }
 
 .lSSlideOuter {
@@ -399,7 +406,7 @@ input.fb {
 .cl { clear:both; }
 
 .menu {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     height: 3.5em;
     margin-left: auto;
     margin-right: auto;
