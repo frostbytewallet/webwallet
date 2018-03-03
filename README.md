@@ -4,6 +4,12 @@ Secure client-side ethereum wallet. Safest way to store ether and tokens. Suppor
 
 https://www.frostbytewallet.io
 
+To use offline:
+
+1. Download https://www.frostbytewallet.io/frostbytewallet.zip
+2. Verify md5 hash to be 7bed2a42bf9e781f197921c3e452fa12 (linux: md5sum ./frostbytewallet.zip)
+3. Extract the files and open wallet.html using the device's browser
+
 ### Integrated currency: Avalanche!
 
 A decentralized currency for anonymous identities. A wrapper for Ethereum, with various incentives for creating ethereum addresses that are hard to generate.
