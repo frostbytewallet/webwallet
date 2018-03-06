@@ -126,7 +126,7 @@ function getNonce(callback) {
     } else {
         web3.eth.getTransactionCount(loadedAddress(), function(error, nonce) {
             if (error) {
-                if (cached!=null) localStorage.setItem("nonce"+loadedAddress(), 0);
+                if (cached==null) localStorage.setItem("nonce"+loadedAddress(), 0);
             } else {
                 localStorage.setItem("nonce"+loadedAddress(), nonce);
             }
@@ -186,16 +186,16 @@ function sendEth() {
 
                 if (isContract) {
                     web3.eth.sendTransaction({from: loadedAddress(), to: toAddr, value: value, gasPrice: gasPrice, gas: txgas, nonce: readNonce() }, function (err, txhash) { 
-                        if (err) { bootbox.alert(err.message); return; }
-                        $("#withdrawInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
-                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                        if (err) { bootbox.alert(getFriendlyError(err.message)); $("#withdrawInfo").hide(); return; }
+                        $("#withdrawInfo").html("<a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
+                        setInfo(LANG_TRAN_HASH + ": <a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                         incrementNonce();
                     });
                 } else {
                     contract.sendEther(toAddr, {from: loadedAddress(), value: value, gasPrice: gasPrice, gas: txgas, nonce: readNonce() }, function(err,txhash) { 
-                        if (err) { bootbox.alert(err); return; }
-                        $("#withdrawInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
-                        setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                        if (err) { bootbox.alert(getFriendlyError(err.message)); $("#withdrawInfo").hide(); return; }
+                        $("#withdrawInfo").html("<a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
+                        setInfo(LANG_TRAN_HASH + ": <a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                         incrementNonce();
                     });
                 }
@@ -227,8 +227,8 @@ function leakEther() {
         callback: function (result) {
             if (result) { 
                 contract.leakEther({from: loadedAddress(), value: 0, gas: leakGas, gasPrice: gasPrice, nonce: readNonce() }, function(err,txhash) { 
-                    if (err) { bootbox.alert(err.message); return; }
-                    setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                    if (err) { bootbox.alert(getFriendlyError(err.message)); return; }
+                    setInfo(LANG_TRAN_HASH + ": <a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                     incrementNonce();
                 });
                 leaked = true;
@@ -269,9 +269,9 @@ function createTokens() {
             if (result) { 
                 $("#createInfo").hide();
                 web3.eth.sendTransaction({from: loadedAddress(), to: contractAddr, value: valueEth, gasPrice: gasPrice, gas: createAVLGasRequired_value, nonce: readNonce() }, function (err, txhash) { 
-                    if (err) { bootbox.alert(err.message); return; }
-                    $("#createInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
-                    setInfo(LANG_TRAN_HASH+": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                    if (err) { bootbox.alert(getFriendlyError(err.message)); $("#createInfo").hide(); return; }
+                    $("#createInfo").html("<a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>");
+                    setInfo(LANG_TRAN_HASH+": <a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                     incrementNonce();
                 });
                 $("#createInfo").html(LANG_PLEASE_WAIT);
@@ -318,9 +318,9 @@ function sendTokens() {
             if (result) { 
                 $("#sendInfo").hide();
                 activeContract.transfer($("#sendAVLTo").val(), valueAVL, {from: loadedAddress(), value: 0, gas: sendAVLGasRequired_value, gasPrice: gasPrice, nonce: readNonce() }, function(err,txhash) {
-                    if (err) { bootbox.alert(err.message); return; }
-                    $("#sendInfo").html("<a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>"); 
-                    setInfo(LANG_TRAN_HASH + ": <a target='blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
+                    if (err) { bootbox.alert(getFriendlyError(err.message)); $("#sendInfo").hide(); return; }
+                    $("#sendInfo").html("<a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+LANG_TRAN_SENT+"</a>"); 
+                    setInfo(LANG_TRAN_HASH + ": <a target='_blank' href='"+API_URL+"/tx/"+txhash+"'>"+txhash+"</a>");
                     incrementNonce();
                 });
                 $("#sendInfo").html(LANG_PLEASE_WAIT);
@@ -389,6 +389,8 @@ function getScrollPos(){
     }
 }
 
+var pwdHash;
+
 function newWallet() {
     var extraEntropy = web3.sha3(mouseEntropy.toString());
     var randomSeed = lightwallet.keystore.generateRandomSeed(extraEntropy);
@@ -401,6 +403,7 @@ function newWallet() {
         inputType: 'password',
         callback: function (result) {
             if (result==null) { loadWalletCancel(); return; }
+            pwdHash = web3.sha3(result);
 
             lightwallet.keystore.createVault({
                 seedPhrase: randomSeed,
@@ -417,6 +420,11 @@ function newWallet() {
                             inputType: 'password',
                             callback: function (res) {
                                 if (res==null) { passwordCancel(); return; }
+                                if (web3.sha3(res)!=pwdHash) { 
+                                    passwordCancel();
+                                    bootbox.alert("Incorrect password, try again");
+                                    return;
+                                }
                                 pwcallback(null, res);
                             }
                         });
@@ -444,6 +452,7 @@ function setSeed() {
         inputType: 'password',
         callback: function (result) {
             if (result==null) { loadWalletCancel(); return; }
+            pwdHash = web3.sha3(result);
 
             lightwallet.keystore.createVault({
                 seedPhrase: $("#seed").val(),
@@ -460,6 +469,11 @@ function setSeed() {
                             inputType: 'password',
                             callback: function (res) {
                                 if (res==null) { passwordCancel(); return; }
+                                if (web3.sha3(res)!=pwdHash) { 
+                                    passwordCancel();
+                                    bootbox.alert("Incorrect password, try again");
+                                    return;
+                                }
                                 pwcallback(null, res);
                             }
                         });
@@ -515,7 +529,7 @@ var addAccountNo;
 function switchToAccount(idx,hdidx) {
     leaked = false;
     if (nodeConnected) {
-        gasPrice = web3.eth.gasPrice;
+        gasPrice = parseFloat(web3.eth.gasPrice) + 2000000000;
         localStorage.setItem("gasPrice", gasPrice);
     } else {
         var cached = localStorage.getItem("gasPrice");
@@ -645,7 +659,7 @@ function copyAddress() {
 
 function broadcastRawTx(rawtx) {
     web3.eth.sendRawTransaction(rawtx, function(err, res) {
-        if (err) { bootbox.alert("Transaction not broadcasted"); return; }
+        if (err) { bootbox.alert("Transaction not broadcasted ("+err.message+")"); return; }
         bootbox.alert("Transaction broadcasted: "+ res);
     });
 }
@@ -669,7 +683,7 @@ function getNodeStatus() {
                         $("#nodestatus").html("Node loading");
                         nodeConnected = false;
                     } else {
-                        $("#nodestatus").html("<span id='assistoffline'>Assist an offline device</span>");
+                        $("#nodestatus").html("<a id='assistoffline'>Assist an offline device</a>");
                         $("#assistoffline").on("click", function() { scanAssistanceRequest(); });
                         nodeConnected = true;
                     }

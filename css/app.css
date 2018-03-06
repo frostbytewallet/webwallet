@@ -15,13 +15,13 @@ body {
 a:active { text-decoration: none; }
 
 .main {
-    width: 1020px;
+    width: 1021px;
     margin: 0 auto 0 auto;
 }
 
 #nodestatus {
-    margin-left: 25.5em;font-family: "Coda";font-size: 0.7em;
-    margin-top: 0.5em;color: palegoldenrod;
+    margin-left: 18em;font-family: "Coda";font-size: 0.9em;
+    color: palegoldenrod;
 }
 #sync { 
     visibility:hidden;
@@ -33,9 +33,21 @@ a:active { text-decoration: none; }
     font-size: 0.7em;
     color: palegoldenrod;
     cursor: pointer;
+    cursor: pointer;
+    padding-left: 1.8em;
+    background-image: url(../images/sync.png);
+    background-repeat: no-repeat;    
 }
-#assistoffline { display:block;font-family: "Coda";font-size: inherit;color:palegoldenrod;cursor:pointer; }
-#sync:hover, #assistoffline:hover { text-decoration:underline; }
+#assistoffline {     
+    display:block;font-family: "Coda";font-size: inherit;color:palegoldenrod;cursor:pointer;
+    background-image: url(../images/assist.png);
+    background-repeat: no-repeat;
+    padding-left: 1.8em;
+    height: 16px;
+    padding-top: 2px;
+}
+#assistoffline { text-decoration: none; }
+#sync:hover { text-decoration:underline; }
 
 .footer_licenses { cursor:pointer; }
 .footer_licenses:hover { text-decoration: underline; }
@@ -79,7 +91,7 @@ a:active { text-decoration: none; }
 .informative { background-color:rgba(81, 122, 153, 0.8); cursor: default; margin-bottom:1em; padding:2em; }
 .informative * { font-family: "Iceland"; }
 .informative h3 { font-weight:normal;float:none;margin-bottom:0.5em;font-size:2.5em; }
-.informative h4 { margin-top:1em; font-size:1.5em; font-weight:bold;font-family: "Coda"; }
+.informative h5 { margin-top:1em; font-size:1.5em; font-weight:bold;font-family: "Coda"; }
 .informative p, .informative span { font-size:1.5em; }
 
 .about .presentation { text-align:center;margin-left:2em; float:right; width:90px; }
@@ -146,16 +158,21 @@ a:active { text-decoration: none; }
     border: solid 1px palegoldenrod;
 }
 
-.modal-open {
-    overflow: initial;
+.footer {
+    font-family: "Iceland";
+    font-size: 1em;
+    color: white;
+    margin-top: 0;
+    padding-bottom: 1em;
+    text-align: right;
+    margin-right: 1.5%;
 }
+.footer a, .footer span { font-family: inherit; }
 
-.bootbox-body { color:black; }
-.footer { font-family:"Coda";font-size:0.8em;color:white;margin-top:0;padding-bottom:1em;text-align:right;margin-right:1em; }
-
-h1 { width:100%;color:whitesmoke;margin-bottom:0;font-size:1em;margin-top:1em;margin-left:1.5em;
+h1,h4 { width:100%;color:whitesmoke;margin-bottom:0;font-size:1em;margin-top:1em;margin-left:1.5em;
 padding-bottom: 0.5em; vertical-align:middle;float:left;cursor:default; }
-
+h4 { margin-top:0; }
+    
 a.slogen {
     font-size: 0.9em;
     color: snow;
@@ -223,7 +240,8 @@ h3.avl {
 
 a { color:white;text-decoration: none; }
 a:hover, a:hover span.title { text-decoration:underline;color:white; }
-a:visited, a:visited span.title { color:white; }
+a:visited, a:visited span.title { text-decoration:none;color:white; }
+a:active, a:active span.title { text-decoration:none;color:white; }
 
 button {
     display: inline-block;
@@ -289,7 +307,7 @@ input.fb {
     margin-right:0.2em;
 }
 
-#sendTo,#sendAVLTo { width:22em; }
+#sendTo,#sendAVLTo { width:22em;font-size:1.3em; }
 
 .header {
     height: 220px;
@@ -313,8 +331,15 @@ input.fb {
 
 .sec .glass { }
 .above { z-index:90;width:100%; height:100%; position:absolute; top:0;left:0;bottom:0;right:0;}
-.aioppressor { position:absolute; right:1em;top:0.3em;cursor:default;}
-#topinfo, #leakEther, #dac, #dac { font-family: "Iceland"; }
+.aioppressor {
+    position: absolute;
+    font-size: 1.1em;
+    right: 1em;
+    top: 0;
+    cursor: default;
+}
+#topinfo, #leakEther, #dac, #dac, #fullscreen { font-family: "Iceland"; }
+#fullscreen { cursor:pointer; }
 #leakEther { cursor: pointer; display: none; }
 .entgen { bottom: 1em; position: absolute; }
 
@@ -355,12 +380,48 @@ input.fb {
 
 #copyaddr:hover { font-size:1.2em;text-decoration: none; }
 
-.modal-title {
-    font-family: "Coda";color:black;
+.modal-dialog {
+    position: fixed;
+    margin: 0;
+    top: 1em;
+    left: 50%;
+    margin-left: -40%;
+    width:80%;
 }
-
+.modal-open {
+    overflow: initial;
+}
+.modal-open .modal { overflow-y: hidden; }
+.modal-title {
+    color:black;font-size:1.5em;padding-bottom:0;
+}
+.modal-title, .modal-title p { font-family:"Coda"; }
 .modal-title b { font-family: "Coda";color:black; }
-.modal-dialog { width:600px; }
+.shownseedphrase { font-weight:bold;display:block;font-size:1.2em; }
+.modal-header {
+    padding: 1em 1.5em 1em 1.5em;
+}
+.modal-header .close {
+    position: absolute;
+    right: 0.2em;
+    top: 0;
+}
+.modal-content { 
+    background-color: oldlace;
+}
+.modal-body { padding: 1em 1.5em 1em 1.5em; }
+.bootbox-form { margin-bottom:0; }
+.modal-footer {
+    padding: 1em 1.5em 1em 1.5em;
+    text-align: right;
+}
+.form-control {
+    height: initial;
+    padding: initial;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    padding-left:0.5em;padding-right:0.5em;
+}
 
 #qrCode { cursor:pointer;display:none;position: absolute; right:1em; bottom:1em;background-color:white; padding:0.5em; }
 #overlay { z-index:99;display:none; opacity:0.85;-moz-opacity:0.85; background-color:black; position:absolute; width:100%;height:100%; top:0;left:0;right:0;bottom:0; }
@@ -387,9 +448,9 @@ input.fb {
 .AVLPrice { font-size:1.2em; }
 .totalSupply { margin-bottom:1em;font-size:1.2em; }
 #seed { width:23.2em;height:1em; }
-#sendValueAmount { width:6em; }
-#txtAVLValue { width: 6em; }
-#txtETHValue { width: 6em; }
+#sendValueAmount { width:6em;font-size:1.3em; }
+#txtAVLValue { width: 6em;font-size:1.3em; }
+#txtETHValue { width: 6em;font-size:1.3em; }
 
 .comment { 
     font-size: 1.2em;
@@ -398,7 +459,7 @@ input.fb {
     bottom: 0.5em;font-size:1.2em;
 }
 
-.sec { cursor:default;width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;padding:1em; float:left;margin-bottom:1em;}
+.sec { cursor:default;width:49.25%;height:250px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;padding:1em; float:left;margin-bottom:1em;}
 .sec .above { padding:1em; }
 .sec .glass { opacity: 0.555;background-color:rgb(24, 86, 156); }
 .sec * { font-family:"Iceland"; }
@@ -454,22 +515,24 @@ input.fb {
 .buy .glass, .send .glass { background-color:#517A99;opacity:0.555; }
 
 .info {
+    overflow:hidden;
     position: absolute;display: none;
     left: 0;
     bottom: 0;
     display: none;
     font-family: "Iceland";
     font-size: 1.2em;
-    padding: 0.5em 1em;
+    padding: 0.4em 1em;
     background-color: black;
     opacity: 0.9;
     border-top-right-radius: 0.4em;
+    padding-right:2em;
 }
 
 .info u { 
     cursor: pointer;
     font-family: "Iceland";
-    font-size: 0.8em;
+    font-size: 1.5em;
     position: absolute;
     right: 0.5em;
     top: 0;
@@ -502,12 +565,25 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
 
 .widest { width:100%;}
 
+.bootbox-body {
+    font-size: 1.5em;color:black;
+    font-family: "Coda";
+}
+
+button.close {
+    font-size: 3em;
+}
+
 .btn-primary {
     background-color: rgb(24, 86, 156) !important;
     border-color: rgb(24, 86, 156) !important;
 }
 
-.btn { border-radius:0 !important; }
+.btn {
+    border-radius: 0 !important;
+    font-size: 1.5em;margin-left:0.5em !important;
+    padding-left:1em;padding-right:1em;
+}
 
 .qrcode {
     width: 32px;
@@ -530,7 +606,8 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     left: 0;
     bottom: 0;
     right: 0;
-    width: 100%;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .result, .result2 { margin-right:0.5em; }
@@ -641,7 +718,7 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     .withdraw .glass { border-top-left-radius: 0.4em; border-top-right-radius: 0.4em;}    
     #entropyVisualizer { width:400px; }
     #accounts { width:156.8px; }
-    .info { width: 26.7em;font-size:1.1em; }
+    .info { width: 32.5em;font-size:1em; }
     .info a { font-size:0.7em; }
     .menu ul li { margin-right: 0.3em; }
 
@@ -666,7 +743,7 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     .specs .tokenlogo { width:128px; }
     .crunching .presentationimage { width:164px; }
 
-    .informative h4 { font-size:1.2em; }    
+    .informative h5 { font-size:1.2em; }    
 
     #createInfo, #withdrawInfo, #sendInfo {
         margin-top: -1.6em;
@@ -679,6 +756,10 @@ span.caption { margin-right:0.5em;font-size:1.2em; }
     #tokensBar { margin-left: 1em; }
 
     #createInfo { margin-left:21.4em; }
-    .modal-dialog { width:96%;margin:2%;position:fixed; }
+    .modal-dialog {
+        left: 50%;
+        margin-left: -45%;
+        width:90%;
+    }
     .result3 { margin-top: -0.2em; }
 }

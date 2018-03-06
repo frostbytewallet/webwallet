@@ -8,14 +8,14 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />    
-    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1" />
+    <meta name="viewport" content="width=600, height=device-height, initial-scale=1" />
     <link href='images/avl/avl16.png' rel='shortcut icon'>
     <title>FrostByte - Safest way to store ether and tokens</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css?v=32">
-    <link rel="stylesheet" href="css/fonts.css?v=32" />
-    <link rel="stylesheet" href="css/app.css?v=32" />
-    <link rel="stylesheet" href="css/slider.css?v=32" />
-    <link rel="stylesheet" href="css/promoted.css?v=32" />
+    <link rel="stylesheet" href="css/bootstrap.min.css?v=34">
+    <link rel="stylesheet" href="css/fonts.css?v=34" />
+    <link rel="stylesheet" href="css/app.css?v=34" />
+    <link rel="stylesheet" href="css/slider.css?v=34" />
+    <link rel="stylesheet" href="css/promoted.css?v=34" />
   </head>
   <body>
     <div class="main">
@@ -24,8 +24,10 @@
           <h1>
             <span class="logoname">FrostByte</span>
             <a class="slogen" href="https://github.com/frostbytewallet/webwallet" target="_blank" title="View on Github">Safest way to store ether and tokens</a>
-            <div id="nodestatus"><span id='assistoffline'>Assist an offline device</span></div>
           </h1>
+          <h4>
+            <div id="nodestatus"><a id='assistoffline'>Assist an offline device</a></div>
+          </h4>
           <div id="walletLoader">
               <div id="logOut">
                 <button>Unload wallet</button>
@@ -40,7 +42,7 @@
             <div>Donations: <a>0xFAB873F0f71dCa84CA33d959C8f017f886E10C63</a></div>
           </div>
           <div class="aioppressor">
-            <span id="dac">Decentralized autonomous contract</span> | <span id="topinfo">Create avalanche to receive fee refunds</span><span id="leakEther">Leak some ether</span>
+            <span id="dac">Decentralized autonomous contract</span> | <span id="topinfo">Create avalanche to receive fee refunds</span><span id="leakEther">Leak some ether</span> | <span id="fullscreen">Full screen</span>
           </div>
         </div>
         <div class="glass"></div>
@@ -127,7 +129,7 @@
                 </div>
                 <div class="amount">
                   <span class="caption"><span>Value</span> (ETH):</span>
-                  <input class="fb" type="text" id="sendValueAmount" placeholder="0">
+                  <input class="fb" type="number" step="0.01" id="sendValueAmount" placeholder="0">
                   <button id="cmdSendETH">Send</button>
                   <div class="comment"><span id="sendEtherGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendEther">and refunded immediately</span></div>
                 </div>
@@ -147,7 +149,7 @@
               <div class="totalSupply"><span>Total in circulation</span>: <span id="totalSupply">(loading)</span> AVL / 1000000 AVL</div>
               <div>
                 <span class="caption"><span>Value</span> (ETH):</span>
-                <input class="fb" type="text" id="txtETHValue" placeholder="0" />
+                <input class="fb" type="number" step="0.01" id="txtETHValue" placeholder="0" />
                 <button id="cmdCreateAVL">Create</button>
                 <div class="comment"><span id="createAVLGasRequired"></span> <span class="lan_fees_used_refunded">ether fees are used and refunded immediately</span></div>
               </div>
@@ -167,7 +169,7 @@
                   <input class="fb" type="text" id="sendAVLTo" placeholder="0x0000000000000000000000000000000000000000" />
                 </div>
                 <span class="caption v"><span class="v">Value</span> (<span id="sendTokenSymbol">AVL</span>):</span>
-                <input class="fb" type="text" id="txtAVLValue" placeholder="0" />
+                <input class="fb" type="number" step="0.01" id="txtAVLValue" placeholder="0" />
                 <button id="cmdSendAVL">Send</button>
                 <div class="comment"><span id="sendAVLGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendAVL">and refunded immediately</span></div>
                 <div id="sendInfo"></div>
@@ -190,20 +192,18 @@
             <div>Advertising</div>
             <img src="images/presentation/survey.svg" />
             <div>AI Surveys</div>
-            <img src="images/presentation/voting.svg" />
-            <div>Voting</div>
             <img src="images/presentation/exchange.svg" />
             <div>Decentralized Exchanges</div>
           </div>
           <p>Avalanche is a decentralized digital currency for anonymous identities. A wrapper for Ethereum, with various incentives for creating ethereum addresses that are hard to generate.</p>
 
-          <h4>Address depth and anonymous identities</h4>
+          <h5>Address depth and anonymous identities</h5>
           
           <p>The highest byte in the user's ethereum address is defined as the address depth, and the price for creating the coin is set accordingly. If the highest byte in the address is 255 then the price is 1 eth, and for each byte lower than that, the price is reduced by 1 eth / 256.</p>
           
           <p>Address depth allows decentralized applications to maintain a certain level of identity control while the users remain anonymous. Usecases include faucets, advertising applications, surveys, voting, decentralized exchanges and more.</p>
           
-          <h4>Where does the ether go when creating new AVL coins</h4>
+          <h5>Where does the ether go when creating new AVL coins</h5>
           
           <p>Nowhere. It's 100% yours, locked inside the contract as "Goo", and used by the contract to refund your ether fees while you use any AVL supported wallet. Fees are refunded for sending ether, and for creating and sending AVL. Also, you may leak your current Goo amount, divided by your address depth, back to ether every 24 hours. When buying and selling AVL coins in online exchanges, only the AVL is transferred.</p>
 
@@ -220,7 +220,7 @@
           </div>
 
           <div class="featureset">
-            <h4>FrostByte Wallet</h4>
+            <h5>FrostByte Wallet</h5>
             <ul>
               <li><span>Fully client-side</span></li>
               <li><span>Enhanced offline mode support (no cables!)</span></li>
@@ -235,7 +235,7 @@
           </div>
 
           <div class="featureset">
-            <h4>Avalanche</h4>
+            <h5>Avalanche</h5>
             <ul>
               <li><span>Fully autonomous contract</span></li>
               <li><span>Fee refunds</span></li>
@@ -271,7 +271,7 @@
 
           <p>Autonomous contract - creators have no operational benefits over other users</p>
 
-          <h4>Contract code</h4>
+          <h5>Contract code</h5>
           <textarea>
 pragma solidity ^0.4.19;
 
@@ -744,21 +744,21 @@ OTHER DEALINGS IN THE SOFTWARE.
     <div id="qrCodeLarge"></div>
     <video id="largePrv" class="largepreview"></video>
 
-    <script src="js/config.js?v=32"></script>
-    <script src="js/jquery-3.3.1.min.js?v=32"></script>
-    <script src="js/web3.js?v=32"></script>
-      <script src="js/hooked-web3-provider.min.js?v=32"></script>
-      <script src="js/async.min.js?v=32"></script>
-      <script src="js/lightwallet.js?v=32"></script>
-    <script src="js/bootstrap.min.js?v=32"></script>
-      <script src="js/bootbox.min.js?v=32"></script>
-    <script src="js/slider.js?v=32"></script>
-    <script src="js/app.js?v=32"></script>
-      <script src="js/wallet-functions.js?v=32"></script>
-      <script src="js/tokenparameters.js?v=32"></script>
-      <script src="js/tokens.js?v=32"></script>
-      <script src="js/assistance.js?v=32"></script>
-    <script src="js/qrcode.min.js?v=32"></script>
-    <script type="text/javascript" src="js/instascan.min.js?v=32"></script>  
+    <script src="js/config.js?v=34"></script>
+    <script src="js/jquery-3.3.1.min.js?v=34"></script>
+    <script src="js/web3.js?v=34"></script>
+      <script src="js/hooked-web3-provider.min.js?v=34"></script>
+      <script src="js/async.min.js?v=34"></script>
+      <script src="js/lightwallet.js?v=34"></script>
+    <script src="js/bootstrap.min.js?v=34"></script>
+      <script src="js/bootbox.min.js?v=34"></script>
+    <script src="js/slider.js?v=34"></script>
+    <script src="js/app.js?v=34"></script>
+      <script src="js/wallet-functions.js?v=34"></script>
+      <script src="js/tokenparameters.js?v=34"></script>
+      <script src="js/tokens.js?v=34"></script>
+      <script src="js/assistance.js?v=34"></script>
+    <script src="js/qrcode.min.js?v=34"></script>
+    <script type="text/javascript" src="js/instascan.min.js?v=34"></script>  
   </body>
 </html>

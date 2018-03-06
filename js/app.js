@@ -8,7 +8,7 @@ $(document).ready(function() {
     $("body").show(); loadContent();
     loadTokens(); confirmTerms();    
     getNodeStatus();
-    $("head").append('<link rel="stylesheet" href="css/tokens.css?v=32" />');
+    $("head").append('<link rel="stylesheet" href="css/tokens.css?v=34" />');    
 });
 
 var currentScale=100;
@@ -69,7 +69,10 @@ function initGUI() {
     $("#cmdSendETH").on("click", function() { getNonce(function() { sendEth(); }); });
     $("#cmdCreateAVL").on("click", function() { getNonce(function() { createTokens(); }); });
     $("#cmdSendAVL").on("click", function() { getNonce(function() { sendTokens(); }); });
-    $("#logOut button").on("click", function() { self.location=self.location.href.replace("#",""); });
+    $("#logOut button").on("click", function() { 
+        if (self.location.href.indexOf("#")>=0) { self.location=self.location.href.split("#")[0]; }
+        else { self.location=self.location.href; }
+    });
     $("#createAVLGasRequired").html("~ " + web3.fromWei(createAVLGasRequired_value*gasPrice, "ether"));
     $("#sendAVLGasRequired").html("~ " + web3.fromWei(sendAVLGasRequired_value*gasPrice, "ether"));
     $("#sendEtherGasRequired").html("~ " + web3.fromWei(txgas*gasPrice, "ether"));
@@ -90,6 +93,10 @@ function initGUI() {
         requestAssistance(JSON.stringify({ "A": loadedAddress(), "C": (loadedContract ? $loadedToken.attr("contract") : null) }));
     });
     $("#assistoffline").on("click", function() { scanAssistanceRequest(); });
+    $("#fullscreen").on("click", function() { toggleFullScreen(); });
+    $("#withdrawInfo, #sendInfo, #createInfo").on("click",function() {
+        $(this).html("");
+    });
 }
 
 function initEntropyGenerator() { for (var x=0;x<40;x++) { $("#ev"+x).attr("class", "color"+(Math.floor(Math.random()*12))); } }
@@ -102,7 +109,7 @@ function confirmTerms() {
         buttons: { confirm: { label: LANG_CONFIRM_AND_AGREE, className: 'btn-success' },
                    cancel: { label: LANG_DECLINE, className: 'btn-danger' } },
         callback: function (result) { 
-            if (result==null) { $("body").hide(); } 
+            if (!result) { $("body").hide();$("body, html").height(0); return; } 
         
             localStorage.setItem("TERMS_CONFIRMED", "YES");
         }
@@ -119,3 +126,33 @@ function getCache(url, callback) {
 }     
 
 function isJson(str) { try { return JSON.parse(str); } catch (e) { return false; } }
+
+function toggleFullScreen() {
+    var htmlElement = $("html")[0];
+    if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {
+        if (htmlElement.requestFullScreen) {
+            htmlElement.requestFullScreen();
+        } else if (htmlElement.mozRequestFullScreen) {
+            htmlElement.mozRequestFullScreen();
+        } else if (htmlElement.webkitRequestFullScreen) {
+            htmlElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        } else if (htmlElement.msRequestFullscreen) {
+            htmlElement.msRequestFullscreen();
+        }
+    } else {
+        if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+    adjustWidth();
+}
+
+function getFriendlyError(msg) {
+    return msg;
+}

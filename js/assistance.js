@@ -4,10 +4,14 @@ var qrCodeObject, qrCodeLargeObject;
 
 function requestAssistance(data, caption) {
     window.requestAnimationFrame(function() {
-        $("#createInfo").html(""); $("#withdrawInfo").html(""); $("#sendInfo").html("");
+        resetTransactionInfo();
         $("#assist").html(caption ? caption : "Online device assistance required");
         showLargeQRCode(data);
     });
+}
+
+function resetTransactionInfo() {
+    $("#createInfo").html(""); $("#withdrawInfo").html(""); $("#sendInfo").html("");
 }
 
 var requestScanner;
@@ -72,7 +76,7 @@ function assistOfflineWallet(ow) {
                             if (err) { errHandler(e); return; }
                             else { response.I = parseFloat(res); }  
                             
-                            response.P = web3.eth.gasPrice; updateProgress();
+                            response.P = parseFloat(web3.eth.gasPrice) + 2000000000; updateProgress();
 
                             showLargeQRCode(JSON.stringify(response).replace(/\s/g,''));
                             $("#assist").html("Ready for scan by offline device");

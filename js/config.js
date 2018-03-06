@@ -727,7 +727,7 @@ var LANG_NO_ETH = "Insufficient balance";
 var LANG_NO_ETH_FOR_FEES = "Insufficient ETH balance for fees";
 var LANG_NOT_LOGGED_SEND = "You may send this amount directly to the contract address, or create an ethereum wallet to pay lower prices.";
 var LANG_NO_AVL = "Insufficient balance";
-var LANG_ENTER_PASSWORD_TO_ENCRYPT = "Enter a password to encrypt your seed in the browser:";
+var LANG_ENTER_PASSWORD_TO_ENCRYPT = "Choose a password to enter when sending a transcation:";
 var LANG_ENTER_PASSWORD_TO_UNLOCK = "Enter your password to unlock your wallet:";
 var LANG_MINING_HALTED = "Not crunching identities";
 var LANG_ADDRESS_COPIED = "Address copied to clipboard";
@@ -756,7 +756,7 @@ function LANG_SEND_AVL_CONFIRM(a1, a2, a3, a4, a5) {
 }
 
 function LANG_CREATE_WALLET_PROMPT(a1) {
-    return 'Your wallet seed:<br/><br/><span style="font-size:1.2em">' + a1 + '</span><br/><br/>Please write down your wallet seed in a safe place and enter a password to encrypt your seed in the browser:';
+    return '<p>Your wallet seed:</p><p class="shownseedphrase">' + a1 + '</span><p>Please write down your wallet seed in a safe place.</p><p>Choose a password to enter when sending a transaction:</p>';
 }
 
 function LANG_MINING_ADDRESSES(a1, a2) {
