@@ -146,7 +146,7 @@
                 for (var i = 0; i < ln; i++) {
                     w += (parseInt($children.eq(i).width()) + settings.slideMargin);
                 }
-                w+=150;
+                w+=200;
             }
             return w;
         };

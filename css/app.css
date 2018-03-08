@@ -23,20 +23,19 @@ a:active { text-decoration: none; }
     margin-left: 18em;font-family: "Coda";font-size: 0.9em;
     color: palegoldenrod;
 }
-#sync { 
-    visibility:hidden;
-    position: absolute;
-    right: 1.5em;width:154px;
-    top: 4.5em;
+#sync {
+    visibility: hidden;
     display: block;
     font-family: "Coda";
-    font-size: 0.7em;
     color: palegoldenrod;
     cursor: pointer;
-    cursor: pointer;
-    padding-left: 1.8em;
+    padding-left: 1.5em;
     background-image: url(../images/sync.png);
-    background-repeat: no-repeat;    
+    background-repeat: no-repeat;
+    margin-top: 0.2em;
+    float: right;
+    width: 154px;
+    line-height: 1.3em;
 }
 #assistoffline {     
     display:block;font-family: "Coda";font-size: inherit;color:palegoldenrod;cursor:pointer;
@@ -338,8 +337,7 @@ input.fb {
     top: 0;
     cursor: default;
 }
-#topinfo, #leakEther, #dac, #dac, #fullscreen { font-family: "Iceland"; }
-#fullscreen { cursor:pointer; }
+#topinfo, #leakEther, #dac, #dac { font-family: "Iceland"; }
 #leakEther { cursor: pointer; display: none; }
 .entgen { bottom: 1em; position: absolute; }
 
@@ -369,7 +367,7 @@ input.fb {
 
 #walletFunctions { width:100%; margin-left:auto; margin-right:auto; padding-left:1.5%; padding-right:1.5%; }
 #walletLoader { white-space:nowrap;position:absolute;bottom:1em;right:1em; }
-#addr { display:block;font-size:1em; }
+#addr { display:block;font-size:1em;width:300px; }
 .addr { font-size:1em;font-family: "Iceland";font-weight:normal;text-decoration: none; }
 
 #copyaddr { 
@@ -459,7 +457,7 @@ input.fb {
     bottom: 0.5em;font-size:1.2em;
 }
 
-.sec { cursor:default;width:49.25%;height:250px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;padding:1em; float:left;margin-bottom:1em;}
+.sec { cursor:default;width:49.25%;height:230px;overflow:hidden;position:relative;opacity:1;-moz-opacity:1;padding:1em; float:left;margin-bottom:1em;}
 .sec .above { padding:1em; }
 .sec .glass { opacity: 0.555;background-color:rgb(24, 86, 156); }
 .sec * { font-family:"Iceland"; }

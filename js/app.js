@@ -93,7 +93,6 @@ function initGUI() {
         requestAssistance(JSON.stringify({ "A": loadedAddress(), "C": (loadedContract ? $loadedToken.attr("contract") : null) }));
     });
     $("#assistoffline").on("click", function() { scanAssistanceRequest(); });
-    $("#fullscreen").on("click", function() { toggleFullScreen(); });
     $("#withdrawInfo, #sendInfo, #createInfo").on("click",function() {
         $(this).html("");
     });
@@ -126,32 +125,6 @@ function getCache(url, callback) {
 }     
 
 function isJson(str) { try { return JSON.parse(str); } catch (e) { return false; } }
-
-function toggleFullScreen() {
-    var htmlElement = $("html")[0];
-    if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {
-        if (htmlElement.requestFullScreen) {
-            htmlElement.requestFullScreen();
-        } else if (htmlElement.mozRequestFullScreen) {
-            htmlElement.mozRequestFullScreen();
-        } else if (htmlElement.webkitRequestFullScreen) {
-            htmlElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        } else if (htmlElement.msRequestFullscreen) {
-            htmlElement.msRequestFullscreen();
-        }
-    } else {
-        if (document.cancelFullScreen) {
-            document.cancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
-    }
-    adjustWidth();
-}
 
 function getFriendlyError(msg) {
     return msg;

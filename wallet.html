@@ -42,7 +42,7 @@
             <div>Donations: <a>0xFAB873F0f71dCa84CA33d959C8f017f886E10C63</a></div>
           </div>
           <div class="aioppressor">
-            <span id="dac">Decentralized autonomous contract</span> | <span id="topinfo">Create avalanche to receive fee refunds</span><span id="leakEther">Leak some ether</span> | <span id="fullscreen">Full screen</span>
+            <span id="dac">Decentralized autonomous contract</span> | <span id="topinfo">Create avalanche to receive fee refunds</span><span id="leakEther">Leak some ether</span>
           </div>
         </div>
         <div class="glass"></div>
@@ -71,10 +71,12 @@
             <div class="above">
               <h3>Contract Address</h3>
               <div id="accsec">
-                <span id="addaccount">+ Add Account</span>
-                <select id="accounts"></select>
+                <div>
+                  <span id="addaccount">+ Add Account</span>
+                  <select id="accounts"></select>
+                </div>
+                <span id='sync'>Synchronize (optic)</span>
               </div>
-              <span id='sync'>Synchronize (optic)</span>
               <div class="cl line"></div>
               <a id="addr" target="_blank"></a>
               <span id="addressdepth"></span><span id="copyaddr">Copy Address</span>
@@ -129,7 +131,7 @@
                 </div>
                 <div class="amount">
                   <span class="caption"><span>Value</span> (ETH):</span>
-                  <input class="fb" type="number" step="0.01" id="sendValueAmount" placeholder="0">
+                  <input class="fb" type="number" min="0" step="0.01" id="sendValueAmount" placeholder="0">
                   <button id="cmdSendETH">Send</button>
                   <div class="comment"><span id="sendEtherGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendEther">and refunded immediately</span></div>
                 </div>
@@ -149,7 +151,7 @@
               <div class="totalSupply"><span>Total in circulation</span>: <span id="totalSupply">(loading)</span> AVL / 1000000 AVL</div>
               <div>
                 <span class="caption"><span>Value</span> (ETH):</span>
-                <input class="fb" type="number" step="0.01" id="txtETHValue" placeholder="0" />
+                <input class="fb" type="number" min="0" step="0.01" id="txtETHValue" placeholder="0" />
                 <button id="cmdCreateAVL">Create</button>
                 <div class="comment"><span id="createAVLGasRequired"></span> <span class="lan_fees_used_refunded">ether fees are used and refunded immediately</span></div>
               </div>
@@ -169,7 +171,7 @@
                   <input class="fb" type="text" id="sendAVLTo" placeholder="0x0000000000000000000000000000000000000000" />
                 </div>
                 <span class="caption v"><span class="v">Value</span> (<span id="sendTokenSymbol">AVL</span>):</span>
-                <input class="fb" type="number" step="0.01" id="txtAVLValue" placeholder="0" />
+                <input class="fb" type="number" min="0" step="0.01" id="txtAVLValue" placeholder="0" />
                 <button id="cmdSendAVL">Send</button>
                 <div class="comment"><span id="sendAVLGasRequired"></span> <span class="lan_fees_used">ether fees are used</span> <span id="enoughFeesSendAVL">and refunded immediately</span></div>
                 <div id="sendInfo"></div>

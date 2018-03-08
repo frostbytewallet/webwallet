@@ -122,7 +122,7 @@ function getNonce(callback) {
 
     var cached = localStorage.getItem("nonce"+loadedAddress());
     if (!nodeConnected) {
-        if (cached!=null) localStorage.setItem("nonce"+loadedAddress(), 0);
+        if (cached==null) localStorage.setItem("nonce"+loadedAddress(), 0);
     } else {
         web3.eth.getTransactionCount(loadedAddress(), function(error, nonce) {
             if (error) {
