@@ -6,8 +6,8 @@ https://www.frostbytewallet.io
 
 To use offline:
 
-1. Download version 0.88 via https://www.frostbytewallet.io/frostbytewallet.zip or through Github's releases page
-2. Verify md5 hash to be 8b2ecbf98ebb39587bdb79afc13e19d9 (linux: md5sum ./frostbytewallet.zip)
+1. Download version 0.89 via https://www.frostbytewallet.io/frostbytewallet.zip or through Github's releases page
+2. Verify md5 hash to be 12d710b3cc60f9cd9a703e12e759f804 (linux: md5sum ./frostbytewallet.zip)
 3. Extract the files and open wallet.html using the device's browser
 
 ### Integrated currency: Avalanche!
