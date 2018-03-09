@@ -149,7 +149,7 @@ function sendEth() {
 
     var toAddr = $("#sendTo").val(); if (!validateETHAddress(toAddr)) return;
     var isContract = nodeConnected ? web3.eth.getCode(toAddr).length>2 : true;
-    if (isContract) { directSend = true; txgas = 250000; } else { directSend = false; txgas = 60000; }
+    if (isContract) { directSend = true; txgas = 250000; } else { directSend = (balanceFEE==0); txgas = 60000; }
 
     var valueEth = $("#sendValueAmount").val();
     var value = parseFloat(web3.toWei(valueEth,"ether"));
@@ -673,7 +673,7 @@ function getNodeStatus() {
         } else {
             web3.eth.isSyncing(function(error, sync){
                 if (error==null) {
-                    if (sync === true) {
+                    /*if (sync === true) {
                         web3.reset(true);
                     } else if (sync) {
                         var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
@@ -682,13 +682,13 @@ function getNodeStatus() {
                     } else if (parseInt(web3.eth.blockNumber)==0) {
                         $("#nodestatus").html("Node loading");
                         nodeConnected = false;
-                    } else {
-                        $("#nodestatus").html("<a id='assistoffline'>Assist an offline device</a>");
-                        $("#assistoffline").on("click", function() { scanAssistanceRequest(); });
-                        nodeConnected = true;
-                    }
+                    } else {*/
+                    $("#nodestatus").html("<a id='assistoffline'>Assist an offline device</a>");
+                    $("#assistoffline").on("click", function() { scanAssistanceRequest(); });
+                    nodeConnected = true;
+                    //}
                 } else {
-                    $("#nodestatus").html("Node down");
+                    $("#nodestatus").html("Offline mode");
                     nodeConnected = false;
                 }
             });

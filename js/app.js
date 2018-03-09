@@ -8,7 +8,7 @@ $(document).ready(function() {
     $("body").show(); loadContent();
     loadTokens(); confirmTerms();    
     getNodeStatus();
-    $("head").append('<link rel="stylesheet" href="css/tokens.css?v=34" />');    
+    $("head").append('<link rel="stylesheet" href="css/tokens.css?v=35" />');    
 });
 
 var currentScale=100;

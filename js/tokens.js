@@ -120,12 +120,17 @@ function setSlider(html) {
         var $lastToken = $loadedToken;
         $loadedToken = $(this);
         if ($loadedToken.attr("symbol")=="AVL") {
+            loadedContract = null;
             $(".result4").css("visibility", "hidden");
             $(".result4 span").html("");
             $("#tokenName").html("Avalanche");
             $("#tokenSymbol").html("AVL");
             $("#sendTokenSymbol").html("AVL");
-            loadedContract = null;
+            if (addresses==null) {
+                $("#addr").html(contractAddr);
+                $("#addr").attr("href", API_URL+"/address/"+contractAddr);
+                qrCodeObject.makeCode("ethereum:"+contractAddr);
+            }
         } else {
             loadedContract = web3.eth.contract(ERC20abi).at($loadedToken.attr("contract"));
             $("#tokenName").html($loadedToken.attr("name"));
@@ -133,6 +138,11 @@ function setSlider(html) {
             $("#tokenSymbol").html($loadedToken.attr("symbol")+":");
             $(".result4").css("visibility", "visible");
             $(".result4 span").html(nodeConnected ? "(loading)":"Unknown");
+            if (addresses==null) {
+                $("#addr").html($loadedToken.attr("contract"));
+                $("#addr").attr("href", API_URL+"/address/"+$loadedToken.attr("contract"));
+                qrCodeObject.makeCode("ethereum:"+$loadedToken.attr("contract"));
+            }
         }
 
         if ($lastToken) $lastToken.css("opacity", 0.8);
@@ -142,9 +152,6 @@ function setSlider(html) {
             createLargeQRCode(JSON.stringify({ "address": loadedAddress(), "contract": (loadedContract ? $loadedToken.attr("contract") : null) }));
             if (loadedContract) getLoadedTokenBalance();
             updateEtherLeakAvailability();
-        } else {
-            $(document).scrollTop($(".send.sec")[0].offsetTop * currentScale);
-            $("#sendAVLTo").focus();
         }
     });
 }
