@@ -669,30 +669,11 @@ function getNodeStatus() {
         if (error) {
             $("#nodestatus").html("Offline mode");
             nodeConnected = false;
-            updateEtherLeakAvailability();
         } else {
-            web3.eth.isSyncing(function(error, sync){
-                if (error==null) {
-                    /*if (sync === true) {
-                        web3.reset(true);
-                    } else if (sync) {
-                        var prc = parseInt(parseFloat(sync.currentBlock) / parseFloat(sync.highestBlock) * 100);
-                        $("#nodestatus").html("Syncing: "+prc+ "%");
-                        nodeConnected = true;
-                    } else if (parseInt(web3.eth.blockNumber)==0) {
-                        $("#nodestatus").html("Node loading");
-                        nodeConnected = false;
-                    } else {*/
-                    $("#nodestatus").html("<a id='assistoffline'>Assist an offline device</a>");
-                    $("#assistoffline").on("click", function() { scanAssistanceRequest(); });
-                    nodeConnected = true;
-                    //}
-                } else {
-                    $("#nodestatus").html("Offline mode");
-                    nodeConnected = false;
-                }
-            });
-            updateEtherLeakAvailability();
+            $("#nodestatus").html("<a id='assistoffline'>Assist an offline device</a>");
+            $("#assistoffline").on("click", function() { scanAssistanceRequest(); });
+            nodeConnected = true;
         }
+        updateEtherLeakAvailability();
     });
 }
