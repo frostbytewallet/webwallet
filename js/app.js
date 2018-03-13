@@ -5,10 +5,10 @@ $(window).on("load", function() {
 });
 
 $(document).ready(function() {
-    $("body").show(); loadContent();
-    loadTokens(); confirmTerms();    
+    $("body").show();
+    loadTokens(); loadContent(); confirmTerms();    
     getNodeStatus();
-    $("head").append('<link rel="stylesheet" href="css/tokens.css?v=36" />');    
+    $("head").append('<link rel="stylesheet" href="css/tokens.css?v=40" />');    
 });
 
 var currentScale=100;
@@ -33,11 +33,18 @@ var loadedSection;
 function loadSection(sel, scroll) { 
     if (sel=="github") return;
     if (loadedSection) $("#content ."+loadedSection).hide();
-    $("#content ."+sel).show();
-    loadedSection = sel;
-    window.location.hash = sel == "wallet" ? "" : sel;
-    adjustWidth();
-    if (scroll) scrollToContent();
+    if ($("#content ."+sel).length==0) {
+        $("#content .wallet").show();
+        loadedSection = "wallet";
+        $("#token_"+sel).click();
+        adjustWidth();
+    } else {
+        $("#content ."+sel).show();
+        loadedSection = sel;
+        window.location.hash = sel == "wallet" ? "" : sel;
+        adjustWidth();
+        if (scroll) scrollToContent();
+    }
 }
 
 function loadContent() {

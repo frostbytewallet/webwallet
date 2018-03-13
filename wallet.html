@@ -11,11 +11,11 @@
     <meta name="viewport" content="width=600, height=device-height, initial-scale=1" />
     <link href='images/avl/avl16.png' rel='shortcut icon'>
     <title>FrostByte - Safest way to store ether and tokens</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css?v=36">
-    <link rel="stylesheet" href="css/fonts.css?v=36" />
-    <link rel="stylesheet" href="css/app.css?v=36" />
-    <link rel="stylesheet" href="css/slider.css?v=36" />
-    <link rel="stylesheet" href="css/promoted.css?v=36" />
+    <link rel="stylesheet" href="css/bootstrap.min.css?v=40">
+    <link rel="stylesheet" href="css/fonts.css?v=40" />
+    <link rel="stylesheet" href="css/app.css?v=40" />
+    <link rel="stylesheet" href="css/slider.css?v=40" />
+    <link rel="stylesheet" href="css/promoted.css?v=40" />
   </head>
   <body>
     <div class="main">
@@ -52,12 +52,12 @@
         <div class="above">
           <ul>
             <li><a id="menu_wallet" class="color11a"><b>Wallet</b></a></li>
-            <li><a id="menu_about" class="color5">What's Avalanche?</a></li>
             <li><a id="menu_features" class="color8">Features</a></li>
             <li><a id="menu_specs" class="color8">Specs</a></li>
             <li><a id="menu_crunching" class="color2">Crunching</a></li>
             <li><a id="menu_integrate" class="color3">Integrate</a></li>
             <li><a id="menu_github" target="_blank" href="https://github.com/frostbytewallet/webwallet" class="color3">Git</a></li>
+            <li><a id="menu_advertising" class="color5">Advertising</a></li>
           </ul>        
         </div>
         <div class="glass"></div>
@@ -69,7 +69,7 @@
           <div class="cl"></div>
           <div class="my sec">
             <div class="above">
-              <h3>Contract Address</h3>
+              <h3><span id="h3TokenName">Avalanche</span> contract address</h3>
               <div id="accsec">
                 <div>
                   <span id="addaccount">+ Add Account</span>
@@ -184,30 +184,22 @@
           <div class="cl"></div>
 
         </div>
-        <div class="about informative">
-          <h3>Avalanche - A currency for anonymous identities</h3>
+        <div class="advertising informative">
+          <h3>Advertising</h3>
 
           <div class="presentation">
-            <img src="images/presentation/faucet.svg" />
-            <div>Faucets</div>
             <img src="images/presentation/advertising.svg" />
-            <div>Advertising</div>
-            <img src="images/presentation/survey.svg" />
-            <div>AI Surveys</div>
-            <img src="images/presentation/exchange.svg" />
-            <div>Decentralized Exchanges</div>
           </div>
-          <p>Avalanche is a decentralized digital currency for anonymous identities. A wrapper for Ethereum, with various incentives for creating ethereum addresses that are hard to generate.</p>
 
-          <h5>Address depth and anonymous identities</h5>
+          <p>Create custom ERC-20 tokens for your business, add them to FrostByte and promote them. Payments with your own tokens are possible, but not for all of the services.</p>
           
-          <p>The highest byte in the user's ethereum address is defined as the address depth, and the price for creating the coin is set accordingly. If the highest byte in the address is 255 then the price is 1 eth, and for each byte lower than that, the price is reduced by 1 eth / 256.</p>
+          <h5>Add or promote your token</h5>
           
-          <p>Address depth allows decentralized applications to maintain a certain level of identity control while the users remain anonymous. Usecases include faucets, advertising applications, surveys, voting, decentralized exchanges and more.</p>
+          <p>To add your token to frostbytewallet.io please send your project details to <span id="admin"></span>, and you will be given different promotion offers depending on the properties of your business. This is also applicable for tokens that are already in FrostByte's token toolbar as it's possible to promote their location in the toolbar or even integrate them into the wallet (see Avalanche).</p>
           
-          <h5>Where does the ether go when creating new AVL coins</h5>
+          <h5>Create a token</h5>
           
-          <p>Nowhere. It's 100% yours, locked inside the contract as "Goo", and used by the contract to refund your ether fees while you use any AVL supported wallet. Fees are refunded for sending ether, and for creating and sending AVL. Also, you may leak your current Goo amount, divided by your address depth, back to ether every 24 hours. When buying and selling AVL coins in online exchanges, only the AVL is transferred.</p>
+          <p>We can help you create your custom ERC-20 token as well as adding it to frostbytewallet.io - send us an email and we will reply with more details.</p>
 
           <div class="cl"></div>
         </div>
@@ -250,8 +242,6 @@
           </div>
           
           <div class="cl"></div>
-
-          <p class="comingsoon"><b>COMING SOON!</b>&nbsp;Currently under development: A decentralized exchange and token faucet. With Avalanche, they will be able reward you according to your identity depth or AVL holdings.</p>
         </div>
         <div class="specs informative">
           <h3>ERC-20 specifications</h3>
@@ -746,21 +736,21 @@ OTHER DEALINGS IN THE SOFTWARE.
     <div id="qrCodeLarge"></div>
     <video id="largePrv" class="largepreview"></video>
 
-    <script src="js/config.js?v=36"></script>
-    <script src="js/jquery-3.3.1.min.js?v=36"></script>
-    <script src="js/web3.js?v=36"></script>
-      <script src="js/hooked-web3-provider.min.js?v=36"></script>
-      <script src="js/async.min.js?v=36"></script>
-      <script src="js/lightwallet.js?v=36"></script>
-    <script src="js/bootstrap.min.js?v=36"></script>
-      <script src="js/bootbox.min.js?v=36"></script>
-    <script src="js/slider.js?v=36"></script>
-    <script src="js/app.js?v=36"></script>
-      <script src="js/wallet-functions.js?v=36"></script>
-      <script src="js/tokenparameters.js?v=36"></script>
-      <script src="js/tokens.js?v=36"></script>
-      <script src="js/assistance.js?v=36"></script>
-    <script src="js/qrcode.min.js?v=36"></script>
-    <script type="text/javascript" src="js/instascan.min.js?v=36"></script>  
+    <script src="js/config.js?v=40"></script>
+    <script src="js/jquery-3.3.1.min.js?v=40"></script>
+    <script src="js/web3.js?v=40"></script>
+      <script src="js/hooked-web3-provider.min.js?v=40"></script>
+      <script src="js/async.min.js?v=40"></script>
+      <script src="js/lightwallet.js?v=40"></script>
+    <script src="js/bootstrap.min.js?v=40"></script>
+      <script src="js/bootbox.min.js?v=40"></script>
+    <script src="js/slider.js?v=40"></script>
+    <script src="js/app.js?v=40"></script>
+      <script src="js/wallet-functions.js?v=40"></script>
+      <script src="js/tokenparameters.js?v=40"></script>
+      <script src="js/tokens.js?v=40"></script>
+      <script src="js/assistance.js?v=40"></script>
+    <script src="js/qrcode.min.js?v=40"></script>
+    <script type="text/javascript" src="js/instascan.min.js?v=40"></script>  
   </body>
 </html>

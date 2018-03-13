@@ -546,7 +546,7 @@ function switchToAccount(idx,hdidx) {
     $("#addr").attr("href", API_URL+"/address/"+loadedAddress());
     $("#addressdepth").html("Depth: "+getHexAddressLevel(loadedAddress()));
     $("#addressdepth").show();
-    $(".my.sec h3").html(hdidx == 0 ? "Main Account" : "Account #"+hdidx);
+    $(".my.sec h3").html(hdidx == 0 ? "Main account" : "Account #"+hdidx);
     $(".my.sec .comment").hide();
     qrCodeObject.makeCode("ethereum:"+$("#addr").html());
     updateEntLabel();

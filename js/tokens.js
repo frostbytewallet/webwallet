@@ -1,8 +1,9 @@
 function getTokenHTML(token) {
-    var template = "<div class='token SYM_[2]' title='[1] ([2])' totalsupply='[0]' name='[1]' symbol='[2]' decimals='[3]' contract='[4]'></div>";
+    var template = "<div class='token SYM_[2]' title='[1] ([2])' totalsupply='[0]' name='[1]' id='token_[2]' symbol='[2]' decimals='[3]' contract='[4]'></div>";
     for (var i = 0; i<token.length; i++) {
         template = template.replace("["+i+"]", token[i]);
         if (i==1 || i==2) template = template.replace("["+i+"]", token[i]);
+        if (i==2) template = template.replace("["+i+"]", token[i]);
         if (i==2) template = template.replace("["+i+"]", token[i]);
     }
     return template.replace("*", "https://www.cryptocompare.com");
@@ -119,6 +120,8 @@ function setSlider(html) {
         $("#sendInfo").html("");
         var $lastToken = $loadedToken;
         $loadedToken = $(this);
+        window.location.hash = $loadedToken.attr("symbol");
+        $("#h3TokenName").html($loadedToken.attr("name"));
         if ($loadedToken.attr("symbol")=="AVL") {
             loadedContract = null;
             $(".result4").css("visibility", "hidden");

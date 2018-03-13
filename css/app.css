@@ -80,26 +80,32 @@ a:active { text-decoration: none; }
 }
 
 #content .wallet { display: none; }
-#content .about { display: none; }
+#content .advertising { display: none; }
 #content .features { display: none; }
 #content .specs { display: none;background-color:rgba(0, 0, 0, 0.6); }
 #content .crunching { display: none; }
 #content .integrate { display: none;background-color:rgba(0, 0, 0, 0.6); }
 #content .licenses { display: none; }
+#menu_advertising { background-color:transparent;font-size:0.8em; }
 
 .informative { background-color:rgba(81, 122, 153, 0.8); cursor: default; margin-bottom:1em; padding:2em; }
 .informative * { font-family: "Iceland"; }
 .informative h3 { font-weight:normal;float:none;margin-bottom:0.5em;font-size:2.5em; }
 .informative h5 { margin-top:1em; font-size:1.5em; font-weight:bold;font-family: "Coda"; }
 .informative p, .informative span { font-size:1.5em; }
-
-.about .presentation { text-align:center;margin-left:2em; float:right; width:90px; }
-.about .presentation img { width:90px;height:90px;display: block; }
-.about .presentation div {
+#h3TokenName { 
+    font-family: inherit;
+    font-size: inherit;    
+}
+.advertising .presentation { text-align:center;margin-left:2em; float:right; }
+.advertising .presentation img { width:150px;height:150px;display: block; }
+.advertising .presentation div {
     margin-bottom: 1em;
     line-height: 1em;
     margin-top: 0.5em;
 }
+#admin { font-size:1em; }
+#admin a { font-weight:bold; text-decoration: underline; }
 
 .features .featuresimage { margin-right:-20px;text-align:center;width:280px; float:right; }
 .features .featuresimage img { width:200px;margin-bottom:1em; }

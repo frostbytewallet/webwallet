@@ -651,7 +651,7 @@ var LANG_UNLOAD_WALLET = "Unload wallet";
 var LANG_LOAD_WALLET = "Load wallet";
 var LANG_WRITE_DOWN_ACCOUNT_NUMBERS = "Write down the account numbers that you use. Deeper addresses can create avalanche for lower prices.";
 var LANG_CONTRACT_ADDRESS = "Contract address";
-var LANG_CONTRACT_ADDRESS_TITLE = "Contract Address";
+var LANG_CONTRACT_ADDRESS_TITLE = '<span id="h3TokenName">Avalanche</span> contract address';
 var LANG_DAC = "Decentralized autonomous contract";
 var LANG_CREATE_AVL_FOR_REFUNDS = "Create avalanche to receive fee refunds";
 var LANG_LEAK_ETHER = "Leak some ether";
@@ -708,6 +708,7 @@ function loadLanguage() {
 	$(".result span, .result2 span, .result3 span").html(LANG_LOADING);
 	$(".avlicon").attr("title", LANG_SPECIFICATIONS);
 	$(".slogen").attr("title", LANG_VIEW_GITHUB);
+	$("#admin").html('<a href="mailto:admin@frostbytewallet.io">admin@frostbytewallet.io</a>');
 }
 
 var LANG_CONFIRM_TERMS = "Please confirm that you are neither under the age of 18 nor a US resident, and agree to use this open source platform as-is and on your own risk:";
